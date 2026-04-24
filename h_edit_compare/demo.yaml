@@ -1,0 +1,7 @@
+  -
+    image: /panda.jpg
+    source_prompt: a panda is walking in a forest
+    target_prompt: a polar bear is walking in a forest
+
+    blended_word: "panda bear"
+    editing_instruction: "Turn the panda into a polar bear"
