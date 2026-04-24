@@ -591,9 +591,11 @@ def HRecSD3Edit(
     edit_mask_shift_x: float = 0.0,
     edit_mask_box: tuple[float, float, float, float] | None = None,
     edit_mask_box_mode: str = "replace",
+    edit_mask_use_core_as_subject: bool = False,
     external_edit_mask_path: str | None = None,
     external_edit_mask_mode: str = "replace",
     mask_blend: bool = False,
+    mask_blend_mode: str = "subject",
     log_every: int = 0,
     stats_output_path: Optional[str] = None,
 ):
@@ -804,6 +806,9 @@ def HRecSD3Edit(
                     M_edit = smooth_spatial_mask(M_edit, kernel_size=edit_mask_smooth_kernel).clamp(0.0, 1.0)
                     M_core = smooth_spatial_mask(M_core, kernel_size=edit_mask_smooth_kernel).clamp(0.0, 1.0)
                 M_core = torch.minimum(M_core, M_edit)
+                M_preserve = (1.0 - M_edit).clamp(0.0, 1.0)
+            if edit_mask_use_core_as_subject:
+                M_edit = M_core.clamp(0.0, 1.0)
                 M_preserve = (1.0 - M_edit).clamp(0.0, 1.0)
             if mask_output_dir is not None:
                 for name, mask in masks.items():
@@ -1398,8 +1403,11 @@ def HRecSD3Edit(
             "edit_mask_shift_y": float(edit_mask_shift_y),
             "edit_mask_shift_x": float(edit_mask_shift_x),
             "edit_mask_box_mode": edit_mask_box_mode,
+            "edit_mask_use_core_as_subject": bool(edit_mask_use_core_as_subject),
             "external_edit_mask_path": external_edit_mask_path,
             "external_edit_mask_mode": external_edit_mask_mode,
+            "mask_blend": bool(mask_blend),
+            "mask_blend_mode": mask_blend_mode,
             **mask_stats,
             **core_mask_stats,
             **preserve_mask_stats,
@@ -1524,8 +1532,16 @@ def HRecSD3Edit(
 
     # Optional hard mask blend: paste source background over edited result.
     if mask_blend and M_preserve is not None:
-        M_edit = (1.0 - M_preserve).to(dtype=result.dtype, device=result.device)
+        if mask_blend_mode == "subject":
+            blend_edit = (1.0 - M_preserve).to(dtype=result.dtype, device=result.device)
+        elif mask_blend_mode == "core":
+            if M_core is None:
+                raise ValueError("mask_blend_mode='core' requires an extracted core mask.")
+            blend_edit = M_core.to(dtype=result.dtype, device=result.device)
+        else:
+            raise ValueError(f"Unsupported mask_blend_mode: {mask_blend_mode}")
+        blend_preserve = (1.0 - blend_edit).clamp(0.0, 1.0)
         x_src_aligned = x_src.to(dtype=result.dtype, device=result.device)
-        result = M_edit * result + M_preserve.to(dtype=result.dtype) * x_src_aligned
+        result = blend_edit * result + blend_preserve * x_src_aligned
 
     return result

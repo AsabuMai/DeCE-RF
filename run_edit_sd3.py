@@ -239,6 +239,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="How --edit-mask-box combines with the attention-derived edit mask.",
     )
     parser.add_argument(
+        "--edit-mask-use-core-as-subject",
+        action="store_true",
+        default=False,
+        help=(
+            "Use the high-confidence core mask as the final M_edit support. "
+            "Useful for diagnosing local edits where the subject mask is too broad."
+        ),
+    )
+    parser.add_argument(
         "--external-edit-mask",
         type=str,
         default=None,
@@ -265,6 +274,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--stats-output", type=str, default=None)
     parser.add_argument("--metadata-output", type=str, default=None)
     parser.add_argument("--mask-blend", action="store_true", default=False)
+    parser.add_argument(
+        "--mask-blend-mode",
+        choices=("subject", "core"),
+        default="subject",
+        help="Which final edit support is used when --mask-blend is enabled.",
+    )
     parser.add_argument(
         "--photo-prompt-mode",
         type=str,
@@ -456,11 +471,13 @@ def main() -> None:
         edit_mask_shift_x=args.edit_mask_shift_x,
         edit_mask_box=edit_mask_box,
         edit_mask_box_mode=args.edit_mask_box_mode,
+        edit_mask_use_core_as_subject=args.edit_mask_use_core_as_subject,
         external_edit_mask_path=args.external_edit_mask,
         external_edit_mask_mode=args.external_edit_mask_mode,
         log_every=args.log_every,
         stats_output_path=args.stats_output,
         mask_blend=args.mask_blend,
+        mask_blend_mode=args.mask_blend_mode,
     )
 
     x_tar_denorm = (x_tar / pipe.vae.config.scaling_factor) + pipe.vae.config.shift_factor
@@ -544,9 +561,12 @@ def main() -> None:
         "edit_mask_shift_x": args.edit_mask_shift_x,
         "edit_mask_box": edit_mask_box,
         "edit_mask_box_mode": args.edit_mask_box_mode,
+        "edit_mask_use_core_as_subject": args.edit_mask_use_core_as_subject,
         "external_edit_mask": args.external_edit_mask,
         "external_edit_mask_mode": args.external_edit_mask_mode,
         "edit_field_mode": args.edit_field_mode,
+        "mask_blend": args.mask_blend,
+        "mask_blend_mode": args.mask_blend_mode,
         "photo_prompt_mode": args.photo_prompt_mode,
         "git_commit": current_git_commit(),
     }

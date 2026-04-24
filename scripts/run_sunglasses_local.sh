@@ -13,6 +13,9 @@ MASK_SHIFT_Y="${MASK_SHIFT_Y:-0.10}"
 MASK_COMPONENT_Y_MAX="${MASK_COMPONENT_Y_MAX:-0.45}"
 EDIT_MASK_BOX="${EDIT_MASK_BOX:-}"
 EDIT_MASK_BOX_MODE="${EDIT_MASK_BOX_MODE:-intersect}"
+USE_CORE_AS_EDIT_MASK="${USE_CORE_AS_EDIT_MASK:-0}"
+MASK_BLEND="${MASK_BLEND:-0}"
+MASK_BLEND_MODE="${MASK_BLEND_MODE:-subject}"
 OUT_DIR="${OUT_DIR:-${ROOT}/outputs/sunglasses_local}"
 mkdir -p "${OUT_DIR}"
 mkdir -p "${OUT_DIR}/masks"
@@ -60,6 +63,17 @@ if [[ -n "${EDIT_MASK_BOX}" ]]; then
   CMD+=(
     --edit-mask-box "${EDIT_MASK_BOX}"
     --edit-mask-box-mode "${EDIT_MASK_BOX_MODE}"
+  )
+fi
+
+if [[ "${USE_CORE_AS_EDIT_MASK}" == "1" ]]; then
+  CMD+=(--edit-mask-use-core-as-subject)
+fi
+
+if [[ "${MASK_BLEND}" == "1" ]]; then
+  CMD+=(
+    --mask-blend
+    --mask-blend-mode "${MASK_BLEND_MODE}"
   )
 fi
 

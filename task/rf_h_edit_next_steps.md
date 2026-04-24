@@ -566,6 +566,9 @@ outputs/panda_tiger_ablation_grid.png
 outputs/sunglasses_current_compare_grid.png
 outputs/panda_tiger_diagnostics_grid.png
 outputs/panda_tiger_rewrite_probe_grid.png
+outputs/sunglasses_cross_method_grid.png
+outputs/sunglasses_cross_method_mask_grid.png
+outputs/sunglasses_cross_method_hint_grid.png
 ```
 
 Panda to tiger ablation:
@@ -612,6 +615,13 @@ Sunglasses ablation:
   current external proposal mask is not reliable enough to beat attention local;
 - simple eye-box clipping protects the face but pushes the generated glasses
   upward, so box clipping is not the right default.
+- cross-method comparison shows RF-Solver and FireFlow place smaller glasses
+  closer to the original eye positions with much smaller proposal-source
+  difference masks than our broad attention subject mask;
+- core-only ODE support is too narrow and fails to generate glasses, while
+  subject-generation plus core final blending creates patch artifacts. The next
+  local-edit idea should therefore separate contextual generation support from
+  precise structural/attention injection, instead of only shrinking `M_edit`.
 
 Please implement or verify the following:
 
