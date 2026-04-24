@@ -565,6 +565,7 @@ Latest generated panels:
 outputs/panda_tiger_ablation_grid.png
 outputs/sunglasses_current_compare_grid.png
 outputs/panda_tiger_diagnostics_grid.png
+outputs/panda_tiger_rewrite_probe_grid.png
 ```
 
 Panda to tiger ablation:
@@ -591,6 +592,17 @@ Panda to tiger branch diagnostics:
   do not create a realistic tiger replacement by themselves.
 - Current evidence points to an object-level rewrite bottleneck, not just a
   reconstruction-vs-edit strength issue.
+
+Panda to tiger rewrite probes:
+
+- mild initial subject noise gives slightly more freedom but remains a hybrid;
+- strong initial subject noise destroys coherence instead of producing a clean
+  tiger;
+- core-only noise leaves the same tiger-face-on-panda-body failure;
+- subject noise plus clean anchor strengthens tiger-face cues but still does
+  not rewrite the full body.
+- Therefore the next algorithmic change should be an object-level replacement
+  mechanism, not just more noise or stronger target guidance in the same mask.
 
 Sunglasses ablation:
 
