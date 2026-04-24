@@ -366,6 +366,63 @@ def save_mask_image(mask: torch.Tensor, path: str) -> None:
     Image.fromarray(array, mode="L").save(path)
 
 
+def spatial_mask_stats(mask: torch.Tensor | None, prefix: str = "mask") -> dict[str, float | None]:
+    if mask is None:
+        return {
+            f"{prefix}_area_ratio": 0.0,
+            f"{prefix}_soft_mean": 0.0,
+            f"{prefix}_soft_max": 0.0,
+            f"{prefix}_center_x": None,
+            f"{prefix}_center_y": None,
+            f"{prefix}_bbox_x0": None,
+            f"{prefix}_bbox_y0": None,
+            f"{prefix}_bbox_x1": None,
+            f"{prefix}_bbox_y1": None,
+        }
+
+    image = mask.detach().float()
+    if image.ndim == 4:
+        image = image[0, 0]
+    elif image.ndim == 3:
+        image = image[0]
+    image = image.clamp(0.0, 1.0)
+    h, w = image.shape[-2:]
+    binary = image > 0.5
+    area_ratio = float(binary.float().mean().item())
+    soft_mean = float(image.mean().item())
+    soft_max = float(image.max().item())
+
+    mass = image.sum()
+    if float(mass.item()) <= 1e-8:
+        center_x = center_y = None
+    else:
+        ys = torch.linspace(0.0, 1.0, h, device=image.device, dtype=image.dtype).view(h, 1)
+        xs = torch.linspace(0.0, 1.0, w, device=image.device, dtype=image.dtype).view(1, w)
+        center_x = float((image * xs).sum().div(mass).item())
+        center_y = float((image * ys).sum().div(mass).item())
+
+    if bool(binary.any().item()):
+        coords = torch.nonzero(binary, as_tuple=False)
+        y0 = float(coords[:, 0].min().item() / max(1, h - 1))
+        y1 = float(coords[:, 0].max().item() / max(1, h - 1))
+        x0 = float(coords[:, 1].min().item() / max(1, w - 1))
+        x1 = float(coords[:, 1].max().item() / max(1, w - 1))
+    else:
+        x0 = y0 = x1 = y1 = None
+
+    return {
+        f"{prefix}_area_ratio": area_ratio,
+        f"{prefix}_soft_mean": soft_mean,
+        f"{prefix}_soft_max": soft_max,
+        f"{prefix}_center_x": center_x,
+        f"{prefix}_center_y": center_y,
+        f"{prefix}_bbox_x0": x0,
+        f"{prefix}_bbox_y0": y0,
+        f"{prefix}_bbox_x1": x1,
+        f"{prefix}_bbox_y1": y1,
+    }
+
+
 def _cfg_v_sd3_with_grad(
     pipe,
     latents: torch.Tensor,
@@ -740,6 +797,12 @@ def HRecSD3Edit(
                     M_core = torch.maximum(M_core, external_mask)
                 else:
                     raise ValueError(f"Unsupported external_edit_mask_mode: {external_edit_mask_mode}")
+                if edit_mask_dilate_kernel > 1:
+                    M_edit = dilate_spatial_mask(M_edit, kernel_size=edit_mask_dilate_kernel).clamp(0.0, 1.0)
+                    M_core = dilate_spatial_mask(M_core, kernel_size=edit_mask_dilate_kernel).clamp(0.0, 1.0)
+                if edit_mask_smooth_kernel > 1:
+                    M_edit = smooth_spatial_mask(M_edit, kernel_size=edit_mask_smooth_kernel).clamp(0.0, 1.0)
+                    M_core = smooth_spatial_mask(M_core, kernel_size=edit_mask_smooth_kernel).clamp(0.0, 1.0)
                 M_core = torch.minimum(M_core, M_edit)
                 M_preserve = (1.0 - M_edit).clamp(0.0, 1.0)
             if mask_output_dir is not None:
@@ -785,6 +848,10 @@ def HRecSD3Edit(
                 else f" core(>0.5)={(m_core > 0.5).float().mean():.2%}"
             )
         )
+    mask_stats = spatial_mask_stats(M_edit, prefix="mask")
+    core_mask_stats = spatial_mask_stats(M_core, prefix="core_mask")
+    preserve_mask_stats = spatial_mask_stats(M_preserve, prefix="preserve_mask")
+
     if edit_clip_guidance_scale > 0.0 or edit_text_guidance_scale > 0.0:
         # Offloaded diffusers modules wrap the pipeline VAE with accelerate
         # hooks that produce inference tensors. A dedicated copy keeps the VAE
@@ -805,7 +872,7 @@ def HRecSD3Edit(
 
     # --- Controlled reverse ODE ---
     z_t = z_T.clone()
-    step_stats: list[dict[str, float]] = []
+    step_stats: list[dict[str, float | str | None]] = []
 
     for i, t in tqdm(enumerate(timesteps), total=len(timesteps)):
         if T_steps - i > n_max:
@@ -1333,6 +1400,9 @@ def HRecSD3Edit(
             "edit_mask_box_mode": edit_mask_box_mode,
             "external_edit_mask_path": external_edit_mask_path,
             "external_edit_mask_mode": external_edit_mask_mode,
+            **mask_stats,
+            **core_mask_stats,
+            **preserve_mask_stats,
             "edit_hedit_guidance_scale": float(edit_hedit_guidance_scale),
             "edit_guidance_scale": float(edit_guidance_scale),
             "edit_region_guidance_scale": float(edit_region_guidance_scale),

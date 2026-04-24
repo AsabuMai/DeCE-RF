@@ -13,6 +13,7 @@ run_case() {
 
   local out_dir="${ROOT}/outputs/recon_${name}"
   mkdir -p "${out_dir}"
+  mkdir -p "${out_dir}/masks"
 
   if [[ "${FORCE}" != "1" && -f "${out_dir}/result.png" && -f "${out_dir}/stats.json" ]]; then
     echo "[skip] recon_${name} already exists"
@@ -27,6 +28,7 @@ run_case() {
     --output "${out_dir}/result.png"
     --stats-output "${out_dir}/stats.json"
     --metadata-output "${out_dir}/metadata.json"
+    --mask-output-dir "${out_dir}/masks"
     --n-max "${n_max}"
     --src-guidance-scale "${src_cfg}"
     --tar-guidance-scale "${src_cfg}"

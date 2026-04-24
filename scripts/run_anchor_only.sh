@@ -6,6 +6,7 @@ PYTHON="${PYTHON:-/home/Wu_25R8111/ENTER/envs/flowedit/bin/python}"
 DEVICE="${DEVICE:-0}"
 OUT_DIR="${ROOT}/outputs/anchor_only"
 mkdir -p "${OUT_DIR}"
+mkdir -p "${OUT_DIR}/masks"
 
 CMD=(
   "${PYTHON}" "${ROOT}/run_edit_sd3.py"
@@ -15,6 +16,7 @@ CMD=(
   --output "${OUT_DIR}/result.png"
   --stats-output "${OUT_DIR}/stats.json"
   --metadata-output "${OUT_DIR}/metadata.json"
+  --mask-output-dir "${OUT_DIR}/masks"
   --src-guidance-scale 1.0
   --tar-guidance-scale 10.5
   --edit-hedit-guidance-scale 0

@@ -608,7 +608,7 @@ x0_hat = x_t - t * v_theta(x_t,t)
 
 The controlled editing dynamics are implemented as:
 
-v_total = v_src + u_rec + u_edit
+xdot_t = v_src + u_rec + u_edit
 
 where u_rec is a reconstruction-aware preserve correction and u_edit is a sum of target-seeking editing velocity surrogates.
 ```

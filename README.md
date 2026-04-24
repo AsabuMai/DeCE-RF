@@ -39,10 +39,10 @@ M_preserve = 1 - M_edit
 E_rec_total = lambda_latent * E_rec_latent + lambda_struct * E_rec_struct
 E_edit_total = lambda_anchor * E_edit_anchor + lambda_region * E_edit_region
 
-v_rec_total  ~= surrogate_grad(E_rec_total)
-v_edit_total ~= surrogate_grad(E_edit_total)
+u_rec  ~= reconstruction preserve velocity from E_rec_total
+u_edit ~= target-seeking edit velocity from E_edit_total
 
-dx_t/dt = beta(t) * v_edit_total + alpha(t) * v_rec_total
+xdot_t = v_src + u_rec + u_edit
 
 E_rec currently uses:
 - a mask-aware multiscale latent term
@@ -54,7 +54,9 @@ E_edit currently uses:
 ```
 
 This is still a research prototype. It is not yet a full bridge-based RF
-h-Edit method.
+h-Edit method. The energy notation is used as the organizing principle, while
+the code records whether each branch is an exact gradient or a surrogate
+velocity field.
 
 ## Current Method Convention
 
@@ -68,7 +70,7 @@ x0_hat = x_t - t * v_theta(x_t, t)
 The controlled editing dynamics are implemented as:
 
 ```text
-v_total = v_src + u_rec + u_edit
+xdot_t = v_src + u_rec + u_edit
 ```
 
 where `u_rec` is a reconstruction-aware preserve correction and `u_edit` is a
@@ -139,7 +141,7 @@ This keeps the mathematical objects unchanged:
 ```text
 M_edit = external or attention-derived edit support
 M_preserve = 1 - M_edit
-v_total = v_src + u_rec + u_edit
+xdot_t = v_src + u_rec + u_edit
 u = -Delta x0 / t
 ```
 

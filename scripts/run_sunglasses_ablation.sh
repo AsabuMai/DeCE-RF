@@ -15,6 +15,7 @@ run_case() {
 
   local out_dir="${ROOT}/outputs/sunglasses_${name}"
   mkdir -p "${out_dir}"
+  mkdir -p "${out_dir}/masks"
 
   local cmd=(
     "${PYTHON}" "${ROOT}/run_edit_sd3.py"
@@ -24,6 +25,7 @@ run_case() {
     --output "${out_dir}/result.png"
     --stats-output "${out_dir}/stats.json"
     --metadata-output "${out_dir}/metadata.json"
+    --mask-output-dir "${out_dir}/masks"
     --src-guidance-scale 1.0
     --tar-guidance-scale 10.5
     --edit-hedit-guidance-scale "${edit_hedit_scale}"

@@ -197,41 +197,50 @@ Therefore, the motivation for decoupling is:
 
 ## 8. Final ODE Formulation We Currently Prefer
 
-Originally, we considered the expanded three-term form:
+The implementation-level RF formulation is:
 
 \[
-\dot x_t = v_\theta - \alpha(t)\nabla E_{\mathrm{rec}} + \beta(t)\nabla E_{\mathrm{edit}}
+\dot x_t = v_{\mathrm{src}}(x_t,t) + u_{\mathrm{rec}}(x_t,t) + u_{\mathrm{edit}}(x_t,t)
 \]
 
-However, after discussion, we concluded that this form is less faithful to the spirit of h-Edit, because it appears to contain three parallel components.
+Here \(v_{\mathrm{src}}\) is the source-conditioned RF base velocity. The
+correction \(u_{\mathrm{rec}}\) is responsible for source preservation, and
+\(u_{\mathrm{edit}}\) is responsible for target transformation.
 
-A more appropriate formulation is to group the original RF velocity and the reconstruction correction into a single **reconstruction-aware base field**:
+For conceptual comparison with h-Edit, the source velocity and reconstruction
+correction can be grouped into a reconstruction-aware base field:
 
 \[
 v_{\mathrm{rec}}(x_t,t)
 =
-v_\theta(x_t,t)-\alpha(t)\nabla_{x_t}E_{\mathrm{rec}}(x_t,t)
+v_{\mathrm{src}}(x_t,t)+u_{\mathrm{rec}}(x_t,t)
 \]
 
-Then define the editing field as:
-
-\[
-v_{\mathrm{edit}}(x_t,t)
-=
-\nabla_{x_t}E_{\mathrm{edit}}(x_t,t)
-\]
-
-The preferred total dynamics becomes:
+Then the same dynamics can be written as:
 
 \[
 \dot x_t
 =
 v_{\mathrm{rec}}(x_t,t)
 +
-\beta(t)\,v_{\mathrm{edit}}(x_t,t)
+u_{\mathrm{edit}}(x_t,t)
 \]
 
-This is much closer to the structural form of h-Edit:
+When the text uses energy notation, it should be read as an energy-inspired
+construction of these correction velocities:
+
+\[
+u_{\mathrm{rec}} \sim -\alpha(t)\,\nabla_{x_t}E_{\mathrm{rec}},
+\qquad
+u_{\mathrm{edit}} \sim \beta(t)\,\nabla_{x_t}E_{\mathrm{edit}}
+\]
+
+In the current code, some branches are exact autograd gradients, while others
+are surrogate velocity fields derived from clean-space displacement or
+feature-space differences. This is why the documentation uses \(u\)-terms for
+the implementation and keeps the energy terms as the organizing objective.
+
+This is close to the structural form of h-Edit:
 
 - one **reconstruction/base term**
 - one **editing term**
