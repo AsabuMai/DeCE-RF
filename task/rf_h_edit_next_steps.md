@@ -564,6 +564,7 @@ Latest generated panels:
 ```text
 outputs/panda_tiger_ablation_grid.png
 outputs/sunglasses_current_compare_grid.png
+outputs/panda_tiger_diagnostics_grid.png
 ```
 
 Panda to tiger ablation:
@@ -577,6 +578,19 @@ Panda to tiger ablation:
 - `decoupled_rec` activates the reconstruction branch and better preserves
   structure/background, but it does not solve the overlay-like replacement
   failure.
+
+Panda to tiger branch diagnostics:
+
+- `flow_only` and `clean_anchor` are both strong enough to create a tiger face,
+  but neither rewrites the full panda body.
+- `region_anchor` weakens the edit and still keeps the same hybrid structure,
+  so simply masking the anchor is not enough for object-level replacement.
+- `flow_plus_traj` preserves the source body even more strongly, which is good
+  for faithfulness but works against full replacement.
+- `target_feature` and `source_suppress` are much weaker than flow/anchor; they
+  do not create a realistic tiger replacement by themselves.
+- Current evidence points to an object-level rewrite bottleneck, not just a
+  reconstruction-vs-edit strength issue.
 
 Sunglasses ablation:
 
