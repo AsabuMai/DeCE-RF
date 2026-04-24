@@ -341,6 +341,45 @@ def _extract_single_prompt_attention_maps(
     return cross_map, self_map
 
 
+def _normalize_map(attn_map: torch.Tensor) -> torch.Tensor:
+    mn, mx = attn_map.min(), attn_map.max()
+    return (attn_map - mn) / (mx - mn + 1e-6)
+
+
+def _fuse_cross_self(
+    cross_map: torch.Tensor,
+    self_map: torch.Tensor,
+    self_weight: float = 0.2,
+) -> torch.Tensor:
+    self_weight = max(0.0, min(1.0, self_weight))
+    return _normalize_map((1.0 - self_weight) * cross_map + self_weight * self_map)
+
+
+def _mask_from_attention_map(
+    attn_map: torch.Tensor,
+    sharpness: float,
+    subject_threshold: float = 0.48,
+    core_threshold: float = 0.72,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    combined = _normalize_map(attn_map)
+    combined = F.max_pool2d(combined, kernel_size=3, stride=1, padding=1)
+    combined = combined / (combined.amax(dim=(-2, -1), keepdim=True) + 1e-6)
+
+    subject_threshold = max(0.0, min(1.0, subject_threshold))
+    core_threshold = max(subject_threshold, min(1.0, core_threshold))
+    subject_soft_threshold = min(1.0, subject_threshold + 0.04)
+    core_soft_threshold = min(1.0, core_threshold + 0.04)
+
+    hard_subject = (combined > subject_threshold).to(combined.dtype)
+    soft_subject = torch.sigmoid((sharpness + 1.0) * (combined - subject_soft_threshold))
+    subject = (0.8 * hard_subject + 0.2 * soft_subject).clamp(0.0, 1.0)
+    hard_core = (combined > core_threshold).to(combined.dtype)
+    soft_core = torch.sigmoid((sharpness + 3.0) * (combined - core_soft_threshold))
+    core = (0.85 * hard_core + 0.15 * soft_core).clamp(0.0, 1.0)
+    core = torch.minimum(core, subject)
+    return subject, core
+
+
 def extract_prompt_attention_map(
     pipe,
     x_latent: torch.Tensor,
@@ -453,6 +492,11 @@ def extract_attention_masks(
     t: torch.Tensor,
     sharpness: float = 10.0,
     max_latent_side: int = 128,
+    mode: str = "changed_union",
+    target_token_words: list[str] | None = None,
+    source_token_words: list[str] | None = None,
+    subject_threshold: float = 0.48,
+    core_threshold: float = 0.72,
 ) -> dict[str, torch.Tensor]:
     """
     Extract a soft editing mask M from SD3 cross-attention maps.
@@ -466,57 +510,105 @@ def extract_attention_masks(
         attention pass to avoid OOM on large images. The mask is upsampled
         back to the original latent resolution afterward.
 
+    `mode` controls which attention map becomes the editable mask:
+    - changed_union: source changed-token and target changed-token union.
+    - target_changed: target changed-token map only.
+    - subject_union: source subject and target subject union.
+    - source_subject: source subject map only.
+    - target_subject: target subject map only.
+
     Returns a soft spatial decomposition where `subject` is the editable mask.
     `core` is a higher-confidence semantic subset inside the editable subject.
     """
     src_changed_words, tar_changed_words = _changed_words(src_prompt, tar_prompt)
+    if source_token_words is not None:
+        src_changed_words = source_token_words
+    if target_token_words is not None:
+        tar_changed_words = target_token_words
     src_token_indices = _token_indices_for_words(pipe, src_prompt, src_changed_words)
     tar_token_indices = _token_indices_for_words(pipe, tar_prompt, tar_changed_words)
 
-    A_src_cross, A_src_self = _extract_single_prompt_attention_maps(
+    A_src_subject_cross, A_src_self = _extract_single_prompt_attention_maps(
         pipe=pipe,
         x_latent=x_src,
         prompt_embeds=src_prompt_embeds,
         pooled_embeds=src_pooled_embeds,
         t=t,
-        token_indices=src_token_indices,
+        token_indices=None,
         max_latent_side=max_latent_side,
     )
-    A_tar_cross, A_tar_self = _extract_single_prompt_attention_maps(
+    A_tar_subject_cross, A_tar_self = _extract_single_prompt_attention_maps(
         pipe=pipe,
         x_latent=x_src,
         prompt_embeds=tar_prompt_embeds,
         pooled_embeds=tar_pooled_embeds,
         t=t,
-        token_indices=tar_token_indices,
+        token_indices=None,
         max_latent_side=max_latent_side,
     )
-    A_src = 0.8 * A_src_cross + 0.2 * A_src_self
-    A_tar = 0.8 * A_tar_cross + 0.2 * A_tar_self
+    A_src_subject = _fuse_cross_self(A_src_subject_cross, A_src_self)
+    A_tar_subject = _fuse_cross_self(A_tar_subject_cross, A_tar_self)
 
-    combined = torch.maximum(A_src, A_tar)
-    mn, mx = combined.min(), combined.max()
-    combined = (combined - mn) / (mx - mn + 1e-6)
-    combined = F.max_pool2d(combined, kernel_size=3, stride=1, padding=1)
-    combined = combined / (combined.amax(dim=(-2, -1), keepdim=True) + 1e-6)
+    if src_token_indices:
+        A_src_changed_cross, _ = _extract_single_prompt_attention_maps(
+            pipe=pipe,
+            x_latent=x_src,
+            prompt_embeds=src_prompt_embeds,
+            pooled_embeds=src_pooled_embeds,
+            t=t,
+            token_indices=src_token_indices,
+            max_latent_side=max_latent_side,
+        )
+        A_src_changed = _fuse_cross_self(A_src_changed_cross, A_src_self, self_weight=0.0)
+    else:
+        A_src_changed = torch.zeros_like(A_src_subject)
 
-    # Keep the same attention-derived mask logic, but tighten the editable
-    # region so the subject mask does not swallow nearly half the image.
-    # This is intended to reduce background/style drift without changing the
-    # reconstruction/editing math downstream.
-    hard_subject = (combined > 0.48).to(combined.dtype)
-    soft_subject = torch.sigmoid((sharpness + 1.0) * (combined - 0.52))
-    M_subject = (0.8 * hard_subject + 0.2 * soft_subject).clamp(0.0, 1.0)
-    hard_core = (combined > 0.72).to(combined.dtype)
-    soft_core = torch.sigmoid((sharpness + 3.0) * (combined - 0.76))
-    M_core = (0.85 * hard_core + 0.15 * soft_core).clamp(0.0, 1.0)
-    M_core = torch.minimum(M_core, M_subject)
+    if tar_token_indices:
+        A_tar_changed_cross, _ = _extract_single_prompt_attention_maps(
+            pipe=pipe,
+            x_latent=x_src,
+            prompt_embeds=tar_prompt_embeds,
+            pooled_embeds=tar_pooled_embeds,
+            t=t,
+            token_indices=tar_token_indices,
+            max_latent_side=max_latent_side,
+        )
+        A_tar_changed = _fuse_cross_self(A_tar_changed_cross, A_tar_self, self_weight=0.0)
+    else:
+        A_tar_changed = torch.zeros_like(A_tar_subject)
+
+    if mode == "changed_union":
+        combined = torch.maximum(A_src_changed, A_tar_changed)
+        if combined.amax() <= 1e-6:
+            combined = torch.maximum(A_src_subject, A_tar_subject)
+    elif mode == "target_changed":
+        combined = A_tar_changed if A_tar_changed.amax() > 1e-6 else A_tar_subject
+    elif mode == "subject_union":
+        combined = torch.maximum(A_src_subject, A_tar_subject)
+    elif mode == "source_subject":
+        combined = A_src_subject
+    elif mode == "target_subject":
+        combined = A_tar_subject
+    else:
+        raise ValueError(f"Unsupported attention mask mode: {mode}")
+
+    M_subject, M_core = _mask_from_attention_map(
+        combined,
+        sharpness=sharpness,
+        subject_threshold=subject_threshold,
+        core_threshold=core_threshold,
+    )
     M_preserve = (1.0 - M_subject).clamp(0.0, 1.0)
 
     return {
         "subject": M_subject,
         "core": M_core,
         "preserve": M_preserve,
+        "source_subject": A_src_subject,
+        "target_subject": A_tar_subject,
+        "source_changed": A_src_changed,
+        "target_changed": A_tar_changed,
+        "combined": _normalize_map(combined),
     }
 
 

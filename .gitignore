@@ -8,6 +8,7 @@ venv/
 env/
 
 results/
+outputs/
 archive/
 h_edit_compare/results_*/
 

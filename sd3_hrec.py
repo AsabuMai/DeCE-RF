@@ -2,15 +2,19 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 from typing import Optional, Union
 
+import numpy as np
 import torch
+from PIL import Image
 from tqdm import tqdm
 
 from clip_text_reward import CLIPReferenceState, LocalCLIPTextReward
 from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion import retrieve_timesteps
 from attention_mask import extract_attention_masks, extract_prompt_attention_map
 from energies import (
+    cosine_safe,
     editing_energy_total,
     editing_velocity_surrogate_total,
     reconstruction_energy_total,
@@ -134,6 +138,17 @@ def calc_cfg_v_sd3(
     guidance_scale: float,
     t: torch.Tensor,
 ) -> torch.Tensor:
+    if negative_prompt_embeds is None or negative_pooled_prompt_embeds is None:
+        timestep = t.expand(latents.shape[0])
+        return pipe.transformer(
+            hidden_states=latents,
+            timestep=timestep,
+            encoder_hidden_states=prompt_embeds,
+            pooled_projections=pooled_prompt_embeds,
+            joint_attention_kwargs=None,
+            return_dict=False,
+        )[0]
+
     timestep = t.expand(latents.shape[0] * 2)
     latent_model_input = torch.cat([latents, latents], dim=0)
     prompt_input = torch.cat([negative_prompt_embeds, prompt_embeds], dim=0)
@@ -204,6 +219,153 @@ def smooth_guidance_field(
     return torch.nn.functional.avg_pool2d(field, kernel_size=kernel_size, stride=1, padding=pad)
 
 
+def translate_spatial_mask(mask: torch.Tensor, shift_y: float = 0.0, shift_x: float = 0.0) -> torch.Tensor:
+    """
+    Translate a BCHW mask without wraparound.
+
+    `shift_y` and `shift_x` are fractions of mask height/width. Positive y
+    moves the mask down; positive x moves it right.
+    """
+    if shift_y == 0.0 and shift_x == 0.0:
+        return mask
+    h, w = mask.shape[-2:]
+    dy = int(round(shift_y * h))
+    dx = int(round(shift_x * w))
+    if dy == 0 and dx == 0:
+        return mask
+
+    out = torch.zeros_like(mask)
+    src_y0 = max(0, -dy)
+    src_y1 = min(h, h - dy)
+    dst_y0 = max(0, dy)
+    dst_y1 = min(h, h + dy)
+    src_x0 = max(0, -dx)
+    src_x1 = min(w, w - dx)
+    dst_x0 = max(0, dx)
+    dst_x1 = min(w, w + dx)
+    if src_y1 > src_y0 and src_x1 > src_x0:
+        out[..., dst_y0:dst_y1, dst_x0:dst_x1] = mask[..., src_y0:src_y1, src_x0:src_x1]
+    return out
+
+
+def dilate_spatial_mask(mask: torch.Tensor, kernel_size: int = 0) -> torch.Tensor:
+    if kernel_size <= 1:
+        return mask
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    pad = kernel_size // 2
+    return torch.nn.functional.max_pool2d(mask.float(), kernel_size=kernel_size, stride=1, padding=pad).to(mask.dtype)
+
+
+def smooth_spatial_mask(mask: torch.Tensor, kernel_size: int = 0) -> torch.Tensor:
+    if kernel_size <= 1:
+        return mask
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    pad = kernel_size // 2
+    return torch.nn.functional.avg_pool2d(mask.float(), kernel_size=kernel_size, stride=1, padding=pad).to(mask.dtype)
+
+
+def filter_spatial_mask_components(
+    mask: torch.Tensor,
+    threshold: float = 0.5,
+    keep_components: int = 0,
+    center_y_min: float | None = None,
+    center_y_max: float | None = None,
+) -> torch.Tensor:
+    if keep_components <= 0 and center_y_min is None and center_y_max is None:
+        return mask
+    threshold = max(0.0, min(1.0, threshold))
+    out = torch.zeros_like(mask)
+    mask_cpu = mask.detach().float().cpu()
+    bsz, _, h, w = mask_cpu.shape
+    for b in range(bsz):
+        binary = mask_cpu[b, 0] > threshold
+        visited = torch.zeros_like(binary, dtype=torch.bool)
+        components: list[tuple[float, list[tuple[int, int]]]] = []
+        for y in range(h):
+            for x in range(w):
+                if not bool(binary[y, x]) or bool(visited[y, x]):
+                    continue
+                stack = [(y, x)]
+                visited[y, x] = True
+                points: list[tuple[int, int]] = []
+                while stack:
+                    cy, cx = stack.pop()
+                    points.append((cy, cx))
+                    for dy in (-1, 0, 1):
+                        for dx in (-1, 0, 1):
+                            if dy == 0 and dx == 0:
+                                continue
+                            ny, nx = cy + dy, cx + dx
+                            if 0 <= ny < h and 0 <= nx < w and bool(binary[ny, nx]) and not bool(visited[ny, nx]):
+                                visited[ny, nx] = True
+                                stack.append((ny, nx))
+                cy_norm = sum(p[0] for p in points) / max(1, len(points)) / h
+                if center_y_min is not None and cy_norm < center_y_min:
+                    continue
+                if center_y_max is not None and cy_norm > center_y_max:
+                    continue
+                mass = float(sum(float(mask_cpu[b, 0, py, px]) for py, px in points))
+                components.append((mass, points))
+        components.sort(key=lambda item: item[0], reverse=True)
+        selected = components if keep_components <= 0 else components[:keep_components]
+        for _, points in selected:
+            for py, px in points:
+                out[b, 0, py, px] = mask[b, 0, py, px]
+    return out
+
+
+def normalized_box_mask_like(
+    reference: torch.Tensor,
+    box: tuple[float, float, float, float],
+    feather: float = 0.025,
+) -> torch.Tensor:
+    """
+    Build a soft BCHW mask from normalized image coordinates.
+
+    Box format is (x0, y0, x1, y1), each in [0, 1].
+    """
+    x0, y0, x1, y1 = box
+    x0, x1 = sorted((max(0.0, min(1.0, x0)), max(0.0, min(1.0, x1))))
+    y0, y1 = sorted((max(0.0, min(1.0, y0)), max(0.0, min(1.0, y1))))
+    h, w = reference.shape[-2:]
+    ys = torch.linspace(0.0, 1.0, h, device=reference.device, dtype=torch.float32).view(1, 1, h, 1)
+    xs = torch.linspace(0.0, 1.0, w, device=reference.device, dtype=torch.float32).view(1, 1, 1, w)
+    feather = max(feather, 1e-4)
+    inside_x = torch.sigmoid((xs - x0) / feather) * torch.sigmoid((x1 - xs) / feather)
+    inside_y = torch.sigmoid((ys - y0) / feather) * torch.sigmoid((y1 - ys) / feather)
+    mask = (inside_x * inside_y).clamp(0.0, 1.0)
+    return mask.expand(reference.shape[0], 1, h, w).to(dtype=reference.dtype)
+
+
+def load_external_mask_like(reference: torch.Tensor, mask_path: str) -> torch.Tensor:
+    """
+    Load an external grayscale edit mask as BCHW in the same spatial space as `reference`.
+
+    This only changes the support of M_edit. It does not alter the
+    reconstruction/editing velocity formulation.
+    """
+    mask_img = Image.open(mask_path).convert("L")
+    mask_arr = torch.from_numpy(np.array(mask_img, dtype="float32") / 255.0)
+    mask = mask_arr[None, None].to(device=reference.device, dtype=reference.dtype)
+    if mask.shape[-2:] != reference.shape[-2:]:
+        mask = torch.nn.functional.interpolate(
+            mask,
+            size=reference.shape[-2:],
+            mode="bilinear",
+            align_corners=False,
+        )
+    return mask.expand(reference.shape[0], 1, reference.shape[-2], reference.shape[-1]).clamp(0.0, 1.0)
+
+
+def save_mask_image(mask: torch.Tensor, path: str) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    image = mask.detach().float()[0, 0].clamp(0.0, 1.0)
+    array = (image.cpu().numpy() * 255.0).round().astype("uint8")
+    Image.fromarray(array, mode="L").save(path)
+
+
 def _cfg_v_sd3_with_grad(
     pipe,
     latents: torch.Tensor,
@@ -214,6 +376,17 @@ def _cfg_v_sd3_with_grad(
     guidance_scale: float,
     t: torch.Tensor,
 ) -> torch.Tensor:
+    if negative_prompt_embeds is None or negative_pooled_prompt_embeds is None:
+        timestep = t.expand(latents.shape[0])
+        return pipe.transformer(
+            hidden_states=latents,
+            timestep=timestep,
+            encoder_hidden_states=prompt_embeds,
+            pooled_projections=pooled_prompt_embeds,
+            joint_attention_kwargs=None,
+            return_dict=False,
+        )[0]
+
     timestep = t.expand(latents.shape[0] * 2)
     latent_model_input = torch.cat([latents, latents], dim=0)
     prompt_input = torch.cat([negative_prompt_embeds, prompt_embeds], dim=0)
@@ -252,9 +425,10 @@ def invert_source_sd3(
     Traverses the active timesteps in reverse (ascending sigma) so the
     inverted latent z_T lives at the same noise level where editing starts.
 
-    If return_trajectory=True, also returns a list of intermediate source
-    latents ordered from low-noise (x_src) to high-noise (z_T), one entry
-    per active timestep. Index 0 = x_src, index -1 = z_T.
+    If return_trajectory=True, also returns a timestep-keyed dictionary of
+    intermediate source latents. Key 0 is the original source latent, and each
+    active scheduler timestep key stores the latent reached by source
+    inversion at that noise level.
     """
     active_ts = [t for i, t in enumerate(timesteps) if T_steps - i <= n_max]
     inv_ts = list(reversed(active_ts))
@@ -263,8 +437,11 @@ def invert_source_sd3(
     latents_dtype = x_src.dtype
 
     trajectory: list[torch.Tensor] = []
+    trajectory_by_timestep: dict[int, torch.Tensor] = {}
     if return_trajectory:
-        trajectory.append(z_t.clone().to(latents_dtype))  # index 0: x_src
+        source_latent = z_t.clone().to(latents_dtype)
+        trajectory.append(source_latent)  # index 0: x_src
+        trajectory_by_timestep[0] = source_latent
 
     for i, t in enumerate(inv_ts[:-1]):
         t_curr = t / 1000
@@ -277,11 +454,15 @@ def invert_source_sd3(
         )
         z_t = z_t + (t_next - t_curr).to(torch.float32) * v.to(torch.float32)
         if return_trajectory:
-            trajectory.append(z_t.clone().to(latents_dtype))
+            source_latent = z_t.clone().to(latents_dtype)
+            trajectory.append(source_latent)
+            trajectory_by_timestep[int(inv_ts[i + 1].item())] = source_latent
 
     z_T = z_t.to(latents_dtype)
     if return_trajectory:
-        return z_T, trajectory  # trajectory[-1] == z_T
+        if active_ts:
+            trajectory_by_timestep[int(active_ts[0].item())] = z_T
+        return z_T, trajectory_by_timestep
     return z_T
 
 
@@ -293,8 +474,10 @@ def HRecSD3Edit(
     tar_prompt: str,
     negative_prompt: str,
     T_steps: int = 28,
-    src_guidance_scale: float = 3.5,
+    src_guidance_scale: float = 1.0,
     tar_guidance_scale: float = 10.5,
+    inversion_guidance_scale: Optional[float] = None,
+    base_guidance_scale: Optional[float] = None,
     n_max: int = 24,
     eta: float = 0.8,
     rec_guidance_scale: float = 0.0,
@@ -328,6 +511,31 @@ def HRecSD3Edit(
     alpha_schedule: str = "constant",
     beta_max: Optional[float] = None,
     beta_schedule: str = "constant",
+    velocity_conversion_mode: str = "linear_path",
+    linear_path_t_min: float = 0.05,
+    rec_stop_timestep: float = 0.08,
+    trajectory_preserve_scale: float = 0.0,
+    trajectory_subject_preserve_scale: float = 0.0,
+    edit_initial_noise_scale: float = 0.0,
+    edit_initial_noise_region: str = "core",
+    attention_mask_mode: str = "changed_union",
+    attention_mask_target_words: list[str] | None = None,
+    attention_mask_source_words: list[str] | None = None,
+    attention_mask_subject_threshold: float = 0.48,
+    attention_mask_core_threshold: float = 0.72,
+    mask_output_dir: str | None = None,
+    edit_mask_dilate_kernel: int = 0,
+    edit_mask_smooth_kernel: int = 0,
+    edit_mask_component_threshold: float = 0.0,
+    edit_mask_keep_components: int = 0,
+    edit_mask_component_y_min: float | None = None,
+    edit_mask_component_y_max: float | None = None,
+    edit_mask_shift_y: float = 0.0,
+    edit_mask_shift_x: float = 0.0,
+    edit_mask_box: tuple[float, float, float, float] | None = None,
+    edit_mask_box_mode: str = "replace",
+    external_edit_mask_path: str | None = None,
+    external_edit_mask_mode: str = "replace",
     mask_blend: bool = False,
     log_every: int = 0,
     stats_output_path: Optional[str] = None,
@@ -336,17 +544,34 @@ def HRecSD3Edit(
     RF image editing via source inversion + controlled reverse ODE.
 
     The active implementation follows the project logic:
-    - a target-conditioned RF base prior
+    - a source-conditioned RF base prior
     - a separate reconstruction guidance branch
     - a separate editing guidance branch
     both defined from the same clean estimate x_hat_0.
+
+    The current implementation uses energy-inspired surrogate velocity fields.
+    Some branches are exact autograd gradients, while others are manually
+    constructed velocity surrogates derived from clean-space displacement or
+    feature-space differences.
     """
     device = x_src.device
     timesteps, T_steps = retrieve_timesteps(scheduler, T_steps, device, timesteps=None)
     pipe._num_timesteps = len(timesteps)
+    if inversion_guidance_scale is None:
+        inversion_guidance_scale = src_guidance_scale
+    if base_guidance_scale is None:
+        base_guidance_scale = src_guidance_scale
+    if edit_src_cfg_scale is None:
+        edit_src_cfg_scale = base_guidance_scale
+    source_encode_guidance_scale = max(
+        float(inversion_guidance_scale),
+        float(base_guidance_scale),
+        float(edit_src_cfg_scale),
+        1.0,
+    )
 
     with torch.no_grad():
-        pipe._guidance_scale = src_guidance_scale
+        pipe._guidance_scale = source_encode_guidance_scale
         (
             src_prompt_embeds,
             src_negative_prompt_embeds,
@@ -378,36 +603,30 @@ def HRecSD3Edit(
 
     # --- Source inversion: forward ODE x_src → z_T ---
     print("[inversion] running source forward ODE ...")
-    z_T = invert_source_sd3(
+    inversion_result = invert_source_sd3(
         pipe=pipe,
         x_src=x_src,
         negative_prompt_embeds=src_negative_prompt_embeds,
         prompt_embeds=src_prompt_embeds,
         negative_pooled_prompt_embeds=src_negative_pooled_prompt_embeds,
         pooled_prompt_embeds=src_pooled_prompt_embeds,
-        guidance_scale=src_guidance_scale,
+        guidance_scale=inversion_guidance_scale,
         timesteps=timesteps,
         T_steps=T_steps,
         n_max=n_max,
+        return_trajectory=trajectory_preserve_scale > 0.0 or trajectory_subject_preserve_scale > 0.0,
     )
+    if trajectory_preserve_scale > 0.0 or trajectory_subject_preserve_scale > 0.0:
+        z_T, source_trajectory_by_timestep = inversion_result
+    else:
+        z_T = inversion_result
+        source_trajectory_by_timestep = {}
     print("[inversion] done.")
 
     if alpha_max is None:
         alpha_max = rec_guidance_scale
-    if edit_src_cfg_scale is None:
-        edit_src_cfg_scale = src_guidance_scale
     if beta_max is None:
-        beta_max = max(
-            edit_hedit_guidance_scale,
-            edit_guidance_scale,
-            edit_region_guidance_scale,
-            edit_target_guidance_scale,
-            edit_source_guidance_scale,
-            edit_clip_guidance_scale,
-            edit_text_guidance_scale,
-            edit_dds_guidance_scale,
-            edit_app_guidance_scale,
-        )
+        beta_max = 1.0
 
     # Extract attention mask for soft E_rec (optional)
     M_edit = None
@@ -429,6 +648,10 @@ def HRecSD3Edit(
         or edit_text_guidance_scale > 0.0
         or edit_dds_guidance_scale > 0.0
         or edit_app_guidance_scale > 0.0
+        or trajectory_preserve_scale > 0.0
+        or trajectory_subject_preserve_scale > 0.0
+        or edit_initial_noise_scale > 0.0
+        or external_edit_mask_path is not None
     ):
         with torch.no_grad():
             t_mid = timesteps[len(timesteps) // 2]
@@ -442,10 +665,112 @@ def HRecSD3Edit(
                 tar_prompt_embeds=tar_prompt_embeds,
                 tar_pooled_embeds=tar_pooled_prompt_embeds,
                 t=t_mid,
+                mode=attention_mask_mode,
+                target_token_words=attention_mask_target_words,
+                source_token_words=attention_mask_source_words,
+                subject_threshold=attention_mask_subject_threshold,
+                core_threshold=attention_mask_core_threshold,
             )
             M_edit = masks["subject"].to(dtype=x_src.dtype)
             M_core = masks["core"].to(dtype=x_src.dtype)
             M_preserve = masks["preserve"].to(dtype=x_src.dtype)
+            if (
+                edit_mask_keep_components > 0
+                or edit_mask_component_y_min is not None
+                or edit_mask_component_y_max is not None
+            ):
+                component_threshold = edit_mask_component_threshold if edit_mask_component_threshold > 0.0 else 0.5
+                M_edit = filter_spatial_mask_components(
+                    M_edit,
+                    threshold=component_threshold,
+                    keep_components=edit_mask_keep_components,
+                    center_y_min=edit_mask_component_y_min,
+                    center_y_max=edit_mask_component_y_max,
+                ).clamp(0.0, 1.0)
+                M_core = filter_spatial_mask_components(
+                    M_core,
+                    threshold=component_threshold,
+                    keep_components=edit_mask_keep_components,
+                    center_y_min=edit_mask_component_y_min,
+                    center_y_max=edit_mask_component_y_max,
+                ).clamp(0.0, 1.0)
+                M_core = torch.minimum(M_core, M_edit)
+                M_preserve = (1.0 - M_edit).clamp(0.0, 1.0)
+            if edit_mask_shift_y != 0.0 or edit_mask_shift_x != 0.0:
+                M_edit = translate_spatial_mask(M_edit, shift_y=edit_mask_shift_y, shift_x=edit_mask_shift_x)
+                M_core = translate_spatial_mask(M_core, shift_y=edit_mask_shift_y, shift_x=edit_mask_shift_x)
+                M_core = torch.minimum(M_core, M_edit)
+                M_preserve = (1.0 - M_edit).clamp(0.0, 1.0)
+            if edit_mask_dilate_kernel > 1:
+                M_edit = dilate_spatial_mask(M_edit, kernel_size=edit_mask_dilate_kernel).clamp(0.0, 1.0)
+                M_core = dilate_spatial_mask(M_core, kernel_size=edit_mask_dilate_kernel).clamp(0.0, 1.0)
+                M_core = torch.minimum(M_core, M_edit)
+                M_preserve = (1.0 - M_edit).clamp(0.0, 1.0)
+            if edit_mask_smooth_kernel > 1:
+                M_edit = smooth_spatial_mask(M_edit, kernel_size=edit_mask_smooth_kernel).clamp(0.0, 1.0)
+                M_core = smooth_spatial_mask(M_core, kernel_size=edit_mask_smooth_kernel).clamp(0.0, 1.0)
+                M_core = torch.minimum(M_core, M_edit)
+                M_preserve = (1.0 - M_edit).clamp(0.0, 1.0)
+            if edit_mask_box is not None:
+                box_mask = normalized_box_mask_like(M_edit, edit_mask_box)
+                if edit_mask_box_mode == "replace":
+                    M_edit = box_mask
+                    M_core = box_mask
+                elif edit_mask_box_mode == "intersect":
+                    M_edit = M_edit * box_mask
+                    M_core = M_core * box_mask
+                elif edit_mask_box_mode == "union":
+                    M_edit = torch.maximum(M_edit, box_mask)
+                    M_core = torch.maximum(M_core, box_mask)
+                else:
+                    raise ValueError(f"Unsupported edit_mask_box_mode: {edit_mask_box_mode}")
+                M_core = torch.minimum(M_core, M_edit)
+                M_preserve = (1.0 - M_edit).clamp(0.0, 1.0)
+            external_mask = None
+            if external_edit_mask_path is not None:
+                external_mask = load_external_mask_like(M_edit, external_edit_mask_path)
+                if external_edit_mask_mode == "replace":
+                    M_edit = external_mask
+                    M_core = external_mask
+                elif external_edit_mask_mode == "intersect":
+                    M_edit = M_edit * external_mask
+                    M_core = M_core * external_mask
+                elif external_edit_mask_mode == "union":
+                    M_edit = torch.maximum(M_edit, external_mask)
+                    M_core = torch.maximum(M_core, external_mask)
+                else:
+                    raise ValueError(f"Unsupported external_edit_mask_mode: {external_edit_mask_mode}")
+                M_core = torch.minimum(M_core, M_edit)
+                M_preserve = (1.0 - M_edit).clamp(0.0, 1.0)
+            if mask_output_dir is not None:
+                for name, mask in masks.items():
+                    save_mask_image(mask.to(dtype=torch.float32), os.path.join(mask_output_dir, f"{name}.png"))
+                save_mask_image(M_edit.to(dtype=torch.float32), os.path.join(mask_output_dir, "subject_final.png"))
+                save_mask_image(M_core.to(dtype=torch.float32), os.path.join(mask_output_dir, "core_final.png"))
+                save_mask_image(M_preserve.to(dtype=torch.float32), os.path.join(mask_output_dir, "preserve_final.png"))
+                if external_mask is not None:
+                    save_mask_image(
+                        external_mask.to(dtype=torch.float32),
+                        os.path.join(mask_output_dir, "external_edit_mask.png"),
+                    )
+            if edit_initial_noise_scale > 0.0:
+                if edit_initial_noise_region == "core":
+                    noise_gate = M_core
+                elif edit_initial_noise_region == "subject":
+                    noise_gate = M_edit
+                else:
+                    raise ValueError(f"Unsupported edit_initial_noise_region: {edit_initial_noise_region}")
+                noise_gate = noise_gate.to(device=z_T.device, dtype=torch.float32)
+                if noise_gate.shape[-2:] != z_T.shape[-2:]:
+                    noise_gate = torch.nn.functional.interpolate(
+                        noise_gate,
+                        size=z_T.shape[-2:],
+                        mode="bilinear",
+                        align_corners=False,
+                    )
+                noise_gate = (float(edit_initial_noise_scale) * noise_gate).clamp(0.0, 1.0)
+                edit_noise = torch.randn_like(z_T, dtype=torch.float32)
+                z_T = ((1.0 - noise_gate) * z_T.to(torch.float32) + noise_gate * edit_noise).to(z_T.dtype)
         m_subject = M_edit.squeeze()
         m_core = M_core.squeeze() if M_core is not None else None
         print(
@@ -494,6 +819,8 @@ def HRecSD3Edit(
 
         sigma = t_i.clamp(min=1e-4)
         alpha_t = get_schedule_value(alpha_schedule, i, len(timesteps), alpha_max)
+        if rec_stop_timestep > 0.0 and float(t_i.item()) < rec_stop_timestep:
+            alpha_t = 0.0
         beta_t = get_schedule_value(beta_schedule, i, len(timesteps), beta_max)
         if len(timesteps) <= 1:
             edit_stage_progress = 1.0
@@ -528,7 +855,7 @@ def HRecSD3Edit(
                 prompt_embeds=src_prompt_embeds,
                 negative_pooled_prompt_embeds=src_negative_pooled_prompt_embeds,
                 pooled_prompt_embeds=src_pooled_prompt_embeds,
-                guidance_scale=src_guidance_scale,
+                guidance_scale=base_guidance_scale,
                 t=t,
             )
 
@@ -572,12 +899,15 @@ def HRecSD3Edit(
             rec_terms = reconstruction_velocity_surrogate_total(
                 x0_pred=x0_src_step,
                 x_src=x_src.to(torch.float32),
+                t_scalar=t_i,
                 M_preserve=None if M_preserve is None else M_preserve.to(dtype=torch.float32, device=z_t.device),
                 current_feature_map=current_rec_feature_map,
                 source_feature_map=source_rec_feature_map,
                 lambda_latent=1.0,
                 lambda_struct=0.0,
                 lambda_feature=struct_guidance_scale,
+                velocity_conversion_mode=velocity_conversion_mode,
+                velocity_t_min=linear_path_t_min,
             )
             rec_energy_terms = reconstruction_energy_total(
                 x0_pred=x0_src_step,
@@ -659,6 +989,7 @@ def HRecSD3Edit(
                     lambda_region=edit_region_guidance_scale,
                     lambda_target=edit_target_guidance_scale,
                     lambda_source=edit_source_guidance_scale,
+                    velocity_t_min=linear_path_t_min,
                 )
                 edit_energy_terms = editing_energy_total(
                     x0_tar=x0_tar,
@@ -798,7 +1129,7 @@ def HRecSD3Edit(
                     prompt_embeds=src_prompt_embeds,
                     negative_pooled_prompt_embeds=src_negative_pooled_prompt_embeds,
                     pooled_prompt_embeds=src_pooled_prompt_embeds,
-                    guidance_scale=src_guidance_scale,
+                    guidance_scale=edit_src_cfg_scale,
                     t=t,
                 )
                 dds_target = 0.5 * (v_tar_noisy - noise).pow(2)
@@ -905,12 +1236,108 @@ def HRecSD3Edit(
             v_edit_total = beta_t * edit_bound_scale * (v_edit_total / edit_rms)
         v_total = v_base + v_rec + v_edit_total
         total_velocity_norm = v_total.norm().item()
+        next_z_t = z_t.to(torch.float32) + (t_im1 - t_i).to(torch.float32) * v_total
+        trajectory_preserve_norm = 0.0
+        trajectory_preserve_weight = 0.0
+        if trajectory_preserve_scale > 0.0 or trajectory_subject_preserve_scale > 0.0:
+            next_timestep_key = int(timesteps[i + 1].item()) if i + 1 < len(timesteps) else 0
+            source_next = source_trajectory_by_timestep.get(next_timestep_key)
+            if source_next is not None:
+                trajectory_gate = torch.zeros(
+                    next_z_t.shape[0],
+                    1,
+                    next_z_t.shape[-2],
+                    next_z_t.shape[-1],
+                    device=next_z_t.device,
+                    dtype=torch.float32,
+                )
+                if rec_gate is None:
+                    preserve_gate = torch.ones_like(trajectory_gate)
+                else:
+                    preserve_gate = rec_gate.to(device=next_z_t.device, dtype=torch.float32)
+                    if preserve_gate.shape[-2:] != next_z_t.shape[-2:]:
+                        preserve_gate = torch.nn.functional.interpolate(
+                            preserve_gate,
+                            size=next_z_t.shape[-2:],
+                            mode="bilinear",
+                            align_corners=False,
+                        )
+                if trajectory_preserve_scale > 0.0:
+                    trajectory_gate = trajectory_gate + float(trajectory_preserve_scale) * preserve_gate
+                if trajectory_subject_preserve_scale > 0.0 and edit_gate is not None and core_gate is not None:
+                    subject_gate_for_traj = edit_gate.to(device=next_z_t.device, dtype=torch.float32)
+                    core_gate_for_traj = core_gate.to(device=next_z_t.device, dtype=torch.float32)
+                    if subject_gate_for_traj.shape[-2:] != next_z_t.shape[-2:]:
+                        subject_gate_for_traj = torch.nn.functional.interpolate(
+                            subject_gate_for_traj,
+                            size=next_z_t.shape[-2:],
+                            mode="bilinear",
+                            align_corners=False,
+                        )
+                        core_gate_for_traj = torch.nn.functional.interpolate(
+                            core_gate_for_traj,
+                            size=next_z_t.shape[-2:],
+                            mode="bilinear",
+                            align_corners=False,
+                        )
+                    subject_ring_for_traj = (subject_gate_for_traj - core_gate_for_traj).clamp_min(0.0)
+                    trajectory_gate = (
+                        trajectory_gate
+                        + float(trajectory_subject_preserve_scale) * subject_ring_for_traj
+                    )
+                trajectory_weight = float(trajectory_gate.max().item())
+                source_next = source_next.to(device=next_z_t.device, dtype=torch.float32)
+                trajectory_delta = trajectory_gate.clamp(0.0, 1.0) * (source_next - next_z_t)
+                next_z_t = next_z_t + trajectory_delta
+                trajectory_preserve_norm = trajectory_delta.norm().item()
+                trajectory_preserve_weight = trajectory_weight
+        edit_base_for_cos = torch.zeros_like(v_base) if v_edit_terms is None else v_edit_terms["base"]
+        edit_anchor_for_cos = torch.zeros_like(v_base) if v_edit_terms is None else v_edit_terms["anchor"]
+        edit_region_for_cos = torch.zeros_like(v_base) if v_edit_terms is None else v_edit_terms["region"]
         step_stat = {
             "step": float(i),
             "t": float(t_i.item()),
             "sigma": float(sigma.item()),
+            "alpha_max": float(alpha_max),
             "alpha_t": float(alpha_t),
+            "beta_max": float(beta_max),
             "beta_t": float(beta_t),
+            "velocity_conversion_mode": velocity_conversion_mode,
+            "src_guidance_scale": float(src_guidance_scale),
+            "inversion_guidance_scale": float(inversion_guidance_scale),
+            "base_guidance_scale": float(base_guidance_scale),
+            "tar_guidance_scale": float(tar_guidance_scale),
+            "edit_src_cfg_scale": float(edit_src_cfg_scale),
+            "linear_path_t_min": float(linear_path_t_min),
+            "rec_stop_timestep": float(rec_stop_timestep),
+            "trajectory_preserve_scale": float(trajectory_preserve_scale),
+            "trajectory_subject_preserve_scale": float(trajectory_subject_preserve_scale),
+            "edit_initial_noise_scale": float(edit_initial_noise_scale),
+            "edit_initial_noise_region": edit_initial_noise_region,
+            "trajectory_preserve_weight": float(trajectory_preserve_weight),
+            "attention_mask_mode": attention_mask_mode,
+            "attention_mask_subject_threshold": float(attention_mask_subject_threshold),
+            "attention_mask_core_threshold": float(attention_mask_core_threshold),
+            "edit_mask_dilate_kernel": float(edit_mask_dilate_kernel),
+            "edit_mask_smooth_kernel": float(edit_mask_smooth_kernel),
+            "edit_mask_component_threshold": float(edit_mask_component_threshold),
+            "edit_mask_keep_components": float(edit_mask_keep_components),
+            "edit_mask_component_y_min": None
+            if edit_mask_component_y_min is None
+            else float(edit_mask_component_y_min),
+            "edit_mask_component_y_max": None
+            if edit_mask_component_y_max is None
+            else float(edit_mask_component_y_max),
+            "edit_mask_shift_y": float(edit_mask_shift_y),
+            "edit_mask_shift_x": float(edit_mask_shift_x),
+            "edit_mask_box_mode": edit_mask_box_mode,
+            "external_edit_mask_path": external_edit_mask_path,
+            "external_edit_mask_mode": external_edit_mask_mode,
+            "edit_hedit_guidance_scale": float(edit_hedit_guidance_scale),
+            "edit_guidance_scale": float(edit_guidance_scale),
+            "edit_region_guidance_scale": float(edit_region_guidance_scale),
+            "edit_clip_guidance_scale": float(edit_clip_guidance_scale),
+            "edit_text_guidance_scale": float(edit_text_guidance_scale),
             "base_edit_norm": float(base_edit_norm),
             "edit_guidance_norm": float(edit_guidance_norm),
             "clip_guidance_norm": float(clip_guidance_norm),
@@ -918,6 +1345,7 @@ def HRecSD3Edit(
             "dds_guidance_norm": float(dds_guidance_norm),
             "app_guidance_norm": float(app_guidance_norm),
             "rec_guidance_norm": float(rec_guidance_norm),
+            "trajectory_preserve_norm": float(trajectory_preserve_norm),
             "total_velocity_norm": float(total_velocity_norm),
             "rec_energy": 0.0 if rec_energy_terms is None else float(rec_energy_terms["latent"].item()),
             "struct_energy": 0.0 if rec_energy_terms is None else float(rec_energy_terms["feature"].item()),
@@ -961,6 +1389,11 @@ def HRecSD3Edit(
             "edit_source_velocity_norm": 0.0
             if v_edit_terms is None
             else float(v_edit_terms["source"].norm().item()),
+            "cos_base_anchor": cosine_safe(edit_base_for_cos, edit_anchor_for_cos),
+            "cos_base_region": cosine_safe(edit_base_for_cos, edit_region_for_cos),
+            "cos_anchor_region": cosine_safe(edit_anchor_for_cos, edit_region_for_cos),
+            "cos_rec_base": cosine_safe(v_rec, v_base),
+            "cos_rec_edit_total": cosine_safe(v_rec, v_edit_total),
         }
         step_stats.append(step_stat)
 
@@ -978,6 +1411,7 @@ def HRecSD3Edit(
                 f"|v_dds|={step_stat['dds_guidance_norm']:.4f} "
                 f"|v_app|={step_stat['app_guidance_norm']:.4f} "
                 f"|v_rec|={step_stat['rec_guidance_norm']:.4f} "
+                f"|traj|={step_stat['trajectory_preserve_norm']:.4f} "
                 f"|v_total|={step_stat['total_velocity_norm']:.4f} "
                 f"E_rec={step_stat['rec_energy']:.6f} "
                 f"E_struct={step_stat['struct_energy']:.6f} "
@@ -999,8 +1433,7 @@ def HRecSD3Edit(
                     f"E_app={step_stat['app_energy']:.6f}"
             )
 
-        z_t = z_t.to(torch.float32)
-        z_t = z_t + (t_im1 - t_i).to(torch.float32) * v_total
+        z_t = next_z_t.to(torch.float32)
         if mask_blend and rec_gate is not None and preserve_blend_scale > 0.0:
             blend_start_idx = int(preserve_blend_start_timestep * len(timesteps))
             if i >= blend_start_idx:

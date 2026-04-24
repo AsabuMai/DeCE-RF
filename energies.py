@@ -1,7 +1,49 @@
 from __future__ import annotations
 
+from typing import Literal
+
 import torch
 import torch.nn.functional as F
+
+
+VelocityConversionMode = Literal["legacy", "linear_path"]
+
+
+def expand_t_like(t_scalar: torch.Tensor, target: torch.Tensor, eps: float = 1e-3) -> torch.Tensor:
+    if not torch.is_tensor(t_scalar):
+        t_scalar = torch.tensor(t_scalar, device=target.device, dtype=target.dtype)
+    t_scalar = t_scalar.to(device=target.device, dtype=target.dtype).clamp_min(eps)
+    while t_scalar.ndim < target.ndim:
+        t_scalar = t_scalar.view(*t_scalar.shape, 1)
+    return t_scalar
+
+
+def clean_delta_to_velocity(
+    delta_x0: torch.Tensor,
+    t_scalar: torch.Tensor,
+    eps: float = 1e-3,
+) -> torch.Tensor:
+    """
+    Convert a desired clean-estimate displacement into a velocity correction.
+
+    RF linear path convention:
+        x0_hat = x_t - t * v
+
+    If v' = v + u, then:
+        x0_hat' - x0_hat = -t * u
+
+    Therefore:
+        u = -delta_x0 / t
+    """
+    t = expand_t_like(t_scalar, delta_x0, eps=eps)
+    return -delta_x0 / t
+
+
+def cosine_safe(a: torch.Tensor, b: torch.Tensor, eps: float = 1e-8) -> float:
+    a_flat = a.detach().float().reshape(-1)
+    b_flat = b.detach().float().reshape(-1)
+    denom = a_flat.norm() * b_flat.norm() + eps
+    return float(torch.dot(a_flat, b_flat) / denom)
 
 
 def _align_like(reference: torch.Tensor, tensor: torch.Tensor, mode: str = "nearest") -> torch.Tensor:
@@ -140,9 +182,12 @@ def reconstruction_energy_multiscale(
 def reconstruction_velocity_surrogate_multiscale(
     x0_pred: torch.Tensor,
     x_src: torch.Tensor,
+    t_scalar: torch.Tensor | None = None,
     scales: tuple[int, ...] = (1, 2, 4),
     upsample_mode: str = "nearest",
     mask: torch.Tensor = None,
+    velocity_conversion_mode: VelocityConversionMode = "linear_path",
+    velocity_t_min: float = 1e-3,
 ) -> torch.Tensor:
     """
     Cheap surrogate for -∇E_rec in x_hat_0 space.
@@ -171,7 +216,16 @@ def reconstruction_velocity_surrogate_multiscale(
             )
         )
 
-    v = -torch.stack(residuals, dim=0).mean(dim=0)
+    residual = torch.stack(residuals, dim=0).mean(dim=0)
+    if velocity_conversion_mode == "legacy":
+        v = -residual
+    elif velocity_conversion_mode == "linear_path":
+        if t_scalar is None:
+            raise ValueError("t_scalar is required for linear_path reconstruction velocity conversion")
+        # Desired clean-space displacement is x_src - x0_pred == -residual.
+        v = clean_delta_to_velocity(-residual, t_scalar, eps=velocity_t_min)
+    else:
+        raise ValueError(f"Unsupported velocity_conversion_mode: {velocity_conversion_mode}")
     if mask is not None:
         v = v * mask
     return v
@@ -282,6 +336,7 @@ def reconstruction_energy_total(
 def reconstruction_velocity_surrogate_total(
     x0_pred: torch.Tensor,
     x_src: torch.Tensor,
+    t_scalar: torch.Tensor | None = None,
     M_preserve: torch.Tensor | None = None,
     current_structure_map: torch.Tensor | None = None,
     source_structure_map: torch.Tensor | None = None,
@@ -290,6 +345,8 @@ def reconstruction_velocity_surrogate_total(
     lambda_latent: float = 1.0,
     lambda_struct: float = 0.5,
     lambda_feature: float = 0.5,
+    velocity_conversion_mode: VelocityConversionMode = "linear_path",
+    velocity_t_min: float = 1e-3,
 ) -> dict[str, torch.Tensor]:
     """
     Unified reconstruction-side surrogate velocity decomposition.
@@ -314,7 +371,10 @@ def reconstruction_velocity_surrogate_total(
     v_latent = reconstruction_velocity_surrogate_multiscale(
         x0_pred,
         x_src,
+        t_scalar=t_scalar,
         mask=M_preserve,
+        velocity_conversion_mode=velocity_conversion_mode,
+        velocity_t_min=velocity_t_min,
     )
     v_struct = torch.zeros_like(v_latent)
     v_feature = torch.zeros_like(v_latent)
@@ -456,13 +516,7 @@ def editing_velocity_surrogate_target_anchor(
     if mask is not None:
         delta = delta * mask
 
-    if not torch.is_tensor(t_scalar):
-        t_scalar = torch.tensor(t_scalar, device=x0_tar.device, dtype=x0_tar.dtype)
-    t_scalar = t_scalar.to(device=x0_tar.device, dtype=x0_tar.dtype).clamp_min(eps)
-    while t_scalar.ndim < delta.ndim:
-        t_scalar = t_scalar.view(*t_scalar.shape, 1)
-
-    return boost * (delta / t_scalar)
+    return boost * clean_delta_to_velocity(delta, t_scalar, eps=eps)
 
 
 def editing_velocity_surrogate_region_delta(
@@ -499,12 +553,7 @@ def editing_velocity_surrogate_region_delta(
     if M_edit is not None:
         delta = delta * M_edit
 
-    if not torch.is_tensor(t_scalar):
-        t_scalar = torch.tensor(t_scalar, device=x0_tar.device, dtype=x0_tar.dtype)
-    t_scalar = t_scalar.to(device=x0_tar.device, dtype=x0_tar.dtype).clamp_min(eps)
-    while t_scalar.ndim < delta.ndim:
-        t_scalar = t_scalar.view(*t_scalar.shape, 1)
-    return delta / t_scalar
+    return clean_delta_to_velocity(delta, t_scalar, eps=eps)
 
 
 def editing_velocity_surrogate_target_attract(
@@ -612,6 +661,7 @@ def editing_velocity_surrogate_total(
     lambda_region: float = 0.0,
     lambda_target: float = 0.0,
     lambda_source: float = 0.0,
+    velocity_t_min: float = 1e-3,
 ) -> dict[str, torch.Tensor]:
     """
     Unified editing-side surrogate velocity decomposition.
@@ -633,12 +683,14 @@ def editing_velocity_surrogate_total(
         x0_src=x0_src,
         t_scalar=t_scalar,
         mask=M_edit,
+        eps=velocity_t_min,
     )
     v_region = editing_velocity_surrogate_region_delta(
         x0_tar=x0_tar,
         x0_src=x0_src,
         t_scalar=t_scalar,
         M_edit=M_edit,
+        eps=velocity_t_min,
     )
     v_target = torch.zeros_like(base_edit_velocity)
     v_source = torch.zeros_like(base_edit_velocity)

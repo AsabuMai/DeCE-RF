@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
+import subprocess
 
 import PIL.Image
 import torch
@@ -25,8 +27,25 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--seed", type=int, default=10)
     parser.add_argument("--num-inference-steps", type=int, default=28)
-    parser.add_argument("--src-guidance-scale", type=float, default=3.5)
+    parser.add_argument(
+        "--src-guidance-scale",
+        type=float,
+        default=1.0,
+        help="Legacy source guidance default used by inversion/base unless the split source CFG args are set.",
+    )
     parser.add_argument("--tar-guidance-scale", type=float, default=10.5)
+    parser.add_argument(
+        "--inversion-guidance-scale",
+        type=float,
+        default=None,
+        help="Optional source CFG used only for source inversion. Defaults to --src-guidance-scale.",
+    )
+    parser.add_argument(
+        "--base-guidance-scale",
+        type=float,
+        default=None,
+        help="Optional source CFG used only for the reverse ODE base prior. Defaults to --src-guidance-scale.",
+    )
     parser.add_argument("--n-max", type=int, default=24)
     parser.add_argument("--eta", type=float, default=0.8)
     parser.add_argument("--rec-guidance-scale", type=float, default=0.0)
@@ -60,8 +79,191 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--alpha-schedule", type=str, default="constant")
     parser.add_argument("--beta-max", type=float, default=None)
     parser.add_argument("--beta-schedule", type=str, default="constant")
+    parser.add_argument(
+        "--velocity-conversion-mode",
+        type=str,
+        choices=("legacy", "linear_path"),
+        default="linear_path",
+        help="How clean-space displacement surrogates are converted into velocity corrections.",
+    )
+    parser.add_argument(
+        "--linear-path-t-min",
+        type=float,
+        default=0.05,
+        help="Minimum denominator for linear-path clean-delta-to-velocity conversion in image runs.",
+    )
+    parser.add_argument(
+        "--rec-stop-timestep",
+        type=float,
+        default=0.08,
+        help="Disable reconstruction guidance below this normalized timestep to avoid low-t blow-up.",
+    )
+    parser.add_argument(
+        "--trajectory-preserve-scale",
+        type=float,
+        default=0.0,
+        help=(
+            "Blend preserve regions toward the saved source inversion trajectory "
+            "after each reverse ODE step. 0 disables trajectory anchoring."
+        ),
+    )
+    parser.add_argument(
+        "--trajectory-subject-preserve-scale",
+        type=float,
+        default=0.0,
+        help=(
+            "Additionally blend the attention subject ring (subject minus core) "
+            "toward the source trajectory. This helps local edits keep identity "
+            "while leaving the high-confidence core editable."
+        ),
+    )
+    parser.add_argument(
+        "--edit-initial-noise-scale",
+        type=float,
+        default=0.0,
+        help=(
+            "Blend the initial inverted latent toward random noise inside the "
+            "attention edit region. Useful for local insertions that need more "
+            "generation freedom than source inversion provides."
+        ),
+    )
+    parser.add_argument(
+        "--edit-initial-noise-region",
+        type=str,
+        choices=("core", "subject"),
+        default="core",
+        help="Which attention mask region receives --edit-initial-noise-scale.",
+    )
+    parser.add_argument(
+        "--attention-mask-mode",
+        type=str,
+        choices=("changed_union", "target_changed", "subject_union", "source_subject", "target_subject"),
+        default="changed_union",
+        help="Which attention map is converted into the editable mask.",
+    )
+    parser.add_argument(
+        "--attention-mask-target-words",
+        type=str,
+        default=None,
+        help=(
+            "Optional comma-separated target prompt words used for token attention. "
+            "Defaults to the changed words inferred from source/target prompts."
+        ),
+    )
+    parser.add_argument(
+        "--attention-mask-source-words",
+        type=str,
+        default=None,
+        help=(
+            "Optional comma-separated source prompt words used for token attention. "
+            "Defaults to the changed words inferred from source/target prompts."
+        ),
+    )
+    parser.add_argument(
+        "--attention-mask-subject-threshold",
+        type=float,
+        default=0.48,
+        help="Threshold on the normalized attention map for the editable subject mask.",
+    )
+    parser.add_argument(
+        "--attention-mask-core-threshold",
+        type=float,
+        default=0.72,
+        help="Threshold on the normalized attention map for the high-confidence edit core.",
+    )
+    parser.add_argument(
+        "--mask-output-dir",
+        type=str,
+        default=None,
+        help="Optional directory for saving attention-mask debug PNGs.",
+    )
+    parser.add_argument(
+        "--edit-mask-dilate-kernel",
+        type=int,
+        default=0,
+        help="Optionally dilate the attention-derived edit/core masks before preserve gating.",
+    )
+    parser.add_argument(
+        "--edit-mask-smooth-kernel",
+        type=int,
+        default=0,
+        help="Optionally smooth the attention-derived edit/core masks before preserve gating.",
+    )
+    parser.add_argument(
+        "--edit-mask-component-threshold",
+        type=float,
+        default=0.0,
+        help="Threshold used by optional attention-mask connected-component filtering. 0 uses 0.5.",
+    )
+    parser.add_argument(
+        "--edit-mask-keep-components",
+        type=int,
+        default=0,
+        help="Keep only the top-N attention-mask connected components by mask mass. 0 keeps all.",
+    )
+    parser.add_argument(
+        "--edit-mask-component-y-min",
+        type=float,
+        default=None,
+        help="Optional minimum normalized component center y for attention-mask component filtering.",
+    )
+    parser.add_argument(
+        "--edit-mask-component-y-max",
+        type=float,
+        default=None,
+        help="Optional maximum normalized component center y for attention-mask component filtering.",
+    )
+    parser.add_argument(
+        "--edit-mask-shift-y",
+        type=float,
+        default=0.0,
+        help="Translate the attention-derived edit/core masks vertically as a fraction of latent height.",
+    )
+    parser.add_argument(
+        "--edit-mask-shift-x",
+        type=float,
+        default=0.0,
+        help="Translate the attention-derived edit/core masks horizontally as a fraction of latent width.",
+    )
+    parser.add_argument(
+        "--edit-mask-box",
+        type=str,
+        default=None,
+        help="Optional normalized edit box as x0,y0,x1,y1. Useful for local accessory placement.",
+    )
+    parser.add_argument(
+        "--edit-mask-box-mode",
+        type=str,
+        choices=("replace", "intersect", "union"),
+        default="replace",
+        help="How --edit-mask-box combines with the attention-derived edit mask.",
+    )
+    parser.add_argument(
+        "--external-edit-mask",
+        type=str,
+        default=None,
+        help=(
+            "Optional grayscale image used as an external M_edit support. "
+            "This changes only the mask source; the RF/ODE edit dynamics are unchanged."
+        ),
+    )
+    parser.add_argument(
+        "--external-edit-mask-mode",
+        type=str,
+        choices=("replace", "intersect", "union"),
+        default="replace",
+        help="How --external-edit-mask combines with the attention-derived edit mask.",
+    )
+    parser.add_argument(
+        "--edit-field-mode",
+        type=str,
+        choices=("surrogate", "autograd"),
+        default="surrogate",
+        help="Current implementation supports the surrogate edit field mode.",
+    )
     parser.add_argument("--log-every", type=int, default=0)
     parser.add_argument("--stats-output", type=str, default=None)
+    parser.add_argument("--metadata-output", type=str, default=None)
     parser.add_argument("--mask-blend", action="store_true", default=False)
     parser.add_argument(
         "--photo-prompt-mode",
@@ -75,6 +277,18 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     return parser
+
+
+def current_git_commit() -> str | None:
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"],
+            cwd=os.path.dirname(os.path.abspath(__file__)),
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except Exception:
+        return None
 
 
 def make_photorealistic_prompt(prompt: str) -> str:
@@ -95,6 +309,25 @@ def make_photorealistic_prompt(prompt: str) -> str:
         f"A realistic wildlife photograph of {prompt.rstrip('.').lower()}, "
         "natural lighting, detailed fur, high-resolution photo."
     )
+
+
+def parse_normalized_box(value: str | None) -> tuple[float, float, float, float] | None:
+    if value is None:
+        return None
+    parts = [part.strip() for part in value.split(",")]
+    if len(parts) != 4:
+        raise ValueError("--edit-mask-box must be formatted as x0,y0,x1,y1")
+    box = tuple(float(part) for part in parts)
+    if any(coord < 0.0 or coord > 1.0 for coord in box):
+        raise ValueError("--edit-mask-box coordinates must be in [0, 1]")
+    return box
+
+
+def parse_word_list(value: str | None) -> list[str] | None:
+    if value is None:
+        return None
+    words = [word.strip().lower() for word in value.split(",") if word.strip()]
+    return words if words else None
 
 
 def load_image_latent(
@@ -118,6 +351,11 @@ def load_image_latent(
 
 def main() -> None:
     args = build_parser().parse_args()
+    if args.edit_field_mode != "surrogate":
+        raise ValueError("Only --edit-field-mode surrogate is currently implemented.")
+    edit_mask_box = parse_normalized_box(args.edit_mask_box)
+    attention_mask_target_words = parse_word_list(args.attention_mask_target_words)
+    attention_mask_source_words = parse_word_list(args.attention_mask_source_words)
     set_seed(args.seed)
 
     source_prompt = args.source_prompt
@@ -160,6 +398,8 @@ def main() -> None:
         T_steps=args.num_inference_steps,
         src_guidance_scale=args.src_guidance_scale,
         tar_guidance_scale=args.tar_guidance_scale,
+        inversion_guidance_scale=args.inversion_guidance_scale,
+        base_guidance_scale=args.base_guidance_scale,
         n_max=args.n_max,
         eta=args.eta,
         rec_guidance_scale=args.rec_guidance_scale,
@@ -193,6 +433,31 @@ def main() -> None:
         alpha_schedule=args.alpha_schedule,
         beta_max=args.beta_max,
         beta_schedule=args.beta_schedule,
+        velocity_conversion_mode=args.velocity_conversion_mode,
+        linear_path_t_min=args.linear_path_t_min,
+        rec_stop_timestep=args.rec_stop_timestep,
+        trajectory_preserve_scale=args.trajectory_preserve_scale,
+        trajectory_subject_preserve_scale=args.trajectory_subject_preserve_scale,
+        edit_initial_noise_scale=args.edit_initial_noise_scale,
+        edit_initial_noise_region=args.edit_initial_noise_region,
+        attention_mask_mode=args.attention_mask_mode,
+        attention_mask_target_words=attention_mask_target_words,
+        attention_mask_source_words=attention_mask_source_words,
+        attention_mask_subject_threshold=args.attention_mask_subject_threshold,
+        attention_mask_core_threshold=args.attention_mask_core_threshold,
+        mask_output_dir=args.mask_output_dir,
+        edit_mask_dilate_kernel=args.edit_mask_dilate_kernel,
+        edit_mask_smooth_kernel=args.edit_mask_smooth_kernel,
+        edit_mask_component_threshold=args.edit_mask_component_threshold,
+        edit_mask_keep_components=args.edit_mask_keep_components,
+        edit_mask_component_y_min=args.edit_mask_component_y_min,
+        edit_mask_component_y_max=args.edit_mask_component_y_max,
+        edit_mask_shift_y=args.edit_mask_shift_y,
+        edit_mask_shift_x=args.edit_mask_shift_x,
+        edit_mask_box=edit_mask_box,
+        edit_mask_box_mode=args.edit_mask_box_mode,
+        external_edit_mask_path=args.external_edit_mask,
+        external_edit_mask_mode=args.external_edit_mask_mode,
         log_every=args.log_every,
         stats_output_path=args.stats_output,
         mask_blend=args.mask_blend,
@@ -205,7 +470,90 @@ def main() -> None:
 
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
     image_tar[0].save(args.output)
+    metadata_output = args.metadata_output
+    if metadata_output is None:
+        root, _ = os.path.splitext(args.output)
+        metadata_output = f"{root}_metadata.json"
+    metadata = {
+        "image": args.image,
+        "source_prompt": args.source_prompt,
+        "effective_source_prompt": source_prompt,
+        "target_prompt": args.prompt,
+        "effective_target_prompt": target_prompt,
+        "output": args.output,
+        "stats_output": args.stats_output,
+        "seed": args.seed,
+        "num_inference_steps": args.num_inference_steps,
+        "n_max": args.n_max,
+        "src_guidance_scale": args.src_guidance_scale,
+        "tar_guidance_scale": args.tar_guidance_scale,
+        "inversion_guidance_scale": (
+            args.inversion_guidance_scale
+            if args.inversion_guidance_scale is not None
+            else args.src_guidance_scale
+        ),
+        "base_guidance_scale": (
+            args.base_guidance_scale
+            if args.base_guidance_scale is not None
+            else args.src_guidance_scale
+        ),
+        "edit_src_cfg_scale": (
+            args.edit_src_cfg_scale
+            if args.edit_src_cfg_scale is not None
+            else (
+                args.base_guidance_scale
+                if args.base_guidance_scale is not None
+                else args.src_guidance_scale
+            )
+        ),
+        "rec_guidance_scale": args.rec_guidance_scale,
+        "struct_guidance_scale": args.struct_guidance_scale,
+        "edit_hedit_guidance_scale": args.edit_hedit_guidance_scale,
+        "edit_guidance_scale": args.edit_guidance_scale,
+        "edit_region_guidance_scale": args.edit_region_guidance_scale,
+        "edit_target_guidance_scale": args.edit_target_guidance_scale,
+        "edit_source_guidance_scale": args.edit_source_guidance_scale,
+        "edit_clip_guidance_scale": args.edit_clip_guidance_scale,
+        "edit_text_guidance_scale": args.edit_text_guidance_scale,
+        "edit_dds_guidance_scale": args.edit_dds_guidance_scale,
+        "edit_app_guidance_scale": args.edit_app_guidance_scale,
+        "alpha_max": args.alpha_max if args.alpha_max is not None else args.rec_guidance_scale,
+        "alpha_schedule": args.alpha_schedule,
+        "beta_max": args.beta_max if args.beta_max is not None else 1.0,
+        "beta_schedule": args.beta_schedule,
+        "velocity_conversion_mode": args.velocity_conversion_mode,
+        "linear_path_t_min": args.linear_path_t_min,
+        "rec_stop_timestep": args.rec_stop_timestep,
+        "trajectory_preserve_scale": args.trajectory_preserve_scale,
+        "trajectory_subject_preserve_scale": args.trajectory_subject_preserve_scale,
+        "edit_initial_noise_scale": args.edit_initial_noise_scale,
+        "edit_initial_noise_region": args.edit_initial_noise_region,
+        "attention_mask_mode": args.attention_mask_mode,
+        "attention_mask_target_words": attention_mask_target_words,
+        "attention_mask_source_words": attention_mask_source_words,
+        "attention_mask_subject_threshold": args.attention_mask_subject_threshold,
+        "attention_mask_core_threshold": args.attention_mask_core_threshold,
+        "mask_output_dir": args.mask_output_dir,
+        "edit_mask_dilate_kernel": args.edit_mask_dilate_kernel,
+        "edit_mask_smooth_kernel": args.edit_mask_smooth_kernel,
+        "edit_mask_component_threshold": args.edit_mask_component_threshold,
+        "edit_mask_keep_components": args.edit_mask_keep_components,
+        "edit_mask_component_y_min": args.edit_mask_component_y_min,
+        "edit_mask_component_y_max": args.edit_mask_component_y_max,
+        "edit_mask_shift_y": args.edit_mask_shift_y,
+        "edit_mask_shift_x": args.edit_mask_shift_x,
+        "edit_mask_box": edit_mask_box,
+        "edit_mask_box_mode": args.edit_mask_box_mode,
+        "external_edit_mask": args.external_edit_mask,
+        "external_edit_mask_mode": args.external_edit_mask_mode,
+        "edit_field_mode": args.edit_field_mode,
+        "photo_prompt_mode": args.photo_prompt_mode,
+        "git_commit": current_git_commit(),
+    }
+    with open(metadata_output, "w", encoding="utf-8") as f:
+        json.dump(metadata, f, indent=2)
     print(f"Saved result to {args.output}")
+    print(f"Saved metadata to {metadata_output}")
 
 
 if __name__ == "__main__":
