@@ -622,6 +622,18 @@ Sunglasses ablation:
   subject-generation plus core final blending creates patch artifacts. The next
   local-edit idea should therefore separate contextual generation support from
   precise structural/attention injection, instead of only shrinking `M_edit`.
+- inspection of RF-Solver, FireFlow, ReFlex, and h-edit shows that their better
+  local placement comes from source-reference feature/attention reuse, not just
+  from a smaller mask. RF-Solver reuses source `V`, FireFlow can reuse/add
+  `Q/K/V`, ReFlex combines source latent blending with CA/SA/feature injection,
+  and h-edit commonly relies on P2P/MasaCtrl/PnP controls around the h-edit
+  update.
+- a coarse RF-compatible approximation, subject-ring source trajectory
+  blending, protects the panda face but suppresses or fragments sunglasses.
+  This means the next useful change should be SD3 transformer-level
+  source-reference attention/feature injection for the target velocity
+  evaluation, while preserving the current total dynamics
+  `xdot_t = v_src + u_rec + u_edit`.
 
 Please implement or verify the following:
 
@@ -659,9 +671,22 @@ Please implement or verify the following:
 - [x] Summarize whether each branch causes drift, overlay, or realistic replacement.
 - [x] Identify which branch is most useful for object replacement.
 - [x] Identify which branch is most useful for local insertion.
+- [x] Compare RF-Solver, FireFlow, ReFlex, FlowEdit, and h-edit mechanisms.
+
+### Next Algorithmic Work
+
+- [ ] Add an experimental SD3 source-reference attention processor.
+- [ ] Start with FireFlow-style `V` replacement/addition for selected
+      transformer layers and early edit steps.
+- [ ] Evaluate `v_tar` inside the existing RF h-edit ODE under this injected
+      processor, rather than changing the ODE formula.
+- [ ] Keep the two-mask split: broad generation support for `u_edit`, precise
+      local mask only for injection/blending diagnostics.
 
 ---
 
 ## 18. One-Sentence Next Step
 
-The next step is to convert the current prototype into a clean method-validation pipeline: fix the documentation, standardize baselines, track trajectory-level diagnostics, and use two fixed tasks to determine whether decoupled reconstruction/editing dynamics truly improves the edit-faithfulness trade-off.
+The next step is to keep the RF h-edit dynamics fixed and add SD3
+source-reference attention/feature injection, because mask and latent-trajectory
+controls alone have now hit the quality/placement trade-off on sunglasses.
