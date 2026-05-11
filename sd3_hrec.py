@@ -24,6 +24,7 @@ from energies import (
     reconstruction_velocity_surrogate_total,
 )
 from generic_support import build_generic_support
+from operation_support_v3 import build_operation_support_v3
 from schedules import get_schedule_value
 
 
@@ -1917,6 +1918,7 @@ def HRecSD3Edit(
     semantic_base_mask_path: str | None = None,
     support_score: str = "attention_x_clean",
     support_edit_operation: str = "auto",
+    support_relation: str = "auto",
     support_new_tokens: list[str] | None = None,
     support_host_tokens: list[str] | None = None,
     support_removed_tokens: list[str] | None = None,
@@ -1995,6 +1997,7 @@ def HRecSD3Edit(
         "semantic",
         "semantic_velocity",
         "generic_support",
+        "operation_support_v3",
         "structure",
         "proposal_diff",
         "auto",
@@ -2112,6 +2115,8 @@ def HRecSD3Edit(
     M_generic_support_clean = None
     M_generic_support_velocity = None
     M_generic_support_score = None
+    M_operation_support_grounding = None
+    M_operation_support_relation = None
     generic_support_stats: dict[str, float | int | str] = {}
     auto_anchor_mask = None
     auto_anchor_box = None
@@ -2146,7 +2151,16 @@ def HRecSD3Edit(
         or external_edit_mask_path is not None
         or auto_local_boxes
         or object_mask_provider
-        in {"attention", "velocity_diff", "attention_velocity", "semantic", "semantic_velocity", "generic_support", "auto"}
+        in {
+            "attention",
+            "velocity_diff",
+            "attention_velocity",
+            "semantic",
+            "semantic_velocity",
+            "generic_support",
+            "operation_support_v3",
+            "auto",
+        }
         or source_inject_mask_mode in {"edit", "core", "preserve"}
     ):
         with torch.no_grad():
@@ -2170,7 +2184,13 @@ def HRecSD3Edit(
             M_edit = masks["subject"].to(dtype=x_src.dtype)
             M_core = masks["core"].to(dtype=x_src.dtype)
             M_preserve = masks["preserve"].to(dtype=x_src.dtype)
-            if object_mask_provider in {"velocity_diff", "attention_velocity", "semantic_velocity", "generic_support"}:
+            if object_mask_provider in {
+                "velocity_diff",
+                "attention_velocity",
+                "semantic_velocity",
+                "generic_support",
+                "operation_support_v3",
+            }:
                 v_src_mid = calc_cfg_v_sd3(
                     pipe=pipe,
                     latents=x_src,
@@ -2202,7 +2222,7 @@ def HRecSD3Edit(
                     M_edit = M_velocity_object.to(dtype=x_src.dtype).clamp(0.0, 1.0)
                     M_core = M_edit
                     M_preserve = (1.0 - M_edit).clamp(0.0, 1.0)
-            if object_mask_provider == "generic_support":
+            if object_mask_provider in {"generic_support", "operation_support_v3"}:
                 object_source = masks.get("target_changed")
                 if support_new_tokens is not None:
                     new_masks = extract_attention_masks(
@@ -2262,25 +2282,53 @@ def HRecSD3Edit(
                         core_threshold=attention_mask_core_threshold,
                     )
                     removed_source = removed_masks["source_changed"]
-                generic = build_generic_support(
-                    attention_map=object_source,
-                    x_t=x_src,
-                    t=t_mid,
-                    source_velocity=v_src_mid,
-                    target_velocity=v_tar_mid,
-                    host_attention_map=host_source,
-                    removed_attention_map=removed_source,
-                    edit_operation=support_edit_operation,
-                    score_mode=support_score,
-                    attention_power=support_attention_power,
-                    disagreement_power=support_disagreement_power,
-                    top_percentile=support_top_percentile,
-                    min_area_ratio=support_min_area_ratio,
-                    max_area_ratio=support_max_area_ratio,
-                    keep_components=support_keep_components,
-                    dilate_radius=support_dilate_radius,
-                    blur_kernel=support_blur_kernel,
-                )
+                support_grounding = None
+                if object_mask_provider == "operation_support_v3" and semantic_base_mask_path is not None:
+                    support_grounding = load_external_mask_like(M_edit, semantic_base_mask_path)
+                    M_operation_support_grounding = support_grounding
+                if object_mask_provider == "operation_support_v3":
+                    generic = build_operation_support_v3(
+                        attention_map=object_source,
+                        x_t=x_src,
+                        t=t_mid,
+                        source_velocity=v_src_mid,
+                        target_velocity=v_tar_mid,
+                        host_attention_map=host_source,
+                        removed_attention_map=removed_source,
+                        grounding_mask=support_grounding,
+                        edit_operation=support_edit_operation,
+                        relation=support_relation,
+                        candidate=support_score,
+                        attention_power=support_attention_power,
+                        disagreement_power=support_disagreement_power,
+                        top_percentile=support_top_percentile,
+                        min_area_ratio=support_min_area_ratio,
+                        max_area_ratio=support_max_area_ratio,
+                        keep_components=support_keep_components,
+                        dilate_radius=support_dilate_radius,
+                        blur_kernel=support_blur_kernel,
+                    )
+                    M_operation_support_relation = generic.relation_map
+                else:
+                    generic = build_generic_support(
+                        attention_map=object_source,
+                        x_t=x_src,
+                        t=t_mid,
+                        source_velocity=v_src_mid,
+                        target_velocity=v_tar_mid,
+                        host_attention_map=host_source,
+                        removed_attention_map=removed_source,
+                        edit_operation=support_edit_operation,
+                        score_mode=support_score,
+                        attention_power=support_attention_power,
+                        disagreement_power=support_disagreement_power,
+                        top_percentile=support_top_percentile,
+                        min_area_ratio=support_min_area_ratio,
+                        max_area_ratio=support_max_area_ratio,
+                        keep_components=support_keep_components,
+                        dilate_radius=support_dilate_radius,
+                        blur_kernel=support_blur_kernel,
+                    )
                 M_edit = generic.edit_mask.to(dtype=x_src.dtype).clamp(0.0, 1.0)
                 M_core = torch.minimum(generic.core_mask.to(dtype=x_src.dtype).clamp(0.0, 1.0), M_edit)
                 M_preserve = (1.0 - M_edit).clamp(0.0, 1.0)
@@ -2591,6 +2639,16 @@ def HRecSD3Edit(
                     save_mask_image(
                         M_generic_support_score.to(dtype=torch.float32),
                         os.path.join(mask_output_dir, "generic_support_score.png"),
+                    )
+                if M_operation_support_grounding is not None:
+                    save_mask_image(
+                        M_operation_support_grounding.to(dtype=torch.float32),
+                        os.path.join(mask_output_dir, "operation_v3_grounding_mask.png"),
+                    )
+                if M_operation_support_relation is not None:
+                    save_mask_image(
+                        M_operation_support_relation.to(dtype=torch.float32),
+                        os.path.join(mask_output_dir, "operation_v3_relation_map.png"),
                     )
                 save_mask_image(M_edit.to(dtype=torch.float32), os.path.join(mask_output_dir, "subject_final.png"))
                 save_mask_image(M_core.to(dtype=torch.float32), os.path.join(mask_output_dir, "core_final.png"))
@@ -3611,6 +3669,7 @@ def HRecSD3Edit(
             "semantic_base_mask_path": semantic_base_mask_path,
             "support_score": support_score,
             "support_edit_operation": support_edit_operation,
+            "support_relation": support_relation,
             "support_new_tokens": ",".join(support_new_tokens or []),
             "support_host_tokens": ",".join(support_host_tokens or []),
             "support_removed_tokens": ",".join(support_removed_tokens or []),

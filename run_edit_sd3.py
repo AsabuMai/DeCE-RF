@@ -313,6 +313,7 @@ def build_parser() -> argparse.ArgumentParser:
             "semantic",
             "semantic_velocity",
             "generic_support",
+            "operation_support_v3",
             "structure",
             "proposal_diff",
             "auto",
@@ -325,10 +326,17 @@ def build_parser() -> argparse.ArgumentParser:
             "for the generic no-oracle path; 'semantic' uses --semantic-base-mask; "
             "'semantic_velocity' refines --semantic-base-mask with RF velocity difference; "
             "'generic_support' uses changed-token attention times clean/velocity disagreement; "
+            "'operation_support_v3' uses operation-aware relation/surface/segmentation candidates; "
             "'structure' keeps the optional external structure mask path; "
             "'proposal_diff' extracts changed support from a proposal image; "
             "'auto' uses proposal_diff when --proposal-edit-image is set, otherwise attention_velocity."
         ),
+    )
+    parser.add_argument(
+        "--support-mode",
+        choices=("generic", "operation_v3"),
+        default=None,
+        help="Convenience selector. operation_v3 maps --object-mask-provider to operation_support_v3.",
     )
     parser.add_argument(
         "--semantic-base-mask",
@@ -354,9 +362,22 @@ def build_parser() -> argparse.ArgumentParser:
             "new_plus_host_x_clean",
             "removed_src_x_clean",
             "removed_src_x_velocity",
+            "src_tar_attn_x_clean",
+            "seg_x_clean",
+            "seg_x_velocity",
+            "seg_x_response",
+            "relation_x_clean",
+            "relation_x_velocity",
+            "relation_x_response",
+            "host_surface_x_clean",
+            "host_surface_x_response",
+            "new_x_surface_x_clean",
+            "auto",
+            "operation_default",
+            "score_auto",
         ),
         default="attention_x_clean",
-        help="Score used by --object-mask-provider generic_support.",
+        help="Score/candidate used by generic_support or operation_support_v3.",
     )
     parser.add_argument(
         "--support-candidate",
@@ -371,6 +392,19 @@ def build_parser() -> argparse.ArgumentParser:
             "new_plus_host_x_clean",
             "removed_src_x_clean",
             "removed_src_x_velocity",
+            "src_tar_attn_x_clean",
+            "seg_x_clean",
+            "seg_x_velocity",
+            "seg_x_response",
+            "relation_x_clean",
+            "relation_x_velocity",
+            "relation_x_response",
+            "host_surface_x_clean",
+            "host_surface_x_response",
+            "new_x_surface_x_clean",
+            "auto",
+            "operation_default",
+            "score_auto",
         ),
         default=None,
         help="Operation-aware support candidate. Overrides --support-score when set.",
@@ -384,6 +418,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--new-tokens", type=str, default=None)
     parser.add_argument("--host-tokens", type=str, default=None)
     parser.add_argument("--removed-tokens", type=str, default=None)
+    parser.add_argument(
+        "--relation",
+        "--support-relation",
+        dest="support_relation",
+        choices=("auto", "none", "above_host", "on_face", "on_surface", "remove_source_object", "inside_host"),
+        default="auto",
+        help="Operation-level relation/layout proposal used by operation_support_v3.",
+    )
     parser.add_argument("--support-attention-power", type=float, default=1.0)
     parser.add_argument("--support-disagreement-power", type=float, default=1.0)
     parser.add_argument("--support-top-percentile", type=float, default=90.0)
@@ -1202,6 +1244,10 @@ def main() -> None:
             structure_box_metadata["structure_external_edit_mask"] = external_edit_mask_path
         print(f"[structure] {json.dumps(structure_box_metadata, sort_keys=True)}")
     resolved_object_mask_provider = args.object_mask_provider
+    if args.support_mode == "operation_v3":
+        resolved_object_mask_provider = "operation_support_v3"
+    elif args.support_mode == "generic" and resolved_object_mask_provider == "operation_support_v3":
+        resolved_object_mask_provider = "generic_support"
     if resolved_object_mask_provider == "auto":
         resolved_object_mask_provider = "proposal_diff" if args.proposal_edit_image else "attention_velocity"
     if resolved_object_mask_provider == "proposal_diff":
@@ -1376,6 +1422,7 @@ def main() -> None:
         semantic_base_mask_path=args.semantic_base_mask,
         support_score=args.support_candidate or args.support_score,
         support_edit_operation=args.edit_operation,
+        support_relation=args.support_relation,
         support_new_tokens=parse_word_list(args.new_tokens),
         support_host_tokens=parse_word_list(args.host_tokens),
         support_removed_tokens=parse_word_list(args.removed_tokens),
@@ -1558,9 +1605,11 @@ def main() -> None:
         "object_mask_provider": resolved_object_mask_provider,
         "requested_object_mask_provider": args.object_mask_provider,
         "semantic_base_mask": args.semantic_base_mask,
+        "support_mode": args.support_mode,
         "support_score": args.support_score,
         "support_candidate": args.support_candidate or args.support_score,
         "edit_operation": args.edit_operation,
+        "support_relation": args.support_relation,
         "new_tokens": parse_word_list(args.new_tokens),
         "host_tokens": parse_word_list(args.host_tokens),
         "removed_tokens": parse_word_list(args.removed_tokens),

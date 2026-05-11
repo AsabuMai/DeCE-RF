@@ -37,6 +37,8 @@ task_config() {
   SUPPORT_HOST_TOKENS=""
   SUPPORT_REMOVED_TOKENS=""
   SUPPORT_V2_CANDIDATE=""
+  SUPPORT_V3_CANDIDATE="operation_default"
+  SUPPORT_V3_RELATION="auto"
   SEMANTIC_PHRASE=""
   SEMANTIC_DILATE="0"
   SEMANTIC_BLUR="0"
@@ -74,6 +76,8 @@ task_config() {
       SUPPORT_NEW_TOKENS="crown"
       SUPPORT_HOST_TOKENS="cat,head"
       SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
+      SUPPORT_V3_RELATION="above_host"
+      SEMANTIC_PHRASE="cat"
       ;;
     P2|dog_sunglasses)
       TASK_NAME="dog_sunglasses"
@@ -87,6 +91,7 @@ task_config() {
       SUPPORT_NEW_TOKENS="sunglasses"
       SUPPORT_HOST_TOKENS="dog,eyes"
       SUPPORT_V2_CANDIDATE="attention_x_clean"
+      SUPPORT_V3_RELATION="on_face"
       SEMANTIC_PHRASE="dog head"
       SUPPORT_RELATION="front_glasses_auto"
       ;;
@@ -102,6 +107,8 @@ task_config() {
       SUPPORT_NEW_TOKENS="heart"
       SUPPORT_HOST_TOKENS="mug"
       SUPPORT_V2_CANDIDATE="new_x_host_x_clean"
+      SUPPORT_V3_RELATION="on_surface"
+      SEMANTIC_PHRASE="mug"
       DECAL_SHAPE="heart"
       DECAL_COLOR="red"
       DECAL_BOX="0.375,0.405,0.515,0.585"
@@ -153,6 +160,7 @@ task_config() {
       SUPPORT_HOST_TOKENS="backpack"
       SUPPORT_REMOVED_TOKENS="toy,charm"
       SUPPORT_V2_CANDIDATE="removed_src_x_clean"
+      SUPPORT_V3_RELATION="remove_source_object"
       SEMANTIC_PHRASE="yellow dangling toy charm"
       SEMANTIC_DILATE="6"
       SEMANTIC_BLUR="1"
@@ -270,6 +278,7 @@ method_config() {
   ADAPTIVE_PROJECTION_SCALE="0.65"
   GENERIC_SUPPORT="0"
   GENERIC_SUPPORT_V2="0"
+  GENERIC_SUPPORT_V3="0"
   SUPPORT_SCORE="attention_x_clean"
   SUPPORT_TOP_PERCENTILE="${SUPPORT_TOP_PERCENTILE:-95}"
   SUPPORT_MIN_AREA_RATIO="${SUPPORT_MIN_AREA_RATIO:-0.02}"
@@ -343,6 +352,20 @@ method_config() {
       GENERIC_SUPPORT="1"
       GENERIC_SUPPORT_V2="1"
       OBJECT_MASK_PROVIDER="generic_support"
+      ;;
+    M16|adaptive_full_support_v3|support_v3_grounded)
+      METHOD_NAME="adaptive_full_support_v3"
+      METHOD_ROUTE="full"
+      METHOD_ABLATION="none"
+      EDIT_HEDIT_GUIDANCE_SCALE="0.65"
+      EDIT_TEXT_GUIDANCE_SCALE="0.08"
+      REC_GUIDANCE_SCALE="0.22"
+      TRAJECTORY_PRESERVE_SCALE="0.12"
+      ADAPTIVE_CLEAN_CONTROL="1"
+      GENERIC_SUPPORT="1"
+      GENERIC_SUPPORT_V3="1"
+      OBJECT_MASK_PROVIDER="operation_support_v3"
+      SUPPORT_SCORE="${SUPPORT_V3_CANDIDATE}"
       ;;
     M11|adaptive_full_attention_only|generic_attention_only)
       METHOD_NAME="adaptive_full_attention_only"
@@ -424,7 +447,7 @@ method_config() {
       TRAJECTORY_PRESERVE_SCALE="0.12"
       ;;
     *)
-      echo "Unknown METHOD '${method_id}'. Valid: M0 M1 M4 M5 M6 M7 M8 M9 M10 M11 M12 M13 M14 M15 / base_only direct_target full full_no_ref full_no_rec full_no_traj adaptive_full adaptive_full_v0 adaptive_full_generic_support generic_support support_v2_minimal generic_attention_only generic_clean_only generic_velocity_only generic_attention_x_velocity." >&2
+      echo "Unknown METHOD '${method_id}'. Valid: M0 M1 M4 M5 M6 M7 M8 M9 M10 M11 M12 M13 M14 M15 M16 / base_only direct_target full full_no_ref full_no_rec full_no_traj adaptive_full adaptive_full_v0 adaptive_full_generic_support generic_support support_v2_minimal support_v3_grounded generic_attention_only generic_clean_only generic_velocity_only generic_attention_x_velocity." >&2
       exit 2
       ;;
   esac
@@ -690,6 +713,17 @@ run_one() {
       SUPPORT_SCORE="${SUPPORT_V2_CANDIDATE:-${SUPPORT_SCORE}}"
       ATTENTION_TARGET_WORDS="${SUPPORT_NEW_TOKENS:-${ATTENTION_TARGET_WORDS}}"
     fi
+    if [[ "${GENERIC_SUPPORT_V3}" == "1" ]]; then
+      OBJECT_MASK_PROVIDER="operation_support_v3"
+      SUPPORT_SCORE="${SUPPORT_V3_CANDIDATE:-operation_default}"
+      ATTENTION_TARGET_WORDS="${SUPPORT_NEW_TOKENS:-${ATTENTION_TARGET_WORDS}}"
+      local v3_relation="${SUPPORT_V3_RELATION:-auto}"
+      # The semantic mask is used as grounding evidence for v3. Relation
+      # proposal itself is built inside operation_support_v3.
+      SUPPORT_RELATION="inside"
+      ensure_semantic_mask "${out_dir}"
+      SUPPORT_RELATION="${v3_relation}"
+    fi
   elif [[ "${METHOD_ROUTE}" == "full" ]]; then
     case "${TASK_KIND}" in
       accessory_semantic)
@@ -866,11 +900,14 @@ run_one() {
     --photo-prompt-mode "${PHOTO_PROMPT_MODE}"
     --log-every 7
   )
-  if [[ "${GENERIC_SUPPORT_V2}" == "1" ]]; then
+  if [[ "${GENERIC_SUPPORT_V2}" == "1" || "${GENERIC_SUPPORT_V3}" == "1" ]]; then
     cmd+=(
       --support-candidate "${SUPPORT_SCORE}"
       --edit-operation "${SUPPORT_EDIT_OPERATION}"
     )
+    if [[ "${GENERIC_SUPPORT_V3}" == "1" ]]; then
+      cmd+=(--support-mode operation_v3 --relation "${SUPPORT_V3_RELATION}")
+    fi
     if [[ -n "${SUPPORT_NEW_TOKENS}" ]]; then
       cmd+=(--new-tokens "${SUPPORT_NEW_TOKENS}")
     fi
