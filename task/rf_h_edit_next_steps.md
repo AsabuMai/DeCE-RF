@@ -525,13 +525,14 @@ R_{\mathrm{text}}(\hat{x}_0,c^{edit})
 \lambda_{\mathrm{src}} R_{\mathrm{text}}(\hat{x}_0,c^{src})
 \]
 
-Then compute:
+For a branch implemented as a true autograd energy gradient, compute:
 
 \[
 u_{\mathrm{edit}} = \nabla_{x_t} E_{\mathrm{edit}}.
 \]
 
-This branch may be slower, but it helps answer an important theoretical question:
+This is not the default assumption for every branch. It may be slower, but it
+helps answer an important theoretical question:
 
 > How different are true energy gradients from the current hand-designed velocity surrogates?
 
@@ -675,12 +676,12 @@ Please implement or verify the following:
 
 ### Next Algorithmic Work
 
-- [ ] Add an experimental SD3 source-reference attention processor.
-- [ ] Start with FireFlow-style `V` replacement/addition for selected
+- [x] Add an experimental SD3 source-reference attention processor.
+- [x] Start with FireFlow-style `V` replacement/addition for selected
       transformer layers and early edit steps.
-- [ ] Evaluate `v_tar` inside the existing RF h-edit ODE under this injected
+- [x] Evaluate `v_tar` inside the existing RF h-edit ODE under this injected
       processor, rather than changing the ODE formula.
-- [ ] Keep the two-mask split: broad generation support for `u_edit`, precise
+- [x] Keep the two-mask split: broad generation support for `u_edit`, precise
       local mask only for injection/blending diagnostics.
 
 ---
@@ -690,3 +691,247 @@ Please implement or verify the following:
 The next step is to keep the RF h-edit dynamics fixed and add SD3
 source-reference attention/feature injection, because mask and latent-trajectory
 controls alone have now hit the quality/placement trade-off on sunglasses.
+
+---
+
+## 19. Submission Readiness TODO
+
+Status as of 2026-05-08:
+
+- Workshop / prototype presentation: close.
+- Workshop short paper: possible after a small fixed matrix and metric pass.
+- Full conference submission: not ready yet.
+
+The current blocker is not lack of code. The blocker is that the evidence is
+still exploratory rather than paper-table reproducible.
+
+Current shortest path:
+
+- Stop treating the project as an open-ended case pile.
+- Freeze 3-4 representative tasks.
+- Freeze 5 method variants.
+- Run 3 seeds for each task/method.
+- Generate automatic metric tables.
+- Start the paper outline in parallel so the claim stays narrow.
+
+One-line assessment:
+
+> The project already has research motivation and a method shape, but it is
+> not yet a submission-ready paper; the remaining gap is systematic
+> experiments, baselines, metrics, ablations, and paper packaging.
+
+### P0: Freeze the paper claim
+
+- [x] Define the main claim in one sentence:
+      decoupled RF/ODE editing improves the edit-success vs source-faithfulness
+      trade-off over direct target guidance.
+- [x] Define what is in the main method:
+      `xdot_t = v_src + u_rec + u_edit`.
+- [x] Define what is a utility, not the core method:
+      mask providers, reference recolor builders, external proposal masks.
+- [ ] Decide the first submission target:
+      workshop short paper vs full conference paper.
+
+### P0: Build the fixed experiment matrix
+
+Use `experiments/main_matrix.md` as the source of truth.
+
+- [x] Create an image manifest that separates `main`, `supplement_or_replace`,
+      and `debug_only` images:
+      `experiments/image_manifest.md`.
+- [x] Download initial Wikimedia candidates to `data/paper_images/`.
+- [x] Replace debug-only bus color edit with a clean licensed clothing/bag/car
+      color image before paper-table runs.
+- [ ] Replace or approve the human portrait candidate before using it as a main
+      local accessory figure.
+- [x] T1 local accessory / headwear insertion:
+      cat -> cat with crown.
+- [x] T2 color / attribute edit:
+      backpack -> blue backpack.
+- [x] T3 color / attribute edit:
+      yellow car -> blue car.
+- [x] T4 known failure / robustness:
+      rabbit side-profile sunglasses.
+
+For each task, run:
+
+- [x] M0 base only.
+- [x] M1 direct target.
+- [x] M2 anchor only.
+- [x] M3 decoupled reconstruction.
+- [x] M4 full method.
+
+Minimum seeds:
+
+- [x] `10`
+- [x] `11`
+- [x] `12`
+
+Each run must save:
+
+```text
+result.png
+stats.json
+metadata.json
+command.txt
+masks/
+```
+
+### P0: Add paper-grade metrics
+
+Add a separate evaluation script rather than relying only on internal
+trajectory stats.
+
+- [x] Edit success:
+      CLIP text-image score or VLM-based target check.
+- [x] Source preservation:
+      LPIPS / DINO / SSIM against source.
+- [x] Mask-outside drift:
+      outside-mask L1 or LPIPS.
+- [x] Region quality:
+      mask-inside color/attribute score where applicable.
+- [x] Runtime and peak GPU memory.
+- [x] Failure flag:
+      overlay, semantic miss, background drift, mask artifact.
+
+Expected script:
+
+```text
+scripts/evaluate_paper_metrics.py
+```
+
+Expected output:
+
+```text
+experiments/main_metrics.csv
+experiments/main_metrics.json
+```
+
+### P0: Make paper runs reproducible
+
+Add one command per paper table or figure.
+
+- [x] `scripts/run_main_table.sh`
+- [x] `scripts/run_ablation_table.sh`
+- [x] `scripts/make_paper_figures.sh`
+- [x] `environment.yml` or `requirements.txt`
+- [x] Re-run `scripts/audit_experiment_records.py` after each batch.
+
+Current full-output audit snapshot:
+
+```text
+outputs/main_matrix: 82 runs
+complete: 82
+incomplete: 0
+```
+
+Current main-matrix audit snapshot:
+
+```text
+outputs/main_matrix planned paper subset:
+planned: 60
+complete: 60
+missing_or_incomplete: 0
+```
+
+Important: the first 16-run seed-10 grid was produced mostly with the generic
+`attention_velocity` provider. Treat it as baseline evidence, not the final
+SAM-supported main method.
+
+Only complete runs should be used in tables or figures.
+
+Missing reproducibility pieces before paper submission:
+
+- [x] One-command ablation table runner.
+- [x] One-command figure/table generation.
+- [x] Environment lock file:
+      `environment.yml` or `requirements.txt`.
+- [x] Metric evaluator connected to `outputs/main_matrix`.
+
+### P1: Establish baseline parity
+
+External baselines should be compared only under matching conditions.
+
+- [x] Choose baselines:
+      FlowEdit, RF-Solver, FireFlow, h-Edit, ReFlex if runnable.
+- [x] Match input image, prompt, resolution, seed, and mask condition where
+      possible.
+- [x] Do not compare against baselines under weaker prompt, resolution, seed,
+      or mask settings; reviewers can reasonably reject that as unfair.
+- [x] Record non-runnable baselines as limitations with exact failure reason
+      instead of using unfair partial comparisons.
+- [ ] Save baseline commands and outputs in the same record format.
+
+### P1: Prepare manuscript files
+
+The `paper/` directory exists, but the manuscript package is not yet active
+enough for real academic-pipeline writing/revision stages.
+
+- [x] `paper/outline.md`
+- [x] `paper/main.tex` or `paper/draft.md`
+- [x] `paper/references.bib`
+- [x] `paper/figures.md`
+- [x] `paper/tables.md`
+- [x] `paper/limitations.md`
+
+Draft structure:
+
+- [x] Introduction: RF/ODE editing needs explicit preservation/edit decoupling.
+- [x] Related work: h-Edit, FlowEdit, RF-Solver, FireFlow, ReFlex, PnP/P2P-style
+      source feature reuse.
+- [x] Method: linear path clean estimate, reconstruction correction, editing
+      correction, mask/support interface.
+- [x] Experiments: fixed matrix, metrics, baselines, ablations.
+- [x] Failure analysis: object replacement overlay and complex reflective color
+      surfaces.
+- [x] Limitations: dependence on spatial support, SD3-specific implementation,
+      baseline resource constraints.
+
+### P1: Add ablations that support the claim
+
+- [x] No reconstruction correction.
+- [x] No trajectory preserve.
+- [x] Broad mask vs changed-token mask.
+- [ ] Attention mask vs external diagnostic mask.
+- [ ] Reference guidance off/on for color tasks.
+- [ ] `EDIT_REF_CHROMA_MODE=yuv` vs `yuv_direction` only as a surface-color
+      ablation, not as the main method.
+
+### P2: Clean outputs for paper use
+
+- [x] Archive or ignore incomplete exploratory folders.
+- [x] Regenerate selected qualitative figures from complete runs.
+- [x] Ensure every figure panel maps to a run directory and command.
+- [x] Keep failure cases visible; do not hide rabbit / object-replacement
+      failure.
+
+### Immediate next executable step
+
+Re-run the first small paper subset with the SAM-supported default:
+
+```text
+TASKS="T1 T2 T4" METHODS="M0 M1 M3 M4" SEEDS="10" DEVICE=<gpu> scripts/run_main_table.sh
+```
+
+Then generate a comparison panel from `outputs/main_matrix` and decide which
+tasks need task-specific mask/reference setup before expanding to seeds 11/12.
+
+Suggested converged task set for the next paper pass:
+
+- `crown/headwear`: local accessory insertion with SAM support.
+- `bus_color` or replacement publication-safe color task:
+  clean object color edit with surface/reference route.
+- `sunglasses`: local accessory insertion, if support can be made reliable.
+- `rabbit_failure`: explicit robustness/failure case, unless profile-eye
+  support makes it reliable enough to move into the main table.
+
+### Immediate support fixes
+
+- [x] Add `top_center` support relation in `scripts/make_semantic_mask.py` for
+      crown/hat/headwear tasks.
+- [x] Re-run `cat_crown/full` with `top_center`; current `above` support can
+      overlap cat ears because the SAM head bbox includes ear tips.
+- [x] Add surface-reference mode to `scripts/run_main_table.sh` for color tasks:
+      `backpack_blue`, `red_chair_blue`, `yellow_car_blue`.
+- [x] Keep `attention_velocity` as a generic baseline method/provider, not as
+      the paper main local-support result.

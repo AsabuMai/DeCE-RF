@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${ROOT:-/home/Wu_25R8111/rf_h_edit_project}"
+
+export ATTENTION_MASK_TARGET_WORDS="${ATTENTION_MASK_TARGET_WORDS:-sunglasses}"
+export OBJECT_MASK_PROVIDER="${OBJECT_MASK_PROVIDER:-attention}"
+export MASK_LAYERING_MODE="${MASK_LAYERING_MODE:-none}"
+export AUTO_STRUCTURE_BOXES="${AUTO_STRUCTURE_BOXES:-1}"
+export AUTO_STRUCTURE_EXTERNAL_MASK="${AUTO_STRUCTURE_EXTERNAL_MASK:-1}"
+export AUTO_LOCAL_BOXES="${AUTO_LOCAL_BOXES:-1}"
+export EDIT_MASK_BOX_MODE="${EDIT_MASK_BOX_MODE:-replace}"
+export MASK_SHIFT_Y="${MASK_SHIFT_Y:-0.0}"
+export SOURCE_INJECT_MASK_MODE="${SOURCE_INJECT_MASK_MODE:-box}"
+export MASK_COMPONENT_Y_MAX="${MASK_COMPONENT_Y_MAX:-0.65}"
+export MASK_KEEP_COMPONENTS="${MASK_KEEP_COMPONENTS:-2}"
+export OUT_DIR="${OUT_DIR:-${ROOT}/outputs/sunglasses_good}"
+
+"${ROOT}/scripts/run_sunglasses_local.sh"

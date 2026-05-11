@@ -258,6 +258,49 @@ def _changed_words(src_prompt: str, tar_prompt: str) -> tuple[list[str], list[st
     return src_changed, tar_changed
 
 
+_EDIT_WORD_STOPWORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
+    "black",
+    "blue",
+    "brown",
+    "by",
+    "for",
+    "gray",
+    "green",
+    "grey",
+    "in",
+    "is",
+    "large",
+    "little",
+    "on",
+    "orange",
+    "over",
+    "pink",
+    "purple",
+    "red",
+    "small",
+    "the",
+    "to",
+    "under",
+    "wearing",
+    "white",
+    "with",
+    "yellow",
+}
+
+
+def _content_edit_words(words: list[str], max_words: int = 3) -> list[str]:
+    content = [word for word in words if word and word not in _EDIT_WORD_STOPWORDS and len(word) > 1]
+    if not content:
+        return words[-max_words:]
+    return content[-max_words:]
+
+
 def _token_indices_for_words(pipe, prompt: str, words: list[str]) -> list[int]:
     if not words:
         return []
@@ -523,8 +566,12 @@ def extract_attention_masks(
     src_changed_words, tar_changed_words = _changed_words(src_prompt, tar_prompt)
     if source_token_words is not None:
         src_changed_words = source_token_words
+    else:
+        src_changed_words = _content_edit_words(src_changed_words)
     if target_token_words is not None:
         tar_changed_words = target_token_words
+    else:
+        tar_changed_words = _content_edit_words(tar_changed_words)
     src_token_indices = _token_indices_for_words(pipe, src_prompt, src_changed_words)
     tar_token_indices = _token_indices_for_words(pipe, tar_prompt, tar_changed_words)
 

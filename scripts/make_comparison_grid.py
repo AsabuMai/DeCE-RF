@@ -6,6 +6,9 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 
+RESAMPLE_LANCZOS = getattr(getattr(Image, "Resampling", Image), "LANCZOS", Image.LANCZOS)
+
+
 def load_font(size: int) -> ImageFont.ImageFont:
     for path in (
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
@@ -35,7 +38,7 @@ def main() -> None:
     font = load_font(22)
     thumbs = []
     for image in images:
-        image.thumbnail((thumb_size, thumb_size), Image.Resampling.LANCZOS)
+        image.thumbnail((thumb_size, thumb_size), RESAMPLE_LANCZOS)
         canvas = Image.new("RGB", (thumb_size, thumb_size), "white")
         x = (thumb_size - image.width) // 2
         y = (thumb_size - image.height) // 2

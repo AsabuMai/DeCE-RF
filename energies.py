@@ -677,6 +677,8 @@ def editing_velocity_surrogate_total(
     x0_tar = aligned["reference"]
     x0_src = aligned["x_src"]
     M_edit = aligned["M_edit"]
+    if M_edit is not None:
+        base_edit_velocity = base_edit_velocity * _align_like(base_edit_velocity, M_edit, mode="bilinear")
 
     v_anchor = editing_velocity_surrogate_target_anchor(
         x0_tar=x0_tar,

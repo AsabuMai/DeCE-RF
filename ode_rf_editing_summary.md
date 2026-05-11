@@ -144,25 +144,28 @@ This formulation is currently favored over a pure target-only reward because it 
 
 A very important clarification is that **edit is not the prompt itself**, and not even the reward value itself.
 
-Mathematically, edit should be understood as a **control vector field** induced by the editing energy:
+Mathematically, edit should be understood as a **control correction field** organized by the editing energy:
 
 \[
 E_{\mathrm{edit}}(x_t,t)
 \rightarrow
-\nabla_{x_t} E_{\mathrm{edit}}(x_t,t)
+\mathcal{G}_{\mathrm{edit}}(x_t,t)
 \rightarrow
-v_{\mathrm{edit}}(x_t,t)
+u_{\mathrm{edit}}(x_t,t)
 \]
 
 So the actual editing effect entering the ODE is:
 
 \[
-v_{\mathrm{edit}}(x_t,t)
+u_{\mathrm{edit}}(x_t,t)
 =
-\nabla_{x_t} E_{\mathrm{edit}}(x_t,t)
+\mathcal{G}_{\mathrm{edit}}(x_t,t)
 \]
 
-This means that editing is ultimately modeled as a **target-seeking correction field** on top of the base flow.
+Here \(\mathcal{G}_{\mathrm{edit}}\) may be an exact autograd gradient for a
+specific branch, or a surrogate velocity derived from clean-space displacement
+or feature-space differences. This means that editing is modeled as a
+**target-seeking correction field** on top of the source-conditioned base flow.
 
 ---
 
@@ -178,7 +181,7 @@ Image editing is inherently a **dual-objective problem**:
 If one uses only a single editing guidance term, such as:
 
 \[
-\dot x_t = v_\theta(x_t,t) + \beta(t)\nabla E_{\mathrm{edit}}(x_t,t)
+\dot x_t = v_{\mathrm{src}}(x_t,t) + u_{\mathrm{edit}}(x_t,t)
 \]
 
 then the dynamics only know how to move toward the target editing objective, but do not explicitly know what content should remain stable.
