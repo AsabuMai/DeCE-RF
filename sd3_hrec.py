@@ -24,7 +24,12 @@ from energies import (
     reconstruction_velocity_surrogate_total,
 )
 from generic_support import build_generic_support
-from operation_support_v3 import build_operation_support_v3
+from operation_support_v3 import (
+    build_operation_support_v3,
+    compute_clean_disagreement,
+    compute_velocity_disagreement,
+    save_support_debug,
+)
 from schedules import get_schedule_value
 
 
@@ -1919,6 +1924,9 @@ def HRecSD3Edit(
     support_score: str = "attention_x_clean",
     support_edit_operation: str = "auto",
     support_relation: str = "auto",
+    support_grounding_method: str = "external_mask",
+    save_support_debug_maps: bool = False,
+    support_temporal_aggregation: str = "single",
     support_new_tokens: list[str] | None = None,
     support_host_tokens: list[str] | None = None,
     support_removed_tokens: list[str] | None = None,
@@ -2283,10 +2291,68 @@ def HRecSD3Edit(
                     )
                     removed_source = removed_masks["source_changed"]
                 support_grounding = None
-                if object_mask_provider == "operation_support_v3" and semantic_base_mask_path is not None:
+                if (
+                    object_mask_provider == "operation_support_v3"
+                    and semantic_base_mask_path is not None
+                    and (support_grounding_method or "external_mask").strip().lower() != "none"
+                ):
                     support_grounding = load_external_mask_like(M_edit, semantic_base_mask_path)
                     M_operation_support_grounding = support_grounding
                 if object_mask_provider == "operation_support_v3":
+                    temporal_mode = (support_temporal_aggregation or "single").strip().lower()
+                    clean_map_override = None
+                    velocity_map_override = None
+                    temporal_step_count = 1
+                    if temporal_mode in {"mean", "max"}:
+                        support_indices = sorted(
+                            {
+                                max(0, min(len(timesteps) - 1, len(timesteps) // 4)),
+                                max(0, min(len(timesteps) - 1, len(timesteps) // 2)),
+                                max(0, min(len(timesteps) - 1, (3 * len(timesteps)) // 4)),
+                            }
+                        )
+                        clean_maps = []
+                        velocity_maps = []
+                        mid_index = len(timesteps) // 2
+                        for support_index in support_indices:
+                            support_t = timesteps[support_index]
+                            if support_index == mid_index:
+                                v_src_support = v_src_mid
+                                v_tar_support = v_tar_mid
+                            else:
+                                v_src_support = calc_cfg_v_sd3(
+                                    pipe=pipe,
+                                    latents=x_src,
+                                    negative_prompt_embeds=src_negative_prompt_embeds,
+                                    prompt_embeds=src_prompt_embeds,
+                                    negative_pooled_prompt_embeds=src_negative_pooled_prompt_embeds,
+                                    pooled_prompt_embeds=src_pooled_prompt_embeds,
+                                    guidance_scale=base_guidance_scale,
+                                    t=support_t,
+                                )
+                                v_tar_support = calc_cfg_v_sd3(
+                                    pipe=pipe,
+                                    latents=x_src,
+                                    negative_prompt_embeds=tar_negative_prompt_embeds,
+                                    prompt_embeds=tar_prompt_embeds,
+                                    negative_pooled_prompt_embeds=tar_negative_pooled_prompt_embeds,
+                                    pooled_prompt_embeds=tar_pooled_prompt_embeds,
+                                    guidance_scale=tar_guidance_scale,
+                                    t=support_t,
+                                )
+                            clean_maps.append(compute_clean_disagreement(x_src, support_t, v_src_support, v_tar_support))
+                            velocity_maps.append(compute_velocity_disagreement(v_src_support, v_tar_support))
+                        temporal_step_count = len(support_indices)
+                        clean_stack = torch.stack(clean_maps, dim=0)
+                        velocity_stack = torch.stack(velocity_maps, dim=0)
+                        if temporal_mode == "max":
+                            clean_map_override = clean_stack.max(dim=0).values
+                            velocity_map_override = velocity_stack.max(dim=0).values
+                        else:
+                            clean_map_override = clean_stack.mean(dim=0)
+                            velocity_map_override = velocity_stack.mean(dim=0)
+                    elif temporal_mode != "single":
+                        raise ValueError(f"Unsupported support_temporal_aggregation: {support_temporal_aggregation}")
                     generic = build_operation_support_v3(
                         attention_map=object_source,
                         x_t=x_src,
@@ -2307,8 +2373,14 @@ def HRecSD3Edit(
                         keep_components=support_keep_components,
                         dilate_radius=support_dilate_radius,
                         blur_kernel=support_blur_kernel,
+                        clean_map_override=clean_map_override,
+                        velocity_map_override=velocity_map_override,
+                        temporal_aggregation=temporal_mode,
+                        temporal_steps=temporal_step_count,
                     )
                     M_operation_support_relation = generic.relation_map
+                    if save_support_debug_maps and mask_output_dir is not None:
+                        save_support_debug(generic, mask_output_dir)
                 else:
                     generic = build_generic_support(
                         attention_map=object_source,
@@ -3670,6 +3742,9 @@ def HRecSD3Edit(
             "support_score": support_score,
             "support_edit_operation": support_edit_operation,
             "support_relation": support_relation,
+            "support_grounding_method": support_grounding_method,
+            "save_support_debug_maps": bool(save_support_debug_maps),
+            "support_temporal_aggregation": support_temporal_aggregation,
             "support_new_tokens": ",".join(support_new_tokens or []),
             "support_host_tokens": ",".join(support_host_tokens or []),
             "support_removed_tokens": ",".join(support_removed_tokens or []),

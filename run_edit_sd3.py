@@ -426,6 +426,27 @@ def build_parser() -> argparse.ArgumentParser:
         default="auto",
         help="Operation-level relation/layout proposal used by operation_support_v3.",
     )
+    parser.add_argument(
+        "--grounding-method",
+        choices=("none", "external_mask", "grounded_sam", "sam", "sam2", "clipseg"),
+        default="external_mask",
+        help=(
+            "Grounding source label for operation_support_v3. Current runtime consumes "
+            "--support-mask as the external grounding mask and records this label."
+        ),
+    )
+    parser.add_argument(
+        "--save-support-debug",
+        action="store_true",
+        default=False,
+        help="Save operation_support_v3 candidate maps when --mask-output-dir is set.",
+    )
+    parser.add_argument(
+        "--support-temporal-aggregation",
+        choices=("single", "mean", "max"),
+        default="single",
+        help="Aggregate operation_support_v3 clean/velocity evidence over one or multiple ODE timesteps.",
+    )
     parser.add_argument("--support-attention-power", type=float, default=1.0)
     parser.add_argument("--support-disagreement-power", type=float, default=1.0)
     parser.add_argument("--support-top-percentile", type=float, default=90.0)
@@ -1423,6 +1444,9 @@ def main() -> None:
         support_score=args.support_candidate or args.support_score,
         support_edit_operation=args.edit_operation,
         support_relation=args.support_relation,
+        support_grounding_method=args.grounding_method,
+        save_support_debug_maps=args.save_support_debug,
+        support_temporal_aggregation=args.support_temporal_aggregation,
         support_new_tokens=parse_word_list(args.new_tokens),
         support_host_tokens=parse_word_list(args.host_tokens),
         support_removed_tokens=parse_word_list(args.removed_tokens),
@@ -1610,6 +1634,9 @@ def main() -> None:
         "support_candidate": args.support_candidate or args.support_score,
         "edit_operation": args.edit_operation,
         "support_relation": args.support_relation,
+        "grounding_method": args.grounding_method,
+        "save_support_debug": args.save_support_debug,
+        "support_temporal_aggregation": args.support_temporal_aggregation,
         "new_tokens": parse_word_list(args.new_tokens),
         "host_tokens": parse_word_list(args.host_tokens),
         "removed_tokens": parse_word_list(args.removed_tokens),

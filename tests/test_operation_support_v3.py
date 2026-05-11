@@ -13,9 +13,15 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from operation_support_v3 import (  # noqa: E402
     build_above_host_region,
+    build_core_ring_preserve_masks,
     build_operation_support_v3,
     build_surface_region,
+    compute_clean_disagreement,
+    compute_velocity_disagreement,
     default_candidate_for_operation,
+    parse_edit_operation,
+    save_support_debug,
+    support_overlap_metrics,
 )
 
 
@@ -41,6 +47,7 @@ class OperationSupportV3Test(unittest.TestCase):
         self.assertLess(float(surface.mean()), float(host.mean()))
 
     def test_default_candidate_is_operation_aware(self):
+        self.assertEqual(parse_edit_operation("decal"), "add_decal")
         self.assertEqual(
             default_candidate_for_operation("add_object", relation="above_host", has_relation=True),
             "relation_x_response",
@@ -53,6 +60,35 @@ class OperationSupportV3Test(unittest.TestCase):
             default_candidate_for_operation("remove_object", has_grounding=True),
             "seg_x_response",
         )
+
+    def test_clean_velocity_wrappers_and_core_ring_masks(self):
+        x_t = torch.zeros(1, 4, 8, 8)
+        source_v = torch.zeros_like(x_t)
+        target_v = torch.ones_like(x_t)
+        clean = compute_clean_disagreement(x_t, torch.tensor(0.5), source_v, target_v)
+        velocity = compute_velocity_disagreement(source_v, target_v)
+        self.assertEqual(clean.shape, (1, 1, 8, 8))
+        self.assertEqual(velocity.shape, (1, 1, 8, 8))
+
+        core_input = torch.zeros(1, 1, 8, 8)
+        core_input[:, :, 3:5, 3:5] = 1.0
+        core, ring, preserve = build_core_ring_preserve_masks(core_input, ring_dilate_radius=3)
+        self.assertGreater(float(core.sum()), 0.0)
+        self.assertGreater(float(ring.sum()), 0.0)
+        self.assertLess(float(preserve[0, 0, 4, 4]), 0.1)
+
+    def test_overlap_metrics_reports_iou_coverage_leakage(self):
+        pred = torch.zeros(1, 1, 8, 8)
+        ref = torch.zeros(1, 1, 8, 8)
+        pred[:, :, 2:6, 2:6] = 1.0
+        ref[:, :, 3:7, 3:7] = 1.0
+
+        metrics = support_overlap_metrics(pred, ref)
+
+        self.assertGreater(metrics["support_iou"], 0.0)
+        self.assertLess(metrics["support_iou"], 1.0)
+        self.assertGreater(metrics["support_coverage"], 0.0)
+        self.assertGreater(metrics["support_leakage"], 0.0)
 
     def test_build_operation_support_v3_selects_relation_candidate(self):
         x_t = torch.zeros(1, 4, 20, 20)
@@ -84,6 +120,26 @@ class OperationSupportV3Test(unittest.TestCase):
         self.assertEqual(result.stats["support_score"], "relation_x_response")
         self.assertIsNotNone(result.relation_map)
         self.assertGreater(float(result.edit_mask[0, 0, 8, 10]), 0.0)
+
+    def test_save_support_debug_writes_candidate_maps(self):
+        with self.subTest("debug output"):
+            import tempfile
+
+            x_t = torch.zeros(1, 4, 8, 8)
+            source_v = torch.zeros_like(x_t)
+            target_v = torch.ones_like(x_t)
+            attention = torch.ones(1, 1, 8, 8)
+            result = build_operation_support_v3(
+                attention_map=attention,
+                x_t=x_t,
+                t=torch.tensor(0.5),
+                source_velocity=source_v,
+                target_velocity=target_v,
+                candidate="attention_x_clean",
+            )
+            with tempfile.TemporaryDirectory() as tmpdir:
+                save_support_debug(result, tmpdir, max_candidates=2)
+                self.assertTrue((Path(tmpdir) / "operation_v3_support_score.png").exists())
 
 
 if __name__ == "__main__":

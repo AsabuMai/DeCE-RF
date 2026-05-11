@@ -18,6 +18,7 @@ GROUNDING_MODEL="${GROUNDING_MODEL:-IDEA-Research/grounding-dino-base}"
 SAM_MODEL="${SAM_MODEL:-facebook/sam-vit-base}"
 ALLOW_MASK_DOWNLOAD="${ALLOW_MASK_DOWNLOAD:-0}"
 REGENERATE_MASKS="${REGENERATE_MASKS:-0}"
+SUPPORT_V3_TEMPORAL_AGGREGATION="${SUPPORT_V3_TEMPORAL_AGGREGATION:-mean}"
 
 NUM_INFERENCE_STEPS="${NUM_INFERENCE_STEPS:-28}"
 N_MAX="${N_MAX:-24}"
@@ -279,6 +280,7 @@ method_config() {
   GENERIC_SUPPORT="0"
   GENERIC_SUPPORT_V2="0"
   GENERIC_SUPPORT_V3="0"
+  MANUAL_SUPPORT="0"
   SUPPORT_SCORE="attention_x_clean"
   SUPPORT_TOP_PERCENTILE="${SUPPORT_TOP_PERCENTILE:-95}"
   SUPPORT_MIN_AREA_RATIO="${SUPPORT_MIN_AREA_RATIO:-0.02}"
@@ -328,7 +330,7 @@ method_config() {
       ADAPTIVE_EDIT_TARGET_PROGRESS="0.0"
       ADAPTIVE_EDIT_TARGET_RMS="0.42"
       ;;
-    M10|adaptive_full_generic_support|generic_support)
+    M10|adaptive_full_generic_support|generic_support|generic_support_v1)
       METHOD_NAME="adaptive_full_generic_support"
       METHOD_ROUTE="full"
       METHOD_ABLATION="none"
@@ -340,7 +342,7 @@ method_config() {
       GENERIC_SUPPORT="1"
       OBJECT_MASK_PROVIDER="generic_support"
       ;;
-    M15|adaptive_full_support_v2|support_v2_minimal)
+    M15|adaptive_full_support_v2|support_v2_minimal|operation_aware_support_v2)
       METHOD_NAME="adaptive_full_support_v2"
       METHOD_ROUTE="full"
       METHOD_ABLATION="none"
@@ -366,6 +368,19 @@ method_config() {
       GENERIC_SUPPORT_V3="1"
       OBJECT_MASK_PROVIDER="operation_support_v3"
       SUPPORT_SCORE="${SUPPORT_V3_CANDIDATE}"
+      ;;
+    manual_support)
+      METHOD_NAME="manual_support"
+      METHOD_ROUTE="full"
+      METHOD_ABLATION="none"
+      EDIT_HEDIT_GUIDANCE_SCALE="0.65"
+      EDIT_TEXT_GUIDANCE_SCALE="0.08"
+      REC_GUIDANCE_SCALE="0.22"
+      TRAJECTORY_PRESERVE_SCALE="0.12"
+      ADAPTIVE_CLEAN_CONTROL="1"
+      GENERIC_SUPPORT="0"
+      MANUAL_SUPPORT="1"
+      OBJECT_MASK_PROVIDER="semantic"
       ;;
     M11|adaptive_full_attention_only|generic_attention_only)
       METHOD_NAME="adaptive_full_attention_only"
@@ -724,6 +739,9 @@ run_one() {
       ensure_semantic_mask "${out_dir}"
       SUPPORT_RELATION="${v3_relation}"
     fi
+  elif [[ "${METHOD_ROUTE}" == "full" && "${MANUAL_SUPPORT}" == "1" ]]; then
+    OBJECT_MASK_PROVIDER="semantic"
+    ensure_semantic_mask "${out_dir}"
   elif [[ "${METHOD_ROUTE}" == "full" ]]; then
     case "${TASK_KIND}" in
       accessory_semantic)
@@ -906,7 +924,13 @@ run_one() {
       --edit-operation "${SUPPORT_EDIT_OPERATION}"
     )
     if [[ "${GENERIC_SUPPORT_V3}" == "1" ]]; then
-      cmd+=(--support-mode operation_v3 --relation "${SUPPORT_V3_RELATION}")
+      cmd+=(
+        --support-mode operation_v3
+        --relation "${SUPPORT_V3_RELATION}"
+        --grounding-method grounded_sam
+        --support-temporal-aggregation "${SUPPORT_V3_TEMPORAL_AGGREGATION}"
+        --save-support-debug
+      )
     fi
     if [[ -n "${SUPPORT_NEW_TOKENS}" ]]; then
       cmd+=(--new-tokens "${SUPPORT_NEW_TOKENS}")

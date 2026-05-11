@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import torch
 import torch.nn.functional as F
+from PIL import Image
 
 from generic_support import (
     clean_disagreement_map,
@@ -29,6 +31,25 @@ class OperationSupportV3Result:
     stats: dict[str, float | int | str]
 
 
+def parse_edit_operation(edit_operation: str | None) -> str:
+    op = (edit_operation or "auto").strip().lower()
+    aliases = {
+        "add": "add_object",
+        "add_accessory": "add_object",
+        "decal": "add_decal",
+        "surface": "add_decal",
+        "remove": "remove_object",
+        "removal": "remove_object",
+        "replace_object": "replace",
+        "replace_attribute": "replace",
+    }
+    op = aliases.get(op, op)
+    valid = {"auto", "add_object", "add_decal", "remove_object", "replace"}
+    if op not in valid:
+        raise ValueError(f"Unsupported edit operation for support v3: {edit_operation}")
+    return op
+
+
 def _match_map(x: torch.Tensor | None, reference: torch.Tensor) -> torch.Tensor | None:
     if x is None:
         return None
@@ -45,6 +66,29 @@ def _match_map(x: torch.Tensor | None, reference: torch.Tensor) -> torch.Tensor 
         else:
             out = out[: reference.shape[0]]
     return normalize_spatial_map(out).to(device=reference.device, dtype=reference.dtype)
+
+
+def ground_object_mask(mask: torch.Tensor | None, reference: torch.Tensor) -> torch.Tensor | None:
+    """Normalize an externally grounded / segmented mask to latent resolution."""
+    return _match_map(mask, reference)
+
+
+def compute_token_attention(attention_map: torch.Tensor | None, reference: torch.Tensor) -> torch.Tensor | None:
+    """Normalize a token-attention map to latent resolution."""
+    return _match_map(attention_map, reference)
+
+
+def compute_clean_disagreement(
+    x_t: torch.Tensor,
+    t: torch.Tensor,
+    source_velocity: torch.Tensor,
+    target_velocity: torch.Tensor,
+) -> torch.Tensor:
+    return clean_disagreement_map(x_t, t, source_velocity, target_velocity)
+
+
+def compute_velocity_disagreement(source_velocity: torch.Tensor, target_velocity: torch.Tensor) -> torch.Tensor:
+    return velocity_disagreement_map(source_velocity, target_velocity)
 
 
 def _binary_bbox(mask: torch.Tensor, threshold: float = 0.2) -> tuple[int, int, int, int] | None:
@@ -227,7 +271,7 @@ def default_candidate_for_operation(
     has_grounding: bool = False,
     has_relation: bool = False,
 ) -> str:
-    op = (edit_operation or "auto").strip().lower()
+    op = parse_edit_operation(edit_operation)
     rel = (relation or "auto").strip().lower()
     if op == "add_object":
         if has_relation and rel not in {"none", "auto", "", "on_face"}:
@@ -252,12 +296,109 @@ def default_candidate_for_operation(
     return "attention_x_clean"
 
 
-def score_support_candidate(candidate: torch.Tensor, clean_map: torch.Tensor, target_area: float = 0.08) -> float:
+def score_support_candidate(
+    candidate: torch.Tensor,
+    clean_map: torch.Tensor,
+    target_area: float = 0.08,
+    grounding_mask: torch.Tensor | None = None,
+    alpha: float = 1.0,
+    beta: float = 0.15,
+    gamma: float = 0.15,
+    delta: float = 0.20,
+) -> float:
     mask = (candidate.detach().float() > 0.5).float()
     area = float(mask.mean().item())
-    edit_response = float((mask * normalize_spatial_map(clean_map).detach().float()).mean().item())
+    clean = normalize_spatial_map(clean_map).detach().float()
+    edit_response = float((mask * clean).sum().item() / max(float(mask.sum().item()), 1e-6))
+    preserve_leakage = float(((1.0 - mask) * clean).mean().item())
     area_penalty = abs(area - float(target_area))
-    return edit_response - 0.15 * area_penalty
+    grounding_confidence = 0.0
+    if grounding_mask is not None:
+        grounding = (_match_map(grounding_mask, candidate).detach().float() > 0.5).float()
+        grounding_confidence = float((mask * grounding).sum().item() / max(float(mask.sum().item()), 1e-6))
+    return (
+        float(alpha) * edit_response
+        - float(beta) * preserve_leakage
+        - float(gamma) * area_penalty
+        + float(delta) * grounding_confidence
+    )
+
+
+def postprocess_support(
+    support_score: torch.Tensor,
+    top_percentile: float = 90.0,
+    min_area_ratio: float = 0.02,
+    max_area_ratio: float = 0.30,
+    keep_components: int = 2,
+    dilate_radius: int = 5,
+    blur_kernel: int = 5,
+) -> tuple[torch.Tensor, torch.Tensor, dict[str, float | int]]:
+    return postprocess_support_score(
+        support_score,
+        top_percentile=top_percentile,
+        min_area_ratio=min_area_ratio,
+        max_area_ratio=max_area_ratio,
+        keep_components=keep_components,
+        dilate_radius=dilate_radius,
+        blur_kernel=blur_kernel,
+    )
+
+
+def build_core_ring_preserve_masks(
+    core_mask: torch.Tensor,
+    ring_dilate_radius: int = 7,
+    ring_scale: float = 0.25,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    core = normalize_spatial_map(core_mask)
+    wide = core
+    if ring_dilate_radius > 1:
+        kernel = int(ring_dilate_radius)
+        if kernel % 2 == 0:
+            kernel += 1
+        wide = F.max_pool2d(core.float(), kernel_size=kernel, stride=1, padding=kernel // 2).to(core.dtype)
+    ring = (wide - core).clamp(0.0, 1.0) * float(ring_scale)
+    preserve = (1.0 - torch.maximum(core, ring)).clamp(0.0, 1.0)
+    return core.clamp(0.0, 1.0), ring.clamp(0.0, 1.0), preserve
+
+
+def support_overlap_metrics(pred_mask: torch.Tensor, reference_mask: torch.Tensor) -> dict[str, float]:
+    pred = (_match_map(pred_mask, reference_mask).detach().float() > 0.5).float()
+    ref = (normalize_spatial_map(reference_mask).detach().float() > 0.5).float()
+    intersection = float((pred * ref).sum().item())
+    pred_area = float(pred.sum().item())
+    ref_area = float(ref.sum().item())
+    union = pred_area + ref_area - intersection
+    return {
+        "support_iou": intersection / max(union, 1e-6),
+        "support_coverage": intersection / max(ref_area, 1e-6),
+        "support_leakage": max(0.0, pred_area - intersection) / max(pred_area, 1e-6),
+        "support_pred_area": pred_area / max(1, pred.numel()),
+        "support_reference_area": ref_area / max(1, ref.numel()),
+    }
+
+
+def _save_mask(mask: torch.Tensor, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    plane = mask.detach().float().clamp(0.0, 1.0)
+    if plane.ndim == 4:
+        plane = plane[0, 0]
+    elif plane.ndim == 3:
+        plane = plane[0]
+    array = (plane.cpu().numpy() * 255.0).round().astype("uint8")
+    Image.fromarray(array, mode="L").save(path)
+
+
+def save_support_debug(result: OperationSupportV3Result, output_dir: str | Path, max_candidates: int = 12) -> None:
+    output = Path(output_dir)
+    _save_mask(result.support_score, output / "operation_v3_support_score.png")
+    if result.grounding_mask is not None:
+        _save_mask(result.grounding_mask, output / "operation_v3_grounding_mask.png")
+    if result.relation_map is not None:
+        _save_mask(result.relation_map, output / "operation_v3_relation_map.png")
+    for idx, (name, score) in enumerate(sorted(result.candidate_scores.items())):
+        if idx >= max_candidates:
+            break
+        _save_mask(score, output / f"operation_v3_candidate_{name.replace('/', '_')}.png")
 
 
 def choose_support_candidate(
@@ -268,6 +409,7 @@ def choose_support_candidate(
     has_grounding: bool,
     has_relation: bool,
     clean_map: torch.Tensor,
+    grounding_mask: torch.Tensor | None = None,
 ) -> tuple[str, torch.Tensor]:
     requested = (candidate_name or "auto").strip()
     if requested in {"", "auto", "operation_default"}:
@@ -278,7 +420,10 @@ def choose_support_candidate(
             has_relation=has_relation,
         )
     if requested == "score_auto":
-        scored = [(score_support_candidate(score, clean_map), name, score) for name, score in candidates.items()]
+        scored = [
+            (score_support_candidate(score, clean_map, grounding_mask=grounding_mask), name, score)
+            for name, score in candidates.items()
+        ]
         scored.sort(key=lambda item: item[0], reverse=True)
         return scored[0][1], scored[0][2]
     if requested not in candidates:
@@ -314,15 +459,27 @@ def build_operation_support_v3(
     keep_components: int = 2,
     dilate_radius: int = 5,
     blur_kernel: int = 5,
+    clean_map_override: torch.Tensor | None = None,
+    velocity_map_override: torch.Tensor | None = None,
+    temporal_aggregation: str = "single",
+    temporal_steps: int = 1,
 ) -> OperationSupportV3Result:
-    attention = _match_map(attention_map, x_t)
+    attention = compute_token_attention(attention_map, x_t)
     if attention is None:
         raise ValueError("operation support v3 requires an attention_map")
-    host = _match_map(host_attention_map, x_t)
-    removed = _match_map(removed_attention_map, x_t)
-    grounding = _match_map(grounding_mask, x_t)
-    clean = clean_disagreement_map(x_t, t, source_velocity, target_velocity)
-    velocity = velocity_disagreement_map(source_velocity, target_velocity)
+    host = compute_token_attention(host_attention_map, x_t)
+    removed = compute_token_attention(removed_attention_map, x_t)
+    grounding = ground_object_mask(grounding_mask, x_t)
+    clean = (
+        _match_map(clean_map_override, x_t)
+        if clean_map_override is not None
+        else compute_clean_disagreement(x_t, t, source_velocity, target_velocity)
+    )
+    velocity = (
+        _match_map(velocity_map_override, x_t)
+        if velocity_map_override is not None
+        else compute_velocity_disagreement(source_velocity, target_velocity)
+    )
     relation_map = build_relation_region(
         relation,
         host_mask=host,
@@ -349,8 +506,9 @@ def build_operation_support_v3(
         has_grounding=grounding is not None,
         has_relation=relation_map is not None,
         clean_map=clean,
+        grounding_mask=grounding,
     )
-    edit, core, stats = postprocess_support_score(
+    edit, core, stats = postprocess_support(
         score,
         top_percentile=top_percentile,
         min_area_ratio=min_area_ratio,
@@ -362,7 +520,7 @@ def build_operation_support_v3(
     stats.update(
         {
             "support_mode": "operation_v3",
-            "support_edit_operation": edit_operation,
+            "support_edit_operation": parse_edit_operation(edit_operation),
             "support_relation": relation,
             "support_score": selected_name,
             "support_requested_candidate": candidate or "auto",
@@ -376,8 +534,12 @@ def build_operation_support_v3(
             "support_keep_components": int(keep_components),
             "support_dilate_radius": int(dilate_radius),
             "support_blur_kernel": int(blur_kernel),
+            "support_temporal_aggregation": temporal_aggregation,
+            "support_temporal_steps": int(temporal_steps),
         }
     )
+    if grounding is not None:
+        stats.update(support_overlap_metrics(edit, grounding))
     return OperationSupportV3Result(
         edit_mask=edit.to(device=x_t.device, dtype=x_t.dtype),
         core_mask=core.to(device=x_t.device, dtype=x_t.dtype),
