@@ -10,6 +10,7 @@ env/
 results/
 outputs/
 archive/
+workshop_materials/
 h_edit_compare/results_*/
 
 *.log
