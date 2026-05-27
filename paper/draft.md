@@ -1,4 +1,30 @@
-# RF h-Edit Draft
+# Decoupled Clean-Estimate Control for Localized Rectified Flow Image Editing
+
+Working title:
+
+```text
+Decoupled Clean-Estimate Control for Localized Rectified Flow Image Editing
+```
+
+Method name:
+
+```text
+DeCE-RF
+```
+
+Expanded form:
+
+```text
+Decoupled Clean-Estimate Control for Rectified Flow
+```
+
+Working thesis:
+
+```text
+Localized RF image editing benefits from decoupling edit and reconstruction
+corrections, localizing them through an operation-conditioned support interface,
+and adapting their strengths with clean-estimate feedback.
+```
 
 This draft should be populated only from complete runs in `outputs/main_matrix`
 and metric rows in `experiments/main_metrics.csv`.
@@ -12,12 +38,13 @@ keeps the source-conditioned RF velocity as the base dynamics, adds an explicit
 reconstruction-aware correction, and separates target-seeking edit corrections
 from preservation corrections.
 
-The paper claim is intentionally narrow and currently not ready as a broad
-success claim: compared with direct target guidance, decoupled RF/ODE editing
-improves source faithfulness, but the current outputs only show a clean
-positive edit on the cat-crown task. The backpack, yellow-car, and rabbit
-tasks should be treated as failures or limitations unless new runs visibly fix
-them.
+The paper claim is intentionally narrow: localized RF editing benefits from
+three coupled design choices. First, edit and reconstruction corrections should
+be separated in velocity space. Second, these corrections should be applied
+through an explicit spatial support interface rather than a global target
+velocity. Third, the edit/preserve balance should be adjusted online from
+clean-estimate feedback. The method is not presented as a fully general
+automatic editor; failures with poor support remain part of the evidence.
 
 ## Related Work
 
@@ -29,14 +56,19 @@ seed, and mask conditions.
 
 ## Method
 
-The implementation-level dynamics are:
+The method decomposes the RF editing dynamics as:
 
 ```text
 xdot_t = v_src + u_rec + u_edit
 ```
 
-Here `v_src` is the source-conditioned RF velocity. The reconstruction branch
-uses the linear RF clean estimate
+Here `v_src` is the source-conditioned RF velocity, `u_rec` is a reconstruction
+correction over the preserve region, and `u_edit` is a target-seeking edit
+correction over the edit support. This decomposition is the main design
+decision: preservation is not treated as a side effect of weak target guidance,
+but as a separate correction field.
+
+The reconstruction branch uses the linear RF clean estimate
 
 ```text
 x0_hat = x_t - t * v_theta(x_t, t)
@@ -49,9 +81,49 @@ gradients, surface-reference corrections, and experimental source-reference
 Q/K/V injection. These terms are described as energy-inspired surrogate
 velocity fields unless a branch explicitly computes an autograd gradient.
 
-The total dynamics are kept fixed while utilities such as mask providers,
-surface recolor references, and source-reference injection are treated as
-support mechanisms rather than separate core methods.
+The spatial interface is operation-conditioned rather than object-specific. It
+does not encode rules such as "if sunglasses, use this box." Instead, each task
+is reduced to an operation type and relation:
+
+```text
+add_object, add_decal, remove_object, replace, recolor
+```
+
+For each operation, the support interface fuses evidence maps:
+
+```text
+target/new-token attention
+host-token attention
+removed/source-token attention
+clean-estimate disagreement
+RF velocity disagreement
+optional grounding or segmentation
+operation relation such as above_host, on_face, on_surface, inside
+```
+
+The output of this interface is not the final edit itself. It is the control
+geometry:
+
+```text
+M_edit, M_core, M_contact, M_preserve
+```
+
+`M_edit` and `M_core` gate edit corrections, `M_contact` allows weak boundary
+blending, and `M_preserve` gates reconstruction corrections. This keeps the
+support module as a principled interface between operation semantics and
+velocity control, not as the central claim.
+
+Finally, the clean-estimate controller measures edit progress and preservation
+drift along the trajectory. When the edit-region clean estimate remains far
+from the target change, it increases the edit weight. When the preserve-region
+clean estimate drifts from the source, it increases the reconstruction weight
+and projects away conflicting edit components. Thus the final method is:
+
+```text
+decouple what to optimize,
+localize where each correction acts,
+adapt how strongly each correction is applied.
+```
 
 ## Experiments
 
