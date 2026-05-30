@@ -1,0 +1,13 @@
+task,method,edit_presence,localization,preservation,artifact_risk,visual_verdict,notes
+cat_crown,support_v3_fixed,good,good,good,medium,pass,"Crown is visible and localized. Shape is large and stylized, but acceptable as a successful accessory insertion."
+cat_crown,support_v3_controller_rmsgap,good,good,good,low,pass,"Crown remains visible with slightly less aggressive shape than fixed/progress. Visual gain over fixed is subtle."
+cat_crown,support_v3_controller_progress,good,good,fair,medium,pass_with_risk,"Crown is strong and clear, but looks more aggressive and may over-edit the local region."
+cat_crown,support_v3_controller_hybrid,good,good,good,low,pass_experimental,"Very close to rmsgap. Seed10 looks usable, but hybrid lacks multi-seed validation."
+dog_sunglasses,support_v3_fixed,good,good,good,low,pass,"Sunglasses are clear, localized on eyes, and face preservation is acceptable."
+dog_sunglasses,support_v3_controller_rmsgap,good,good,good,low,pass,"Sunglasses are clear with comparable preservation to fixed. Visual difference from fixed is small."
+dog_sunglasses,support_v3_controller_progress,good,good,good,low,pass_with_metric_risk,"Looks visually acceptable in seed10, but quantitative multi-seed results show worse CLIP/SSIM than rmsgap."
+dog_sunglasses,support_v3_controller_hybrid,good,good,good,low,pass_experimental,"Looks close to rmsgap and fixed. Needs more seeds before becoming a candidate."
+mug_heart,support_v3_fixed,good,good,good,low,pass,"Heart is visible and well localized. Mug/background shift is mild."
+mug_heart,support_v3_controller_rmsgap,good,good,good,low,pass,"Heart is visible and localized. Preservation is slightly better than fixed by metrics; visual difference is subtle."
+mug_heart,support_v3_controller_progress,good,good,fair,medium,pass_with_risk,"Heart is visible, but progress branch has worse SSIM/inside drift and should not be main."
+mug_heart,support_v3_controller_hybrid,good,good,fair,medium,pass_experimental_with_risk,"Heart is visible, but hybrid slightly hurts preservation relative to rmsgap. Keep as branch."

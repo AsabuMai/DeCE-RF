@@ -1,0 +1,35 @@
+{
+  "experiment": "completion_guided_removal_dece_rf",
+  "source_method": "support_v3_controller_rmsgap",
+  "output_method": "support_v3_controller_rmsgap_completion_ref_targetstruct",
+  "reference_method": "same_support_inpaint_telea",
+  "tasks": [
+    "backpack_remove_toy_charm",
+    "laptop_remove_sticker",
+    "fridge_remove_yellow_magnet",
+    "fridge_remove_peach_magnet",
+    "whiteboard_remove_yellow_letter",
+    "dog_remove_tennis_ball"
+  ],
+  "seeds": [
+    "10"
+  ],
+  "completion_prior": {
+    "type": "same_support_classical_inpaint",
+    "method": "telea",
+    "radius": 5.0,
+    "mask_dilate": 3,
+    "mask_blur": 0.0,
+    "mask_threshold": 45
+  },
+  "fixed_guidance": {
+    "edit_ref_guidance_scale": 0.55,
+    "edit_ref_chroma_mode": "yuv",
+    "edit_ref_luma_preserve_scale": 0.8,
+    "edit_ref_gradient_preserve_scale": 0.4,
+    "edit_ref_smooth_kernel": 1,
+    "edit_text_guidance_scale": 0.02,
+    "edit_ref_structure_mode": "reference",
+    "with_clean_fill": false
+  }
+}

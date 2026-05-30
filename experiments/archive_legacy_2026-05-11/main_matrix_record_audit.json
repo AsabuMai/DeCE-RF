@@ -1,0 +1,740 @@
+[
+  {
+    "run": "backpack_blue/anchor_only/seed_10",
+    "path": "outputs/main_matrix/backpack_blue/anchor_only/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "backpack_blue/anchor_only/seed_11",
+    "path": "outputs/main_matrix/backpack_blue/anchor_only/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 11
+  },
+  {
+    "run": "backpack_blue/anchor_only/seed_12",
+    "path": "outputs/main_matrix/backpack_blue/anchor_only/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 12
+  },
+  {
+    "run": "backpack_blue/base_only/seed_10",
+    "path": "outputs/main_matrix/backpack_blue/base_only/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "backpack_blue/base_only/seed_11",
+    "path": "outputs/main_matrix/backpack_blue/base_only/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 11
+  },
+  {
+    "run": "backpack_blue/base_only/seed_12",
+    "path": "outputs/main_matrix/backpack_blue/base_only/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 12
+  },
+  {
+    "run": "backpack_blue/decoupled_rec/seed_10",
+    "path": "outputs/main_matrix/backpack_blue/decoupled_rec/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "backpack_blue/decoupled_rec/seed_11",
+    "path": "outputs/main_matrix/backpack_blue/decoupled_rec/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 11
+  },
+  {
+    "run": "backpack_blue/decoupled_rec/seed_12",
+    "path": "outputs/main_matrix/backpack_blue/decoupled_rec/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 12
+  },
+  {
+    "run": "backpack_blue/direct_target/seed_10",
+    "path": "outputs/main_matrix/backpack_blue/direct_target/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "backpack_blue/direct_target/seed_11",
+    "path": "outputs/main_matrix/backpack_blue/direct_target/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 11
+  },
+  {
+    "run": "backpack_blue/direct_target/seed_12",
+    "path": "outputs/main_matrix/backpack_blue/direct_target/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 12
+  },
+  {
+    "run": "backpack_blue/full/seed_10",
+    "path": "outputs/main_matrix/backpack_blue/full/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "backpack_blue/full/seed_11",
+    "path": "outputs/main_matrix/backpack_blue/full/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 11
+  },
+  {
+    "run": "backpack_blue/full/seed_12",
+    "path": "outputs/main_matrix/backpack_blue/full/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 12
+  },
+  {
+    "run": "backpack_blue/full_attention_velocity/seed_10",
+    "path": "outputs/main_matrix/backpack_blue/full_attention_velocity/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "backpack_blue/full_full_ref/seed_10",
+    "path": "outputs/main_matrix/backpack_blue/full_full_ref/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "backpack_blue/full_no_rec/seed_10",
+    "path": "outputs/main_matrix/backpack_blue/full_no_rec/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "backpack_blue/full_no_traj/seed_10",
+    "path": "outputs/main_matrix/backpack_blue/full_no_traj/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "backpack_blue/full_semantic_velocity/seed_10",
+    "path": "outputs/main_matrix/backpack_blue/full_semantic_velocity/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "backpack_blue/full_source_v_inject/seed_10",
+    "path": "outputs/main_matrix/backpack_blue/full_source_v_inject/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a burgundy backpack sitting on rocks outdoors.",
+    "target_prompt": "A photo of the same backpack sitting on the same rocks outdoors, with the backpack fabric changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown/anchor_only/seed_10",
+    "path": "outputs/main_matrix/cat_crown/anchor_only/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown/anchor_only/seed_11",
+    "path": "outputs/main_matrix/cat_crown/anchor_only/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 11
+  },
+  {
+    "run": "cat_crown/anchor_only/seed_12",
+    "path": "outputs/main_matrix/cat_crown/anchor_only/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 12
+  },
+  {
+    "run": "cat_crown/base_only/seed_10",
+    "path": "outputs/main_matrix/cat_crown/base_only/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown/base_only/seed_11",
+    "path": "outputs/main_matrix/cat_crown/base_only/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 11
+  },
+  {
+    "run": "cat_crown/base_only/seed_12",
+    "path": "outputs/main_matrix/cat_crown/base_only/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 12
+  },
+  {
+    "run": "cat_crown/decoupled_rec/seed_10",
+    "path": "outputs/main_matrix/cat_crown/decoupled_rec/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown/decoupled_rec/seed_11",
+    "path": "outputs/main_matrix/cat_crown/decoupled_rec/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 11
+  },
+  {
+    "run": "cat_crown/decoupled_rec/seed_12",
+    "path": "outputs/main_matrix/cat_crown/decoupled_rec/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 12
+  },
+  {
+    "run": "cat_crown/direct_target/seed_10",
+    "path": "outputs/main_matrix/cat_crown/direct_target/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown/direct_target/seed_11",
+    "path": "outputs/main_matrix/cat_crown/direct_target/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 11
+  },
+  {
+    "run": "cat_crown/direct_target/seed_12",
+    "path": "outputs/main_matrix/cat_crown/direct_target/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 12
+  },
+  {
+    "run": "cat_crown/full/seed_10",
+    "path": "outputs/main_matrix/cat_crown/full/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown/full/seed_11",
+    "path": "outputs/main_matrix/cat_crown/full/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 11
+  },
+  {
+    "run": "cat_crown/full/seed_12",
+    "path": "outputs/main_matrix/cat_crown/full/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 12
+  },
+  {
+    "run": "cat_crown/full_attention_velocity/seed_10",
+    "path": "outputs/main_matrix/cat_crown/full_attention_velocity/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown/full_full_ref/seed_10",
+    "path": "outputs/main_matrix/cat_crown/full_full_ref/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown/full_no_rec/seed_10",
+    "path": "outputs/main_matrix/cat_crown/full_no_rec/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown/full_no_traj/seed_10",
+    "path": "outputs/main_matrix/cat_crown/full_no_traj/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown/full_semantic_velocity/seed_10",
+    "path": "outputs/main_matrix/cat_crown/full_semantic_velocity/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown/full_source_v_inject/seed_10",
+    "path": "outputs/main_matrix/cat_crown/full_source_v_inject/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a cat sitting in grass.",
+    "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses/anchor_only/seed_10",
+    "path": "outputs/main_matrix/rabbit_sunglasses/anchor_only/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses/anchor_only/seed_11",
+    "path": "outputs/main_matrix/rabbit_sunglasses/anchor_only/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 11
+  },
+  {
+    "run": "rabbit_sunglasses/anchor_only/seed_12",
+    "path": "outputs/main_matrix/rabbit_sunglasses/anchor_only/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 12
+  },
+  {
+    "run": "rabbit_sunglasses/base_only/seed_10",
+    "path": "outputs/main_matrix/rabbit_sunglasses/base_only/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses/base_only/seed_11",
+    "path": "outputs/main_matrix/rabbit_sunglasses/base_only/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 11
+  },
+  {
+    "run": "rabbit_sunglasses/base_only/seed_12",
+    "path": "outputs/main_matrix/rabbit_sunglasses/base_only/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 12
+  },
+  {
+    "run": "rabbit_sunglasses/decoupled_rec/seed_10",
+    "path": "outputs/main_matrix/rabbit_sunglasses/decoupled_rec/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses/decoupled_rec/seed_11",
+    "path": "outputs/main_matrix/rabbit_sunglasses/decoupled_rec/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 11
+  },
+  {
+    "run": "rabbit_sunglasses/decoupled_rec/seed_12",
+    "path": "outputs/main_matrix/rabbit_sunglasses/decoupled_rec/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 12
+  },
+  {
+    "run": "rabbit_sunglasses/direct_target/seed_10",
+    "path": "outputs/main_matrix/rabbit_sunglasses/direct_target/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses/direct_target/seed_11",
+    "path": "outputs/main_matrix/rabbit_sunglasses/direct_target/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 11
+  },
+  {
+    "run": "rabbit_sunglasses/direct_target/seed_12",
+    "path": "outputs/main_matrix/rabbit_sunglasses/direct_target/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 12
+  },
+  {
+    "run": "rabbit_sunglasses/full/seed_10",
+    "path": "outputs/main_matrix/rabbit_sunglasses/full/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses/full/seed_11",
+    "path": "outputs/main_matrix/rabbit_sunglasses/full/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 11
+  },
+  {
+    "run": "rabbit_sunglasses/full/seed_12",
+    "path": "outputs/main_matrix/rabbit_sunglasses/full/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a rabbit sitting outdoors in side profile.",
+    "target_prompt": "A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses.",
+    "seed": 12
+  },
+  {
+    "run": "red_chair_blue/base_only/seed_10",
+    "path": "outputs/main_matrix/red_chair_blue/base_only/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red chair indoors.",
+    "target_prompt": "A photo of the same chair indoors, with the chair changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "red_chair_blue/decoupled_rec/seed_10",
+    "path": "outputs/main_matrix/red_chair_blue/decoupled_rec/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red chair indoors.",
+    "target_prompt": "A photo of the same chair indoors, with the chair changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "red_chair_blue/direct_target/seed_10",
+    "path": "outputs/main_matrix/red_chair_blue/direct_target/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red chair indoors.",
+    "target_prompt": "A photo of the same chair indoors, with the chair changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "red_chair_blue/full/seed_10",
+    "path": "outputs/main_matrix/red_chair_blue/full/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red chair indoors.",
+    "target_prompt": "A photo of the same chair indoors, with the chair changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "yellow_car_blue/anchor_only/seed_10",
+    "path": "outputs/main_matrix/yellow_car_blue/anchor_only/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "yellow_car_blue/anchor_only/seed_11",
+    "path": "outputs/main_matrix/yellow_car_blue/anchor_only/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 11
+  },
+  {
+    "run": "yellow_car_blue/anchor_only/seed_12",
+    "path": "outputs/main_matrix/yellow_car_blue/anchor_only/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 12
+  },
+  {
+    "run": "yellow_car_blue/base_only/seed_10",
+    "path": "outputs/main_matrix/yellow_car_blue/base_only/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "yellow_car_blue/base_only/seed_11",
+    "path": "outputs/main_matrix/yellow_car_blue/base_only/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 11
+  },
+  {
+    "run": "yellow_car_blue/base_only/seed_12",
+    "path": "outputs/main_matrix/yellow_car_blue/base_only/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 12
+  },
+  {
+    "run": "yellow_car_blue/decoupled_rec/seed_10",
+    "path": "outputs/main_matrix/yellow_car_blue/decoupled_rec/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "yellow_car_blue/decoupled_rec/seed_11",
+    "path": "outputs/main_matrix/yellow_car_blue/decoupled_rec/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 11
+  },
+  {
+    "run": "yellow_car_blue/decoupled_rec/seed_12",
+    "path": "outputs/main_matrix/yellow_car_blue/decoupled_rec/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 12
+  },
+  {
+    "run": "yellow_car_blue/direct_target/seed_10",
+    "path": "outputs/main_matrix/yellow_car_blue/direct_target/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "yellow_car_blue/direct_target/seed_11",
+    "path": "outputs/main_matrix/yellow_car_blue/direct_target/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 11
+  },
+  {
+    "run": "yellow_car_blue/direct_target/seed_12",
+    "path": "outputs/main_matrix/yellow_car_blue/direct_target/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 12
+  },
+  {
+    "run": "yellow_car_blue/full/seed_10",
+    "path": "outputs/main_matrix/yellow_car_blue/full/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "yellow_car_blue/full/seed_11",
+    "path": "outputs/main_matrix/yellow_car_blue/full/seed_11",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 11
+  },
+  {
+    "run": "yellow_car_blue/full/seed_12",
+    "path": "outputs/main_matrix/yellow_car_blue/full/seed_12",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 12
+  },
+  {
+    "run": "yellow_car_blue/full_attention_velocity/seed_10",
+    "path": "outputs/main_matrix/yellow_car_blue/full_attention_velocity/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "yellow_car_blue/full_full_ref/seed_10",
+    "path": "outputs/main_matrix/yellow_car_blue/full_full_ref/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "yellow_car_blue/full_no_rec/seed_10",
+    "path": "outputs/main_matrix/yellow_car_blue/full_no_rec/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "yellow_car_blue/full_no_traj/seed_10",
+    "path": "outputs/main_matrix/yellow_car_blue/full_no_traj/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "yellow_car_blue/full_semantic_velocity/seed_10",
+    "path": "outputs/main_matrix/yellow_car_blue/full_semantic_velocity/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 10
+  },
+  {
+    "run": "yellow_car_blue/full_source_v_inject/seed_10",
+    "path": "outputs/main_matrix/yellow_car_blue/full_source_v_inject/seed_10",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow car parked on a street.",
+    "target_prompt": "A photo of the same car parked on the same street, with the car body changed to clean blue.",
+    "seed": 10
+  }
+]

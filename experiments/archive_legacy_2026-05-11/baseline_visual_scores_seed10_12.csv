@@ -1,0 +1,61 @@
+task,method,seed,edit_success,preservation,locality,artifact,overall,notes
+cat_crown,ours_full,10,4,5,5,4,4,Crown visible; cat identity and background preserved.
+cat_crown,ours_full,11,4,5,5,4,4,Crown visible; cat identity and background preserved.
+cat_crown,ours_full,12,4,5,5,4,4,Crown visible; cat identity and background preserved.
+cat_crown,flowedit,10,5,1,1,3,2,"Crown strong, but cat/background are redrawn."
+cat_crown,flowedit,11,5,1,1,3,2,"Crown strong, but cat/background are redrawn."
+cat_crown,flowedit,12,5,1,1,3,2,"Crown strong, but cat/background are redrawn."
+cat_crown,splitflow,10,5,2,2,3,3,Crown strong; cat identity and pose drift.
+cat_crown,splitflow,11,5,2,2,3,3,Crown strong; cat identity and pose drift.
+cat_crown,splitflow,12,5,2,2,3,3,Crown strong; cat identity and pose drift.
+cat_crown,fireflow,10,4,2,2,3,3,Crown appears; cat identity/pose drift.
+cat_crown,fireflow,11,4,2,2,3,3,Crown appears; cat identity/pose drift.
+cat_crown,fireflow,12,4,2,2,3,3,Crown appears; cat identity/pose drift.
+cat_crown,rf_solver_edit,10,4,2,2,3,3,Crown appears; FLUX output changes identity/pose.
+cat_crown,rf_solver_edit,11,4,2,2,3,3,Crown appears; FLUX output changes identity/pose.
+cat_crown,rf_solver_edit,12,4,2,2,3,3,Crown appears; FLUX output changes identity/pose.
+dog_sunglasses,ours_full,10,3,5,5,3,4,Sunglasses are subtle/semi-transparent; dog and background preserved.
+dog_sunglasses,ours_full,11,3,5,5,3,4,Sunglasses are subtle/semi-transparent; dog and background preserved.
+dog_sunglasses,ours_full,12,3,5,5,3,4,Sunglasses are subtle/semi-transparent; dog and background preserved.
+dog_sunglasses,flowedit,10,5,2,2,3,3,Sunglasses strong; dog identity and composition drift.
+dog_sunglasses,flowedit,11,5,2,2,3,3,Sunglasses strong; dog identity and composition drift.
+dog_sunglasses,flowedit,12,5,2,2,3,3,Sunglasses strong; dog identity and composition drift.
+dog_sunglasses,splitflow,10,5,3,3,3,3,Sunglasses strong; identity and face geometry still change.
+dog_sunglasses,splitflow,11,5,3,3,3,3,Sunglasses strong; identity and face geometry still change.
+dog_sunglasses,splitflow,12,5,3,3,3,3,Sunglasses strong; identity and face geometry still change.
+dog_sunglasses,fireflow,10,5,2,2,3,3,Sunglasses clear; identity and clothing/background details drift.
+dog_sunglasses,fireflow,11,5,2,2,3,3,Sunglasses clear; identity and clothing/background details drift.
+dog_sunglasses,fireflow,12,5,2,2,3,3,Sunglasses clear; identity and clothing/background details drift.
+dog_sunglasses,rf_solver_edit,10,4,2,2,3,3,Sunglasses generally visible; identity and layout drift.
+dog_sunglasses,rf_solver_edit,11,4,2,2,3,3,Sunglasses generally visible; identity and layout drift.
+dog_sunglasses,rf_solver_edit,12,4,2,2,3,3,Sunglasses generally visible; identity and layout drift.
+mug_heart,ours_full,10,5,5,5,4,5,Heart clear; mug layout and background preserved.
+mug_heart,ours_full,11,5,5,5,4,5,Heart clear; mug layout and background preserved.
+mug_heart,ours_full,12,5,5,5,4,5,Heart clear; mug layout and background preserved.
+mug_heart,flowedit,10,4,3,3,3,3,Heart appears; some seeds shift viewpoint or scene layout.
+mug_heart,flowedit,11,4,3,3,3,3,Heart appears; some seeds shift viewpoint or scene layout.
+mug_heart,flowedit,12,4,3,3,3,3,Heart appears; some seeds shift viewpoint or scene layout.
+mug_heart,splitflow,10,5,4,4,4,4,Clean heart; moderate viewpoint/lighting change.
+mug_heart,splitflow,11,5,4,4,4,4,Clean heart; moderate viewpoint/lighting change.
+mug_heart,splitflow,12,5,4,4,4,4,Clean heart; moderate viewpoint/lighting change.
+mug_heart,fireflow,10,3,4,4,3,3,Heart is small; mug layout mostly preserved.
+mug_heart,fireflow,11,3,4,4,3,3,Heart is small; mug layout mostly preserved.
+mug_heart,fireflow,12,3,4,4,3,3,Heart is small; mug layout mostly preserved.
+mug_heart,rf_solver_edit,10,2,4,4,3,3,Heart is very small; mug layout mostly preserved.
+mug_heart,rf_solver_edit,11,2,4,4,3,3,Heart is very small; mug layout mostly preserved.
+mug_heart,rf_solver_edit,12,2,4,4,3,3,Heart is very small; mug layout mostly preserved.
+backpack_remove_toy_charm,ours_full,10,5,5,5,4,5,"Dangling toy removed; patch, strap, zipper, and fabric preserved."
+backpack_remove_toy_charm,ours_full,11,5,5,5,4,5,"Dangling toy removed; patch, strap, zipper, and fabric preserved."
+backpack_remove_toy_charm,ours_full,12,5,5,5,4,5,"Dangling toy removed; patch, strap, zipper, and fabric preserved."
+backpack_remove_toy_charm,flowedit,10,1,1,1,2,1,Regenerates a different backpack/keychain scene and often keeps a charm.
+backpack_remove_toy_charm,flowedit,11,1,1,1,2,1,Regenerates a different backpack/keychain scene and often keeps a charm.
+backpack_remove_toy_charm,flowedit,12,1,1,1,2,1,Regenerates a different backpack/keychain scene and often keeps a charm.
+backpack_remove_toy_charm,splitflow,10,1,2,1,2,1,Redraws the scene and keeps/regenerates a dangling toy.
+backpack_remove_toy_charm,splitflow,11,1,2,1,2,1,Redraws the scene and keeps/regenerates a dangling toy.
+backpack_remove_toy_charm,splitflow,12,1,2,1,2,1,Redraws the scene and keeps/regenerates a dangling toy.
+backpack_remove_toy_charm,fireflow,10,1,4,1,2,2,Source layout partly preserved but dangling toy remains.
+backpack_remove_toy_charm,fireflow,11,1,4,1,2,2,Source layout partly preserved but dangling toy remains.
+backpack_remove_toy_charm,fireflow,12,1,4,1,2,2,Source layout partly preserved but dangling toy remains.
+backpack_remove_toy_charm,rf_solver_edit,10,1,4,1,2,2,Source layout partly preserved but dangling toy remains.
+backpack_remove_toy_charm,rf_solver_edit,11,1,4,1,2,2,Source layout partly preserved but dangling toy remains.
+backpack_remove_toy_charm,rf_solver_edit,12,1,4,1,2,2,Source layout partly preserved but dangling toy remains.

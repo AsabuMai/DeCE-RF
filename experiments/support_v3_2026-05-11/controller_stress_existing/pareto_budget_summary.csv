@@ -1,0 +1,9 @@
+base_method,best_success_under_joint_budget,best_success_under_outside_budget,best_success_under_ssim_budget,family,joint_budget_eligible,n,outside_budget,outside_budget_eligible,pareto_auc_outside,pareto_auc_ssim_loss,ssim_budget_eligible,ssim_loss_budget,success_key,task
+support_v3_fixed,0.0,0.0,0.0,edit_strength,3,5,0.05474404042959213,3,0.0,0.0,3,0.13042038880797033,clip_target_minus_source,cat_crown
+support_v3_controller_rmsgap,0.0,0.0,0.0,edit_strength,4,5,0.05474404042959213,5,0.0,0.0,4,0.13042038880797033,clip_target_minus_source,cat_crown
+support_v3_fixed,0.0,0.0,0.0,support_perturb,3,5,0.046829238990942636,4,0.0,0.0,3,0.09843711702624298,clip_target_minus_source,dog_sunglasses
+support_v3_controller_rmsgap,0.0,0.0,0.0,support_perturb,3,5,0.046829238990942636,5,0.0,0.0,3,0.09843711702624298,clip_target_minus_source,dog_sunglasses
+support_v3_fixed,0.0,0.0,0.0,edit_strength,3,5,0.008799963777263959,5,0.0,0.0,3,0.13733742147725903,clip_target_minus_source,mug_heart
+support_v3_controller_rmsgap,0.0,0.0,0.0,edit_strength,3,5,0.008799963777263959,5,0.0,0.0,3,0.13733742147725903,clip_target_minus_source,mug_heart
+support_v3_fixed,0.0,0.0,0.0,support_perturb,3,5,0.008799963777263959,3,0.0,0.0,4,0.13733742147725903,clip_target_minus_source,mug_heart
+support_v3_controller_rmsgap,0.0,0.0,0.0,support_perturb,4,5,0.008799963777263959,4,0.0,0.0,4,0.13733742147725903,clip_target_minus_source,mug_heart

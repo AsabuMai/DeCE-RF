@@ -1,0 +1,112 @@
+[
+  {
+    "image": "/home/Wu_25R8111/rf_h_edit_project/data/paper_images/cat_sitting_in_grass.jpg",
+    "missing": [],
+    "operation": "add_object",
+    "relation": "above_host",
+    "run_dir": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/cat_crown/support_v3_fixed_policyv1_debug/seed_10",
+    "selected_candidate": "relation_x_response",
+    "support_area": 0.0260416679084301,
+    "task": "cat_crown"
+  },
+  {
+    "image": "/home/Wu_25R8111/rf_h_edit_project/data/pretty_free_candidates/unsplash_dog_front_malinois_PGlA5efHOiI.jpg",
+    "missing": [],
+    "operation": "add_object",
+    "relation": "on_face",
+    "run_dir": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/dog_sunglasses/support_v3_fixed_policyv1_debug/seed_10",
+    "selected_candidate": "relation_x_response",
+    "support_area": 0.07625000178813934,
+    "task": "dog_sunglasses"
+  },
+  {
+    "image": "/home/Wu_25R8111/rf_h_edit_project/data/pretty_free_candidates/pexels_white_mug_6312107.jpg",
+    "missing": [],
+    "operation": "add_decal",
+    "relation": "on_surface",
+    "run_dir": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/mug_heart/support_v3_fixed_policyv1_debug/seed_10",
+    "selected_candidate": "decal_surface_local_response",
+    "support_area": 0.0364583358168602,
+    "task": "mug_heart"
+  },
+  {
+    "image": "/home/Wu_25R8111/rf_h_edit_project/data/pretty_free_candidates/pexels_white_tshirt_mockup_12025472.jpg",
+    "missing": [],
+    "operation": "add_decal",
+    "relation": "on_surface",
+    "run_dir": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/tshirt_star/support_v3_fixed_policyv1_debug/seed_10",
+    "selected_candidate": "decal_surface_local_response",
+    "support_area": 0.0662202388048172,
+    "task": "tshirt_star"
+  },
+  {
+    "image": "/home/Wu_25R8111/rf_h_edit_project/data/pretty_free_candidates/pexels_white_tote_bag_4068314.jpg",
+    "missing": [],
+    "operation": "add_decal",
+    "relation": "on_surface",
+    "run_dir": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/tote_leaf/support_v3_fixed_policyv1_debug/seed_10",
+    "selected_candidate": "decal_surface_local_response",
+    "support_area": 0.0234375,
+    "task": "tote_leaf"
+  },
+  {
+    "image": "/home/Wu_25R8111/rf_h_edit_project/data/pretty_free_candidates/unsplash_backpack_keychain_njwnKDUDKNM.jpg",
+    "missing": [],
+    "operation": "remove_object",
+    "relation": "remove_source_object",
+    "run_dir": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/backpack_remove_toy_charm/support_v3_fixed_policyv1_debug/seed_10",
+    "selected_candidate": "seg_only",
+    "support_area": 0.1233723983168602,
+    "task": "backpack_remove_toy_charm"
+  },
+  {
+    "image": "/home/Wu_25R8111/rf_h_edit_project/data/pretty_free_candidates/unsplash_backpack_keychain_njwnKDUDKNM.jpg",
+    "missing": [],
+    "operation": "replace",
+    "relation": "remove_source_object",
+    "run_dir": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/backpack_replace_patch_blue/support_v3_fixed_policyv1_debug/seed_10",
+    "selected_candidate": "seg_only",
+    "support_area": 0.0647786483168602,
+    "task": "backpack_replace_patch_blue"
+  },
+  {
+    "image": "/home/Wu_25R8111/rf_h_edit_project/data/replacement_candidates/commons_black_white_cat_belled_collar.jpg",
+    "missing": [],
+    "operation": "replace",
+    "relation": "remove_source_object",
+    "run_dir": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/cat_replace_bell_heart_tag/support_v3_fixed_policyv1_debug/seed_10",
+    "selected_candidate": "seg_only",
+    "support_area": 0.01869419775903225,
+    "task": "cat_replace_bell_heart_tag"
+  },
+  {
+    "image": "/home/Wu_25R8111/rf_h_edit_project/data/replacement_candidates/commons_dog_with_tennis_ball.jpg",
+    "missing": [],
+    "operation": "replace",
+    "relation": "remove_source_object",
+    "run_dir": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/dog_replace_tennis_ball_star/support_v3_fixed_policyv1_debug/seed_10",
+    "selected_candidate": "seg_only",
+    "support_area": 0.0309244804084301,
+    "task": "dog_replace_tennis_ball_star"
+  },
+  {
+    "image": "/home/Wu_25R8111/rf_h_edit_project/data/paper_images/rabbit_side_view.jpg",
+    "missing": [],
+    "operation": "add_object",
+    "relation": "on_face",
+    "run_dir": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/rabbit_sunglasses/support_v3_fixed_policyv1_debug/seed_10",
+    "selected_candidate": "relation_x_response",
+    "support_area": 0.025862067937850952,
+    "task": "rabbit_sunglasses"
+  },
+  {
+    "image": "/home/Wu_25R8111/rf_h_edit_project/data/paper_images/dog_sitting_cc0.jpg",
+    "missing": [],
+    "operation": "add_object",
+    "relation": "above_host",
+    "run_dir": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/dog_crown/support_v3_fixed_policyv1_debug/seed_10",
+    "selected_candidate": "relation_x_response",
+    "support_area": 0.0282738097012043,
+    "task": "dog_crown"
+  }
+]
