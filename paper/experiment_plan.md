@@ -106,6 +106,47 @@ operation provides a trustworthy prior or a strong target shape/color cue. Do
 not silently mix these routes into the main Core-6 method table.
 ```
 
+Object-addition gate status:
+
+```text
+add_editor_v1 is not yet a passing extension gate. It can induce localized
+object-like color/texture, but current multi-seed visual gates fail as genuine
+object insertion: spoon and pen attach to host edges, flowers are mostly a
+small lip artifact, cushion edits chair geometry, and sunglasses read as a
+localized black patch. Do not use these runs as positive evidence. The next
+route needs an explicit spawn/placement region for the new object, separated
+from the host preservation/support mask, rather than pushing target velocity
+through the host mask itself.
+
+2026-06-02 add_editor_v2 seed-10 probes:
+- Implemented a relation-aware add_editor_v2 route for object insertion. The
+  route keeps inside-container tasks on the previous segmentation/response
+  candidate, sends on-surface tasks to a host-spawn-wide candidate, and sends
+  above-host/container-mouth tasks to a top-contact candidate. Also fixed the
+  support postprocessing fallback so it chooses the candidate closest to the
+  requested area instead of silently keeping the last percentile trial.
+- Added explicit position/orientation language to add-object prompts and local
+  target prompts. This is required: generic prompts like "inside" or
+  "on_surface" leave too much freedom, and RF response often attaches to rims,
+  shadows, highlights, spiral bindings, or host edges.
+- Current positive-looking seed-10 examples: vase+flowers, chair+cushion,
+  shelf+books, and bowl+spoon are visually more recognizable than add_editor_v1.
+  Wall+clock forms a small plausible clock after position prompting, but is not
+  yet robust.
+- Current failures: bowl+apple is pulled toward the bowl rim / external shadow
+  even after center/away-from-rim prompting; notebook+pen still attaches to the
+  spiral binding and becomes a blue smear rather than a clean diagonal pen;
+  frame+landscape mainly edits frame/inner blank tone instead of adding a clear
+  picture.
+- Conclusion: add_editor_v2 is a useful diagnostic but is not ready for the
+  main experiment. Prompt position specificity is necessary but insufficient;
+  the next route must bind the prompt position to a geometry-aware placement
+  prior or explicit spatial box/region for the new object, especially for
+  center-in-container and elongated-object-on-page cases. Do not promote
+  add-object insertion to a headline result until the seed-10 gate passes
+  without per-image hyperparameter tuning.
+```
+
 Removal stress tasks excluded from the main matrix:
 
 | Task | Reason |
@@ -417,18 +458,89 @@ Table 4: failure taxonomy counts.
 
 ## External Baselines
 
-Use existing baseline records where already available:
+Use the complete external baseline protocol, not ad hoc single-method smoke outputs.
+
+Source-code pool, protocol, and manifest:
 
 ```text
+/workspace/baselines/src
+/workspace/baselines/download_status.tsv
+experiments/support_v3_2026-05-11/core6_external_baseline_protocol.md
+experiments/support_v3_2026-05-11/core6_external_baseline_manifest.csv
+```
+
+Baseline blocks:
+
+```text
+Block 0: internal controls / main claim rows
+base_only
+direct_target
+adaptive_full_generic_support
+support_v3_controller_rmsgap
+support_v3_fixed only as internal ablation
+
+Block A: matched RF / flow-family external baselines
 FlowEdit
 SplitFlow
 FireFlow
 RF-Solver-Edit
+ReFlex
+FlowAlign
+stable-flow
+ZONE
+
+Block B: diffusion text-editing external baselines
+LEDITS++
+h-Edit-R
+h-Edit-R + P2P
+InstructPix2Pix
+Pix2Pix-Zero
+MasaCtrl
+Prompt-to-Prompt
+
+Block C: same-support diagnostics
+same-support inpainting or mask-aware external editors, diagnostic table only
 ```
 
-Report ReFlex and SteerFlow as failed/unavailable only if the failure metadata
-is kept in the manifest. Do not claim superiority over baselines that could not
-be run under matched conditions.
+Fairness rules:
+
+```text
+same Core-6 source images and prompts
+seeds 10/11/12 when supported
+fixed Core-6 masks used for metrics only
+no DeCE-RF support/eval mask passed to headline external baselines
+same-support rows must be labeled diagnostic-only
+no per-image hyperparameter tuning after visual inspection
+all failures remain in the manifest with concrete reasons
+```
+
+Current completed external baseline:
+
+```text
+LEDITS++: Core-6 x seeds 10/11/12 complete via diffusers SD1.5 pipeline
+```
+
+LEDITS++ should appear in the external diffusion-editing table with a nonlocal-rewrite caveat, not in the RF/flow-family group.
+
+h-Edit complete baseline design:
+
+```text
+h-Edit-R + P2P
+```
+
+Use the authors' recommended text-guided P2P route as the single h-Edit baseline row. Do not report a separate no-attention h-Edit-R row in the main external baseline table; keep it only as an optional diagnostic if P2P failure analysis is needed.
+
+Before full Core-6 expansion, h-Edit-R + P2P must pass a pre-registered seed-10 gate on:
+
+```text
+dog_sunglasses
+mug_heart or tshirt_star
+red_chair_blue
+```
+
+Gate criterion: h-Edit-R + P2P must show visible target formation on at least two of the three gate tasks, without hidden mask input. The previous `mug_heart` h-Edit-R + P2P smoke is recorded as `smoke_failed` because it reconstructed the mug but did not form the red heart.
+
+Do not claim superiority over baselines that could not be run under matched conditions. Report ReFlex, SteerFlow, or any other method as failed/unavailable only if the failure metadata is kept in the manifest.
 
 ## Server Run Order
 
@@ -440,7 +552,11 @@ When the lab server is available:
 4. Build comparison grids.
 5. Run contribution ablations.
 6. Run stress/perturbation sweeps for feedback-control evidence.
-7. Update manual visual audit and failure flags.
+7. Follow `core6_external_baseline_protocol.md` and update `core6_external_baseline_manifest.csv` before each external baseline expansion.
+8. Run h-Edit seed-10 gate for `dog_sunglasses`, one decal task, and `red_chair_blue` using `h-Edit-R + P2P`.
+9. If the gate passes, freeze h-Edit config and expand to Core-6 seeds 10/11/12; otherwise keep it as a smoke-failed/pending baseline.
+10. Validate RF/flow-family baseline environments and adapters one method at a time.
+11. Update manual visual audit, baseline manifest, and failure flags.
 
 Suggested runner pattern:
 

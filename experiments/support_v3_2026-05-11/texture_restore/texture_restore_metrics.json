@@ -1,0 +1,90 @@
+[
+  {
+    "name": "cf_soft",
+    "inside_blue": 0.9822427989568377,
+    "outside_blue": 0.007751686769633609,
+    "boundary_red": 0.03645235361653272,
+    "source_red_boundary_residual": 0.07840050377833753,
+    "outside_l1": 0.05746679753065109,
+    "inside_l1": 0.26236945390701294,
+    "texture_corr": 0.15073189423220873,
+    "path": "outputs/pretty_matrix/red_chair_blue/support_v3_controller_rmsgap_recolor_closedform_rgbonly_static_896_s025/seed_10/result.png"
+  },
+  {
+    "name": "yuv_dlp3",
+    "inside_blue": 0.9718404782137311,
+    "outside_blue": 0.0062933844927376545,
+    "boundary_red": 0.05697474167623422,
+    "source_red_boundary_residual": 0.10516372795969774,
+    "outside_l1": 0.057412341237068176,
+    "inside_l1": 0.2628272473812103,
+    "texture_corr": 0.20094651077978234,
+    "path": "outputs/pretty_matrix/red_chair_blue/support_v3_controller_rmsgap_recolor_closedform_yuvtex_c050_dlp3_static_896_s025/seed_10/result.png"
+  },
+  {
+    "name": "cf_soft_y0p6",
+    "inside_blue": 0.9822134966448853,
+    "outside_blue": 0.007745205426180739,
+    "boundary_red": 0.03645235361653272,
+    "source_red_boundary_residual": 0.07840050377833753,
+    "outside_l1": 0.0574583038687706,
+    "inside_l1": 0.2562022805213928,
+    "texture_corr": 0.7111924749197259,
+    "path": "experiments/support_v3_2026-05-11/texture_restore/cf_soft_y0p6.png"
+  },
+  {
+    "name": "cf_soft_y0p8",
+    "inside_blue": 0.9822134966448853,
+    "outside_blue": 0.007745205426180739,
+    "boundary_red": 0.03645235361653272,
+    "source_red_boundary_residual": 0.07840050377833753,
+    "outside_l1": 0.05745613947510719,
+    "inside_l1": 0.2550449073314667,
+    "texture_corr": 0.7913131430113552,
+    "path": "experiments/support_v3_2026-05-11/texture_restore/cf_soft_y0p8.png"
+  },
+  {
+    "name": "cf_soft_y1p0",
+    "inside_blue": 0.9822134966448853,
+    "outside_blue": 0.007745205426180739,
+    "boundary_red": 0.03645235361653272,
+    "source_red_boundary_residual": 0.07840050377833753,
+    "outside_l1": 0.05745413899421692,
+    "inside_l1": 0.2545619606971741,
+    "texture_corr": 0.8437287786671261,
+    "path": "experiments/support_v3_2026-05-11/texture_restore/cf_soft_y1p0.png"
+  },
+  {
+    "name": "yuv_dlp3_y0p6",
+    "inside_blue": 0.9718404782137311,
+    "outside_blue": 0.006286903149284784,
+    "boundary_red": 0.05697474167623422,
+    "source_red_boundary_residual": 0.10516372795969774,
+    "outside_l1": 0.05740423500537872,
+    "inside_l1": 0.25757884979248047,
+    "texture_corr": 0.7168222141830343,
+    "path": "experiments/support_v3_2026-05-11/texture_restore/yuv_dlp3_y0p6.png"
+  },
+  {
+    "name": "yuv_dlp3_y0p8",
+    "inside_blue": 0.9718404782137311,
+    "outside_blue": 0.006286903149284784,
+    "boundary_red": 0.05697474167623422,
+    "source_red_boundary_residual": 0.10516372795969774,
+    "outside_l1": 0.05740201845765114,
+    "inside_l1": 0.2567206621170044,
+    "texture_corr": 0.7926385834122688,
+    "path": "experiments/support_v3_2026-05-11/texture_restore/yuv_dlp3_y0p8.png"
+  },
+  {
+    "name": "yuv_dlp3_y1p0",
+    "inside_blue": 0.9718404782137311,
+    "outside_blue": 0.006286903149284784,
+    "boundary_red": 0.05697474167623422,
+    "source_red_boundary_residual": 0.10516372795969774,
+    "outside_l1": 0.057399943470954895,
+    "inside_l1": 0.25642839074134827,
+    "texture_corr": 0.8431622672256127,
+    "path": "experiments/support_v3_2026-05-11/texture_restore/yuv_dlp3_y1p0.png"
+  }
+]

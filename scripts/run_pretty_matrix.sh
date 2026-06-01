@@ -5,6 +5,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEFAULT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 ROOT="${ROOT:-${DEFAULT_ROOT}}"
 PYTHON="${PYTHON:-${ROOT}/.venv/bin/python}"
+if [[ -z "${HF_HOME:-}" && -d "${ROOT}/../.cache/huggingface" ]]; then
+  export HF_HOME="${ROOT}/../.cache/huggingface"
+fi
 export HF_HUB_ENABLE_HF_TRANSFER="${HF_HUB_ENABLE_HF_TRANSFER:-0}"
 if [[ "${HF_HUB_ENABLE_HF_TRANSFER}" == "1" ]] && ! "${PYTHON}" -c "import hf_transfer" >/dev/null 2>&1; then
   echo "[pretty-matrix] disabling HF_HUB_ENABLE_HF_TRANSFER because hf_transfer is not installed"
@@ -53,6 +56,7 @@ task_config() {
   SUPPORT_NEW_TOKENS=""
   SUPPORT_HOST_TOKENS=""
   SUPPORT_REMOVED_TOKENS=""
+  SUPPORT_LOCAL_TARGET_PROMPT=""
   SUPPORT_V2_CANDIDATE=""
   SUPPORT_V3_CANDIDATE="operation_default"
   SUPPORT_V3_RELATION="auto"
@@ -89,7 +93,7 @@ task_config() {
       TASK_KIND="accessory_semantic"
       IMAGE="${ROOT}/data/paper_images/cat_sitting_in_grass.jpg"
       SOURCE_PROMPT="A photo of a cat sitting in grass."
-      TARGET_PROMPT="A photo of the same cat sitting in the same grass, wearing a small golden crown on its head."
+      TARGET_PROMPT="A photo of the same cat sitting in the same grass, wearing a small golden crown centered on top of its head between the ears."
       ATTENTION_TARGET_WORDS="crown,head"
       CHANGED_TARGET_WORDS="crown"
       SUPPORT_EDIT_OPERATION="add_object"
@@ -98,13 +102,14 @@ task_config() {
       SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
       SUPPORT_V3_RELATION="above_host"
       SEMANTIC_PHRASE="cat"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up photo of a small golden crown centered on top of a cat's head between the ears."
       ;;
     P2|dog_sunglasses)
       TASK_NAME="dog_sunglasses"
       TASK_KIND="accessory_semantic_glasses"
       IMAGE="${ROOT}/data/pretty_free_candidates/unsplash_dog_front_malinois_PGlA5efHOiI.jpg"
       SOURCE_PROMPT="A front-facing portrait of a dog in snow."
-      TARGET_PROMPT="A front-facing portrait of the same dog wearing black sunglasses in snow."
+      TARGET_PROMPT="A front-facing portrait of the same dog wearing black sunglasses aligned across both eyes in snow."
       ATTENTION_TARGET_WORDS="sunglasses,eyes"
       CHANGED_TARGET_WORDS="sunglasses"
       SUPPORT_EDIT_OPERATION="add_object"
@@ -114,6 +119,7 @@ task_config() {
       SUPPORT_V3_RELATION="on_face"
       SEMANTIC_PHRASE="dog head"
       SUPPORT_RELATION="front_glasses_auto"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up front-facing photo of black sunglasses aligned horizontally across both eyes of a dog."
       ;;
     P3|mug_heart)
       TASK_NAME="mug_heart"
@@ -435,7 +441,7 @@ task_config() {
       TASK_KIND="accessory_semantic_glasses"
       IMAGE="${ROOT}/data/paper_images/rabbit_side_view.jpg"
       SOURCE_PROMPT="A photo of a rabbit sitting outdoors in side profile."
-      TARGET_PROMPT="A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses."
+      TARGET_PROMPT="A photo of the same rabbit sitting outdoors in side profile, wearing small black sunglasses aligned over the visible eye area."
       ATTENTION_TARGET_WORDS="sunglasses,eyes"
       CHANGED_TARGET_WORDS="sunglasses"
       SUPPORT_EDIT_OPERATION="add_object"
@@ -445,13 +451,14 @@ task_config() {
       SUPPORT_V3_RELATION="on_face"
       SEMANTIC_PHRASE="rabbit head"
       SUPPORT_RELATION="front_glasses_auto"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up side-profile photo of small black sunglasses aligned over the rabbit's visible eye area."
       ;;
     P13|dog_crown)
       TASK_NAME="dog_crown"
       TASK_KIND="accessory_semantic"
       IMAGE="${ROOT}/data/paper_images/dog_sitting_cc0.jpg"
       SOURCE_PROMPT="A photo of a dog sitting."
-      TARGET_PROMPT="A photo of the same dog sitting, wearing a small golden crown on its head."
+      TARGET_PROMPT="A photo of the same dog sitting, wearing a small golden crown centered on top of its head between the ears."
       ATTENTION_TARGET_WORDS="crown,head"
       CHANGED_TARGET_WORDS="crown"
       SUPPORT_EDIT_OPERATION="add_object"
@@ -460,9 +467,163 @@ task_config() {
       SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
       SUPPORT_V3_RELATION="above_host"
       SEMANTIC_PHRASE="dog"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up photo of a small golden crown centered on top of a dog's head between the ears."
+      ;;
+    P19|web_plate_apple)
+      TASK_NAME="web_plate_apple"
+      TASK_KIND="object_on_surface"
+      IMAGE="${ROOT}/data/web_add_object_candidates/pexels_empty_white_plate_2611817.jpg"
+      SOURCE_PROMPT="A top-down minimalist photo of an empty white ceramic bowl on a pale marble surface."
+      TARGET_PROMPT="A top-down minimalist photo of the same white ceramic bowl on the same pale marble surface, with one small red apple placed exactly in the center of the visible bowl interior, away from the rim."
+      ATTENTION_TARGET_WORDS="apple,bowl,center"
+      CHANGED_TARGET_WORDS="apple"
+      SUPPORT_EDIT_OPERATION="add_object"
+      SUPPORT_NEW_TOKENS="apple"
+      SUPPORT_HOST_TOKENS="bowl,plate"
+      SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
+      SUPPORT_V3_RELATION="inside"
+      SEMANTIC_PHRASE="white ceramic bowl"
+      SUPPORT_RELATION="inside"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up top-down photo of one small red apple centered inside the white ceramic bowl, fully within the inner circular basin and away from the rim."
+      ;;
+    P20|web_vase_flowers)
+      TASK_NAME="web_vase_flowers"
+      TASK_KIND="object_in_container"
+      IMAGE="${ROOT}/data/web_add_object_candidates/pexels_white_ceramic_vase_36382219.jpg"
+      SOURCE_PROMPT="A minimalist photo of an empty white ceramic vase displayed in a softly lit alcove."
+      TARGET_PROMPT="A minimalist photo of the same white ceramic vase in the same softly lit alcove, with a small bouquet of yellow flowers emerging from the vase opening at the top center."
+      ATTENTION_TARGET_WORDS="yellow,flowers,vase"
+      CHANGED_TARGET_WORDS="flowers"
+      SUPPORT_EDIT_OPERATION="add_object"
+      SUPPORT_NEW_TOKENS="flowers,bouquet"
+      SUPPORT_HOST_TOKENS="vase"
+      SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
+      SUPPORT_V3_RELATION="above_host"
+      SEMANTIC_PHRASE="white ceramic vase"
+      SUPPORT_RELATION="inside"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up photo of a small bouquet of yellow flowers emerging directly from the top opening of a white ceramic vase, centered on the vase mouth."
+      ;;
+    P21|web_chair_cushion)
+      TASK_NAME="web_chair_cushion"
+      TASK_KIND="object_on_furniture"
+      IMAGE="${ROOT}/data/web_add_object_candidates/pexels_empty_chair_room_20027127.jpg"
+      SOURCE_PROMPT="A minimalist photo of a single empty chair in a bright empty room."
+      TARGET_PROMPT="A minimalist photo of the same single empty chair in the same bright empty room, with a red cushion placed flat on the center of the chair seat."
+      ATTENTION_TARGET_WORDS="red,cushion,chair,seat"
+      CHANGED_TARGET_WORDS="cushion"
+      SUPPORT_EDIT_OPERATION="add_object"
+      SUPPORT_NEW_TOKENS="cushion"
+      SUPPORT_HOST_TOKENS="chair,seat"
+      SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
+      SUPPORT_V3_RELATION="on_surface"
+      SEMANTIC_PHRASE="chair seat"
+      SUPPORT_RELATION="inside"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up photo of a red cushion placed flat on the center of a chair seat, aligned with the seat and not covering the chair back."
+      ;;
+    P22|web_frame_landscape)
+      TASK_NAME="web_frame_landscape"
+      TASK_KIND="object_inside_frame"
+      IMAGE="${ROOT}/data/web_add_object_candidates/pexels_blank_frames_7318843.jpg"
+      SOURCE_PROMPT="A photo of blank wooden picture frames standing on a wooden table in sunlight."
+      TARGET_PROMPT="A photo of the same wooden picture frames on the same wooden table, with a colorful mountain landscape picture centered inside the blank area of the large front frame."
+      ATTENTION_TARGET_WORDS="landscape,picture,frame,mountain"
+      CHANGED_TARGET_WORDS="landscape,picture"
+      SUPPORT_EDIT_OPERATION="add_object"
+      SUPPORT_NEW_TOKENS="landscape,picture,mountain"
+      SUPPORT_HOST_TOKENS="front frame,large frame"
+      SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
+      SUPPORT_V3_RELATION="inside"
+      SEMANTIC_PHRASE="large front picture frame"
+      SUPPORT_RELATION="inside"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up photo of a colorful mountain landscape picture centered within the inner blank rectangle of a large wooden picture frame."
+      ;;
+    P23|web_desk_mug)
+      TASK_NAME="web_desk_mug"
+      TASK_KIND="object_on_desk"
+      IMAGE="${ROOT}/data/web_add_object_candidates2/pexels_empty_desks_office_7534208.jpg"
+      SOURCE_PROMPT="A photo of an empty modern office desk with chairs and a framed picture on the wall."
+      TARGET_PROMPT="A photo of the same empty modern office desk with a small red coffee mug placed on the visible wooden desktop near the back center, preserving the chairs, wall picture, and room layout."
+      ATTENTION_TARGET_WORDS="red,coffee,mug,desk"
+      CHANGED_TARGET_WORDS="mug"
+      SUPPORT_EDIT_OPERATION="add_object"
+      SUPPORT_NEW_TOKENS="mug,coffee mug"
+      SUPPORT_HOST_TOKENS="wooden desk,desk"
+      SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
+      SUPPORT_V3_RELATION="on_surface"
+      SEMANTIC_PHRASE="wooden desk"
+      SUPPORT_RELATION="inside"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up photo of a small red coffee mug sitting upright on the visible wooden desktop near the back center edge."
+      ;;
+    P24|web_wall_clock)
+      TASK_NAME="web_wall_clock"
+      TASK_KIND="object_on_wall"
+      IMAGE="${ROOT}/data/web_add_object_candidates2/pexels_blank_room_7045322.jpg"
+      SOURCE_PROMPT="A photo of an empty modern room with a long brick wall and wooden floor."
+      TARGET_PROMPT="A photo of the same empty modern room with a round black wall clock hanging on the right brick wall at about eye level, preserving the floor, lighting, and room layout."
+      ATTENTION_TARGET_WORDS="black,wall,clock,brick"
+      CHANGED_TARGET_WORDS="clock"
+      SUPPORT_EDIT_OPERATION="add_object"
+      SUPPORT_NEW_TOKENS="clock,wall clock"
+      SUPPORT_HOST_TOKENS="brick wall,wall"
+      SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
+      SUPPORT_V3_RELATION="on_surface"
+      SEMANTIC_PHRASE="brick wall"
+      SUPPORT_RELATION="inside"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up photo of a round black wall clock mounted on the right brick wall at about eye level, centered between brick rows."
+      ;;
+    P25|web_shelf_books)
+      TASK_NAME="web_shelf_books"
+      TASK_KIND="object_on_shelf"
+      IMAGE="${ROOT}/data/web_add_object_candidates2/pexels_empty_shelves_7195887.jpg"
+      SOURCE_PROMPT="A photo of an empty modern walk-in closet with dark wooden shelves."
+      TARGET_PROMPT="A photo of the same empty modern walk-in closet with a small upright stack of colorful books placed on the middle right dark wooden shelf, preserving the closet layout and lighting."
+      ATTENTION_TARGET_WORDS="colorful,books,shelf"
+      CHANGED_TARGET_WORDS="books"
+      SUPPORT_EDIT_OPERATION="add_object"
+      SUPPORT_NEW_TOKENS="books,colorful books"
+      SUPPORT_HOST_TOKENS="shelf,shelves"
+      SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
+      SUPPORT_V3_RELATION="on_surface"
+      SEMANTIC_PHRASE="dark wooden shelves"
+      SUPPORT_RELATION="inside"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up photo of a small upright stack of colorful books placed on the middle right dark wooden shelf."
+      ;;
+    P26|web_bowl_spoon)
+      TASK_NAME="web_bowl_spoon"
+      TASK_KIND="object_in_bowl"
+      IMAGE="${ROOT}/data/web_add_object_candidates/pexels_empty_white_plate_2611817.jpg"
+      SOURCE_PROMPT="A top-down minimalist photo of an empty white ceramic bowl on a pale marble surface."
+      TARGET_PROMPT="A top-down minimalist photo of the same white ceramic bowl on the same pale marble surface, with a small stainless steel spoon placed diagonally inside the lower-right part of the bowl, bowl handle end pointing toward the lower right."
+      ATTENTION_TARGET_WORDS="spoon,bowl"
+      CHANGED_TARGET_WORDS="spoon"
+      SUPPORT_EDIT_OPERATION="add_object"
+      SUPPORT_NEW_TOKENS="spoon"
+      SUPPORT_HOST_TOKENS="bowl"
+      SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
+      SUPPORT_V3_RELATION="inside"
+      SEMANTIC_PHRASE="white ceramic bowl"
+      SUPPORT_RELATION="inside"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up top-down photo of a stainless steel spoon placed diagonally inside the lower-right part of a white ceramic bowl, with the handle pointing toward the lower right."
+      ;;
+    P27|web_notebook_pen)
+      TASK_NAME="web_notebook_pen"
+      TASK_KIND="object_on_notebook"
+      IMAGE="${ROOT}/data/web_add_candidates/pexels_blank_notebook_5705957.jpg"
+      SOURCE_PROMPT="A top-down photo of an open blank spiral notebook on a pale peach desk."
+      TARGET_PROMPT="A top-down photo of the same open blank spiral notebook on the same pale peach desk, with a blue pen placed diagonally across the center of the notebook page, away from the spiral binding."
+      ATTENTION_TARGET_WORDS="blue,pen,notebook,page"
+      CHANGED_TARGET_WORDS="pen"
+      SUPPORT_EDIT_OPERATION="add_object"
+      SUPPORT_NEW_TOKENS="pen,blue pen"
+      SUPPORT_HOST_TOKENS="notebook,page"
+      SUPPORT_V2_CANDIDATE="new_plus_host_x_clean"
+      SUPPORT_V3_RELATION="on_surface"
+      SEMANTIC_PHRASE="notebook page"
+      SUPPORT_RELATION="inside"
+      SUPPORT_LOCAL_TARGET_PROMPT="A close-up top-down photo of a blue pen placed diagonally across the center of a blank notebook page, away from the spiral binding and not along the page edge."
       ;;
     *)
-      echo "Unknown TASK '${task_id}'. Valid: P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12 P13 P14 P15 P16 P17 P18." >&2
+      echo "Unknown TASK '${task_id}'. Valid: P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20 P21 P22 P23 P24 P25 P26 P27." >&2
       exit 2
       ;;
   esac
@@ -795,6 +956,62 @@ method_config() {
       SUPPORT_SCORE="${SUPPORT_V3_CANDIDATE}"
       ADAPTIVE_PRESERVE_CLEAN_CORRECTION_SCALE="${SUPPORT_V3_DIRECT_PRESERVE_SCALE:-0.5}"
       OPERATION_EDIT_FIELD="replace_editor_v1"
+      ;;
+    M27|support_v3_controller_rmsgap_add_editor_v1|rmsgap_add_editor_v1|add_editor_v1)
+      METHOD_NAME="support_v3_controller_rmsgap_add_editor_v1"
+      METHOD_ROUTE="full"
+      METHOD_ABLATION="none"
+      EDIT_HEDIT_GUIDANCE_SCALE="0.65"
+      EDIT_TEXT_GUIDANCE_SCALE="0.08"
+      REC_GUIDANCE_SCALE="0.22"
+      TRAJECTORY_PRESERVE_SCALE="0.12"
+      ADAPTIVE_CLEAN_CONTROL="1"
+      ADAPTIVE_EDIT_TARGET_PROGRESS="0.0"
+      ADAPTIVE_EDIT_TARGET_RMS="0.42"
+      GENERIC_SUPPORT="1"
+      GENERIC_SUPPORT_V3="1"
+      OBJECT_MASK_PROVIDER="operation_support_v3"
+      case "${SUPPORT_V3_RELATION}" in
+        inside|inside_host|on_surface|surface)
+          SUPPORT_SCORE="${SUPPORT_V3_ADD_EDITOR_CANDIDATE:-seg_x_response}"
+          ;;
+        *)
+          SUPPORT_SCORE="${SUPPORT_V3_ADD_EDITOR_CANDIDATE:-${SUPPORT_V3_CANDIDATE}}"
+          ;;
+      esac
+      ADAPTIVE_PRESERVE_CLEAN_CORRECTION_SCALE="${SUPPORT_V3_DIRECT_PRESERVE_SCALE:-0.5}"
+      OPERATION_EDIT_FIELD="add_editor_v1"
+      ;;
+    M28|support_v3_controller_rmsgap_add_editor_v2|rmsgap_add_editor_v2|add_editor_v2)
+      METHOD_NAME="support_v3_controller_rmsgap_add_editor_v2"
+      METHOD_ROUTE="full"
+      METHOD_ABLATION="none"
+      EDIT_HEDIT_GUIDANCE_SCALE="0.65"
+      EDIT_TEXT_GUIDANCE_SCALE="0.08"
+      REC_GUIDANCE_SCALE="0.22"
+      TRAJECTORY_PRESERVE_SCALE="0.12"
+      ADAPTIVE_CLEAN_CONTROL="1"
+      ADAPTIVE_EDIT_TARGET_PROGRESS="0.0"
+      ADAPTIVE_EDIT_TARGET_RMS="0.42"
+      GENERIC_SUPPORT="1"
+      GENERIC_SUPPORT_V3="1"
+      OBJECT_MASK_PROVIDER="operation_support_v3"
+      case "${SUPPORT_V3_RELATION}" in
+        inside|inside_host)
+          SUPPORT_SCORE="${SUPPORT_V3_ADD_EDITOR_CANDIDATE:-seg_x_response}"
+          ;;
+        on_surface|surface)
+          SUPPORT_SCORE="${SUPPORT_V3_ADD_EDITOR_CANDIDATE:-host_spawn_wide_x_response}"
+          ;;
+        above_host|above|on_top|top)
+          SUPPORT_SCORE="${SUPPORT_V3_ADD_EDITOR_CANDIDATE:-host_top_contact_x_response}"
+          ;;
+        *)
+          SUPPORT_SCORE="${SUPPORT_V3_ADD_EDITOR_CANDIDATE:-${SUPPORT_V3_CANDIDATE}}"
+          ;;
+      esac
+      ADAPTIVE_PRESERVE_CLEAN_CORRECTION_SCALE="${SUPPORT_V3_DIRECT_PRESERVE_SCALE:-0.5}"
+      OPERATION_EDIT_FIELD="add_editor_v2"
       ;;
     manual_support)
       METHOD_NAME="manual_support"
@@ -1203,7 +1420,9 @@ run_one() {
   local method_id="$2"
   local seed="$3"
   task_config "${task_id}"
+  SUPPORT_V3_CANDIDATE="${SUPPORT_V3_CANDIDATE_OVERRIDE:-${SUPPORT_V3_CANDIDATE}}"
   method_config "${method_id}"
+  local method_support_score="${SUPPORT_SCORE:-}"
   SOURCE_PROMPT="${SOURCE_PROMPT_OVERRIDE:-${SOURCE_PROMPT}}"
   TARGET_PROMPT="${TARGET_PROMPT_OVERRIDE:-${TARGET_PROMPT}}"
   DECAL_BOX="${DECAL_BOX_OVERRIDE:-${DECAL_BOX}}"
@@ -1242,7 +1461,7 @@ run_one() {
     fi
     if [[ "${GENERIC_SUPPORT_V3}" == "1" ]]; then
       OBJECT_MASK_PROVIDER="operation_support_v3"
-      SUPPORT_SCORE="${SUPPORT_V3_CANDIDATE:-operation_default}"
+      SUPPORT_SCORE="${method_support_score:-${SUPPORT_V3_CANDIDATE:-operation_default}}"
       ATTENTION_TARGET_WORDS="${SUPPORT_NEW_TOKENS:-${ATTENTION_TARGET_WORDS}}"
       case "${SUPPORT_EDIT_OPERATION}:${SUPPORT_V3_RELATION}" in
         add_object:above_host)
@@ -1344,16 +1563,81 @@ run_one() {
             fi
             ;;
           add_object:on_face|add_object:face|add_object:eye_band|add_object:eyes)
-            EDIT_HEDIT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_FACE_HEDIT:-0.65}"
-            EDIT_TEXT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_FACE_TEXT:-0.10}"
-            EDIT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_FACE_ANCHOR:-0.03}"
-            EDIT_REGION_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_FACE_REGION:-0.03}"
+            if [[ "${OPERATION_EDIT_FIELD}" == add_editor_v* ]]; then
+              EDIT_HEDIT_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_FACE_HEDIT:-0.70}"
+              EDIT_TEXT_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_FACE_TEXT:-0.14}"
+              EDIT_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_FACE_ANCHOR:-0.03}"
+              EDIT_REGION_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_FACE_REGION:-0.05}"
+              REC_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_FACE_REC:-0.14}"
+              TRAJECTORY_PRESERVE_SCALE="${SUPPORT_V3_ADD_EDITOR_FACE_TRAJ:-0.06}"
+              SUPPORT_MIN_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_FACE_MIN_AREA_RATIO:-0.006}"
+              SUPPORT_MAX_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_FACE_MAX_AREA_RATIO:-0.035}"
+              REGION_TARGET_TRANSPORT_SCALE="${SUPPORT_V3_ADD_EDITOR_FACE_TRANSPORT:-0.70}"
+              REGION_TARGET_OUTSIDE_LOCK_SCALE="${SUPPORT_V3_ADD_EDITOR_FACE_OUTSIDE_LOCK:-0.90}"
+              EDIT_INITIAL_NOISE_SCALE="${SUPPORT_V3_ADD_EDITOR_FACE_NOISE:-0.05}"
+              EDIT_INITIAL_NOISE_REGION="${SUPPORT_V3_ADD_EDITOR_FACE_NOISE_REGION:-core}"
+              EDIT_LOCAL_TARGET_PROMPT="${SUPPORT_V3_ADD_EDITOR_FACE_LOCAL_TARGET_PROMPT:-${SUPPORT_LOCAL_TARGET_PROMPT:-A close-up photo of ${SUPPORT_NEW_TOKENS} on ${SUPPORT_HOST_TOKENS}.}}"
+              EDIT_LOCAL_TARGET_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_FACE_LOCAL_TARGET:-0.32}"
+              EDIT_LOCAL_TARGET_CFG_SCALE="${SUPPORT_V3_ADD_EDITOR_FACE_LOCAL_CFG:-8.0}"
+            else
+              EDIT_HEDIT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_FACE_HEDIT:-0.65}"
+              EDIT_TEXT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_FACE_TEXT:-0.10}"
+              EDIT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_FACE_ANCHOR:-0.03}"
+              EDIT_REGION_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_FACE_REGION:-0.03}"
+            fi
             ;;
           add_object:*)
-            EDIT_HEDIT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_OBJECT_HEDIT:-0.65}"
-            EDIT_TEXT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_OBJECT_TEXT:-0.10}"
-            EDIT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_OBJECT_ANCHOR:-0.03}"
-            EDIT_REGION_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_OBJECT_REGION:-0.03}"
+            if [[ "${OPERATION_EDIT_FIELD}" == add_editor_v* ]]; then
+              EDIT_HEDIT_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_HEDIT:-0.72}"
+              EDIT_TEXT_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_TEXT:-0.14}"
+              EDIT_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_ANCHOR:-0.03}"
+              EDIT_REGION_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_REGION:-0.05}"
+              REC_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_REC:-0.12}"
+              TRAJECTORY_PRESERVE_SCALE="${SUPPORT_V3_ADD_EDITOR_TRAJ:-0.05}"
+              REGION_TARGET_TRANSPORT_SCALE="${SUPPORT_V3_ADD_EDITOR_TRANSPORT:-0.95}"
+              REGION_TARGET_OUTSIDE_LOCK_SCALE="${SUPPORT_V3_ADD_EDITOR_OUTSIDE_LOCK:-0.85}"
+              EDIT_INITIAL_NOISE_SCALE="${SUPPORT_V3_ADD_EDITOR_NOISE:-0.10}"
+              if [[ "${OPERATION_EDIT_FIELD}" == "add_editor_v2" ]]; then
+                case "${SUPPORT_V3_RELATION}" in
+                  inside|inside_host)
+                    SUPPORT_MIN_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_MIN_AREA_RATIO:-0.035}"
+                    SUPPORT_MAX_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_MAX_AREA_RATIO:-0.12}"
+                    EDIT_LOCAL_TARGET_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_LOCAL_TARGET:-0.38}"
+                    ;;
+                  on_surface|surface)
+                    SUPPORT_MIN_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_MIN_AREA_RATIO:-0.030}"
+                    SUPPORT_MAX_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_MAX_AREA_RATIO:-0.100}"
+                    REGION_TARGET_TRANSPORT_SCALE="${SUPPORT_V3_ADD_EDITOR_TRANSPORT:-0.72}"
+                    REGION_TARGET_OUTSIDE_LOCK_SCALE="${SUPPORT_V3_ADD_EDITOR_OUTSIDE_LOCK:-0.90}"
+                    EDIT_LOCAL_TARGET_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_LOCAL_TARGET:-0.44}"
+                    ;;
+                  above_host|above|on_top|top)
+                    SUPPORT_MIN_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_MIN_AREA_RATIO:-0.010}"
+                    SUPPORT_MAX_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_MAX_AREA_RATIO:-0.045}"
+                    REGION_TARGET_TRANSPORT_SCALE="${SUPPORT_V3_ADD_EDITOR_TRANSPORT:-0.70}"
+                    REGION_TARGET_OUTSIDE_LOCK_SCALE="${SUPPORT_V3_ADD_EDITOR_OUTSIDE_LOCK:-0.92}"
+                    EDIT_LOCAL_TARGET_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_LOCAL_TARGET:-0.50}"
+                    ;;
+                  *)
+                    SUPPORT_MIN_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_MIN_AREA_RATIO:-0.035}"
+                    SUPPORT_MAX_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_MAX_AREA_RATIO:-0.12}"
+                    EDIT_LOCAL_TARGET_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_LOCAL_TARGET:-0.38}"
+                    ;;
+                esac
+              else
+                SUPPORT_MIN_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_MIN_AREA_RATIO:-0.035}"
+                SUPPORT_MAX_AREA_RATIO="${SUPPORT_V3_ADD_EDITOR_MAX_AREA_RATIO:-0.12}"
+                EDIT_LOCAL_TARGET_GUIDANCE_SCALE="${SUPPORT_V3_ADD_EDITOR_LOCAL_TARGET:-0.38}"
+              fi
+              EDIT_INITIAL_NOISE_REGION="${SUPPORT_V3_ADD_EDITOR_NOISE_REGION:-core}"
+              EDIT_LOCAL_TARGET_PROMPT="${SUPPORT_V3_ADD_EDITOR_LOCAL_TARGET_PROMPT:-${SUPPORT_LOCAL_TARGET_PROMPT:-A close-up photo of ${SUPPORT_NEW_TOKENS} on ${SUPPORT_HOST_TOKENS}.}}"
+              EDIT_LOCAL_TARGET_CFG_SCALE="${SUPPORT_V3_ADD_EDITOR_LOCAL_CFG:-8.0}"
+            else
+              EDIT_HEDIT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_OBJECT_HEDIT:-0.65}"
+              EDIT_TEXT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_OBJECT_TEXT:-0.10}"
+              EDIT_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_OBJECT_ANCHOR:-0.03}"
+              EDIT_REGION_GUIDANCE_SCALE="${SUPPORT_V3_OPFIELD_OBJECT_REGION:-0.03}"
+            fi
             ;;
         esac
       fi

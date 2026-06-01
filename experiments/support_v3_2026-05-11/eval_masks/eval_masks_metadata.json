@@ -16,51 +16,81 @@
     "task": "backpack_remove_toy_charm"
   },
   "cat_crown": {
-    "area": 0.03076171875,
-    "eval_mask": "experiments/support_v3_2026-05-11/eval_masks/cat_crown_eval_mask.png",
-    "fixed_eval_mask_area": 0.03076171875,
-    "methods": [
-      "direct_target",
-      "adaptive_full_generic_support",
-      "support_v3_fixed",
-      "support_v3_controller_rmsgap"
+    "area": 0.029058547247023808,
+    "area_threshold_0_5": 0.0279541015625,
+    "bbox_threshold_0_2": [
+      205,
+      0,
+      299,
+      59
     ],
-    "reason": "diff_minus_base",
+    "derived_from": "outputs/pretty_matrix/cat_crown/support_v3_controller_rmsgap/seed_10/masks/operation_v3_core_mask.png",
+    "eval_mask": "experiments/support_v3_2026-05-11/eval_masks/cat_crown_eval_mask.png",
+    "fixed_eval_mask_area": 0.029058547247023808,
+    "reason": "manual replacement from seed-10 operation_v3_core_mask; previous diff-derived fixed mask selected cat torso instead of crown region",
     "seed": "10",
+    "source": "experiments/support_v3_2026-05-11/eval_masks/manual/cat_crown_eval_mask.png",
     "source_image": "/workspace/rf_h_edit/data/paper_images/cat_sitting_in_grass.jpg",
-    "source_type": "diff_minus_base",
+    "source_type": "manual_adjusted_operation_support",
     "task": "cat_crown"
   },
   "dog_sunglasses": {
-    "area": 0.04890625,
-    "eval_mask": "experiments/support_v3_2026-05-11/eval_masks/dog_sunglasses_eval_mask.png",
-    "fixed_eval_mask_area": 0.04890625,
-    "methods": [
-      "direct_target",
-      "adaptive_full_generic_support",
-      "support_v3_fixed",
-      "support_v3_controller_rmsgap"
+    "area": 0.1206640625,
+    "area_threshold_0_5": 0.1176708984375,
+    "bbox_threshold_0_2": [
+      88,
+      141,
+      322,
+      254
     ],
-    "reason": "diff_minus_base",
+    "derived_from": "outputs/pretty_matrix/dog_sunglasses/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png",
+    "eval_mask": "experiments/support_v3_2026-05-11/eval_masks/dog_sunglasses_eval_mask.png",
+    "fixed_eval_mask_area": 0.1206640625,
+    "postprocess": "manual rounded eye/sunglasses band [88,142,320,252] at 400x512 constrained by expanded semantic head",
+    "reason": "manual eye/sunglasses band constrained by seed-10 semantic dog head; previous fixed mask included low snout, and first revision was too high over ears/forehead",
     "seed": "10",
+    "source": "experiments/support_v3_2026-05-11/eval_masks/manual/dog_sunglasses_eval_mask.png",
     "source_image": "/workspace/rf_h_edit/data/pretty_free_candidates/unsplash_dog_front_malinois_PGlA5efHOiI.jpg",
-    "source_type": "diff_minus_base",
+    "source_type": "manual_adjusted_operation_support",
     "task": "dog_sunglasses"
   },
   "mug_heart": {
-    "area": 0.040707542782738096,
-    "eval_mask": "experiments/support_v3_2026-05-11/eval_masks/mug_heart_eval_mask.png",
-    "fixed_eval_mask_area": 0.040707542782738096,
-    "methods": [
-      "direct_target",
-      "adaptive_full_generic_support",
-      "support_v3_fixed",
-      "support_v3_controller_rmsgap"
+    "area": 0.042323521205357144,
+    "area_threshold_0_5": 0.04049827938988095,
+    "bbox_threshold_0_2": [
+      213,
+      117,
+      291,
+      211
     ],
-    "reason": "diff_minus_base",
+    "derived_from": "outputs/pretty_matrix/mug_heart/support_v3_controller_rmsgap/seed_10/masks/operation_v3_core_mask.png",
+    "eval_mask": "experiments/support_v3_2026-05-11/eval_masks/mug_heart_eval_mask.png",
+    "fixed_eval_mask_area": 0.042323521205357144,
+    "reason": "manual replacement from seed-10 operation_v3_core_mask; previous diff-derived fixed mask selected mug bottom/shadow instead of front decal region",
     "seed": "10",
+    "source": "experiments/support_v3_2026-05-11/eval_masks/manual/mug_heart_eval_mask.png",
     "source_image": "/workspace/rf_h_edit/data/pretty_free_candidates/pexels_white_mug_6312107.jpg",
-    "source_type": "diff_minus_base",
+    "source_type": "manual_adjusted_operation_support",
     "task": "mug_heart"
+  },
+  "red_chair_blue": {
+    "area": 0.18979810631793478,
+    "area_threshold_0_5": 0.18667735224184784,
+    "bbox_threshold_0_2": [
+      131,
+      277,
+      350,
+      488
+    ],
+    "derived_from": "outputs/pretty_matrix/red_chair_blue/support_v3_controller_rmsgap_recolor_edgefix_dilate3_guidanceonly/seed_10/masks/surface_refined_mask.png",
+    "eval_mask": "experiments/support_v3_2026-05-11/eval_masks/red_chair_blue_eval_mask.png",
+    "fixed_eval_mask_area": 0.18979810631793478,
+    "postprocess": "left_expand_8px_at_368x512; preserves right boundary and includes conservative left mixed upholstery boundary",
+    "reason": "seed-10 visual-gate surface mask was conservative on the left mixed chair boundary; fixed full-chair recolor evaluation mask expands left only and remains independent of per-method support masks",
+    "seed": "10",
+    "source": "experiments/support_v3_2026-05-11/eval_masks/manual/red_chair_blue_eval_mask.png",
+    "source_image": "/workspace/rf_h_edit/data/pretty_free_candidates/pexels_red_armchair_room_6758347.jpg",
+    "source_type": "manual_adjusted_external_semantic_surface",
+    "task": "red_chair_blue"
   }
 }

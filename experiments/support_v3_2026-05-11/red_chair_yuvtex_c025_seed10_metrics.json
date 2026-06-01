@@ -1,0 +1,38 @@
+[
+  {
+    "name": "old_dynamic",
+    "runtime_seconds": 131.5499256940093,
+    "projection_eval_count": null,
+    "inside_blue": 0.9756569491025688,
+    "outside_blue": 0.0012624049544699568,
+    "boundary_red": 0.13119743692430916,
+    "source_red_boundary_residual": 0.34101382488479265,
+    "outside_l1": 0.014431281946599483,
+    "inside_l1": 0.24862276017665863,
+    "texture_corr": 0.5557757676714469
+  },
+  {
+    "name": "cf_rgbonly_soft",
+    "runtime_seconds": 62.706228104187176,
+    "projection_eval_count": 1,
+    "inside_blue": 0.9488331799231144,
+    "outside_blue": 0.006774124563382408,
+    "boundary_red": 0.03974878766197631,
+    "source_red_boundary_residual": 0.11160609613130129,
+    "outside_l1": 0.057648666203022,
+    "inside_l1": 0.26168501377105713,
+    "texture_corr": 0.07596781774784236
+  },
+  {
+    "name": "cf_yuvtex_c025",
+    "runtime_seconds": 65.88268558285199,
+    "projection_eval_count": 1,
+    "inside_blue": 0.9505206923312939,
+    "outside_blue": 0.007243763654127582,
+    "boundary_red": 0.04420065188011766,
+    "source_red_boundary_residual": 0.12403282532239156,
+    "outside_l1": 0.05769528076052666,
+    "inside_l1": 0.26138395071029663,
+    "texture_corr": 0.08398307283790313
+  }
+]

@@ -1,0 +1,12 @@
+run_id=core6_full_rerun_20260601_064458
+start_utc=2026-06-01T06:44:58Z
+repo=/workspace/rf_h_edit
+tasks=P1 P2 P3 P5 P7 P4
+methods=M0 M1 M10 M18 M17
+seeds=10 11 12
+main_methods=base_only,direct_target,adaptive_full_generic_support,support_v3_controller_rmsgap
+fixed_control_methods=support_v3_fixed,support_v3_controller_rmsgap
+mask_policy=REGENERATE_MASKS=1; M17 reuses M18 semantic masks via SEMANTIC_MASK_CACHE_METHOD=support_v3_controller_rmsgap
+archive=outputs/archive_core6_full_rerun_20260601_064458
+outputs=outputs/pretty_matrix
+completed_utc=2026-06-01T06:44:58Z

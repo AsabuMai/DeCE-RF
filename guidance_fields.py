@@ -230,6 +230,119 @@ def masked_chroma_luma_loss(
     return 0.5 * total
 
 
+def _luma_high_pass(luma: torch.Tensor, kernel_size: int) -> torch.Tensor:
+    kernel_size = max(1, int(kernel_size))
+    if kernel_size <= 1:
+        return luma
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    pad = kernel_size // 2
+    low = F.avg_pool2d(luma, kernel_size=kernel_size, stride=1, padding=pad)
+    return luma - low
+
+
+def _mask_boundary_band(weights: torch.Tensor, kernel_size: int) -> torch.Tensor:
+    kernel_size = max(1, int(kernel_size))
+    if kernel_size <= 1:
+        return torch.zeros_like(weights)
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    pad = kernel_size // 2
+    dilated = F.max_pool2d(weights, kernel_size=kernel_size, stride=1, padding=pad)
+    eroded = -F.max_pool2d(-weights, kernel_size=kernel_size, stride=1, padding=pad)
+    return (dilated - eroded).clamp(0.0, 1.0)
+
+
+def masked_recolor_texture_boundary_loss(
+    image: torch.Tensor,
+    source_image: torch.Tensor,
+    target_rgb: torch.Tensor,
+    mask: torch.Tensor | None,
+    target_chroma_scale: float = 1.0,
+    luma_preserve_scale: float = 0.35,
+    luma_gradient_preserve_scale: float = 0.0,
+    texture_preserve_scale: float = 0.0,
+    texture_kernel_size: int = 7,
+    boundary_chroma_scale: float = 0.0,
+    boundary_kernel_size: int = 7,
+) -> torch.Tensor:
+    """Recolor objective that edits chroma while preserving source luma texture.
+
+    The mask is treated as a continuous foreground alpha. Its boundary band
+    gets an optional extra chroma term, which models mixed foreground/background
+    pixels without changing the luma texture target.
+    """
+    loss_dtype = torch.float32
+    image_f = image.to(dtype=loss_dtype)
+    if mask is None:
+        weights = torch.ones(
+            image.shape[0],
+            1,
+            image.shape[2],
+            image.shape[3],
+            device=image.device,
+            dtype=loss_dtype,
+        )
+    else:
+        weights = F.interpolate(
+            mask.to(dtype=loss_dtype, device=image.device),
+            size=image.shape[-2:],
+            mode="bilinear",
+            align_corners=False,
+        ).clamp(0.0, 1.0)
+    src = F.interpolate(
+        source_image.to(dtype=loss_dtype, device=image.device),
+        size=image.shape[-2:],
+        mode="bilinear",
+        align_corners=False,
+    )
+    current_yuv = rgb_to_yuv(image_f)
+    source_yuv = rgb_to_yuv(src)
+    target_image = target_rgb.to(dtype=loss_dtype, device=image.device).view(1, 3, 1, 1).expand_as(image_f)
+    target_yuv = rgb_to_yuv(target_image)
+    target_yuv = torch.cat(
+        [
+            target_yuv[:, :1],
+            target_yuv[:, 1:] * max(0.0, float(target_chroma_scale)),
+        ],
+        dim=1,
+    )
+
+    boundary = _mask_boundary_band(weights, kernel_size=boundary_kernel_size) * weights
+    chroma_weights = (weights + max(0.0, float(boundary_chroma_scale)) * boundary).clamp_min(0.0)
+    chroma_denom = chroma_weights.sum().clamp_min(1e-6)
+    chroma_loss = ((current_yuv[:, 1:] - target_yuv[:, 1:]).pow(2) * chroma_weights).sum() / chroma_denom
+
+    denom = weights.sum().clamp_min(1e-6)
+    luma_loss = ((current_yuv[:, :1] - source_yuv[:, :1]).pow(2) * weights).sum() / denom
+    total = chroma_loss + float(luma_preserve_scale) * luma_loss
+
+    if luma_gradient_preserve_scale > 0.0:
+        current_y = current_yuv[:, :1]
+        source_y = source_yuv[:, :1]
+        grad_x = current_y[..., :, 1:] - current_y[..., :, :-1]
+        src_grad_x = source_y[..., :, 1:] - source_y[..., :, :-1]
+        grad_y = current_y[..., 1:, :] - current_y[..., :-1, :]
+        src_grad_y = source_y[..., 1:, :] - source_y[..., :-1, :]
+        weights_x = torch.minimum(weights[..., :, 1:], weights[..., :, :-1])
+        weights_y = torch.minimum(weights[..., 1:, :], weights[..., :-1, :])
+        denom_x = weights_x.sum().clamp_min(1e-6)
+        denom_y = weights_y.sum().clamp_min(1e-6)
+        grad_loss = (
+            ((grad_x - src_grad_x).pow(2) * weights_x).sum() / denom_x
+            + ((grad_y - src_grad_y).pow(2) * weights_y).sum() / denom_y
+        )
+        total = total + float(luma_gradient_preserve_scale) * grad_loss
+
+    if texture_preserve_scale > 0.0:
+        current_hp = _luma_high_pass(current_yuv[:, :1], kernel_size=texture_kernel_size)
+        source_hp = _luma_high_pass(source_yuv[:, :1], kernel_size=texture_kernel_size)
+        texture_loss = ((current_hp - source_hp).pow(2) * weights).sum() / denom
+        total = total + float(texture_preserve_scale) * texture_loss
+
+    return 0.5 * total
+
+
 def masked_reference_image_loss(
     image: torch.Tensor,
     reference_image: torch.Tensor,

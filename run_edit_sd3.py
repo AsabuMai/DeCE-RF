@@ -24,6 +24,82 @@ from edit_preprocess import (
 from sd3_hrec import HRecSD3Edit
 
 
+def _pil_to_unit_tensor(image: PIL.Image.Image) -> torch.Tensor:
+    data = torch.frombuffer(bytearray(image.convert("RGB").tobytes()), dtype=torch.uint8)
+    data = data.view(image.height, image.width, 3).permute(2, 0, 1).float() / 255.0
+    return data.unsqueeze(0)
+
+
+def _mask_to_unit_tensor(mask: PIL.Image.Image) -> torch.Tensor:
+    data = torch.frombuffer(bytearray(mask.convert("L").tobytes()), dtype=torch.uint8)
+    data = data.view(mask.height, mask.width).float() / 255.0
+    return data.view(1, 1, mask.height, mask.width)
+
+
+def _unit_tensor_to_pil(image: torch.Tensor) -> PIL.Image.Image:
+    array = (
+        image[0]
+        .detach()
+        .float()
+        .cpu()
+        .permute(1, 2, 0)
+        .clamp(0.0, 1.0)
+        .mul(255.0)
+        .round()
+        .to(torch.uint8)
+        .numpy()
+    )
+    return PIL.Image.fromarray(array)
+
+
+def _rgb_to_yuv_tensor(image_rgb: torch.Tensor) -> torch.Tensor:
+    r = image_rgb[:, 0:1]
+    g = image_rgb[:, 1:2]
+    b = image_rgb[:, 2:3]
+    y = 0.299 * r + 0.587 * g + 0.114 * b
+    u = 0.492111 * (b - y)
+    v = 0.877283 * (r - y)
+    return torch.cat([y, u, v], dim=1)
+
+
+def _yuv_to_rgb_tensor(image_yuv: torch.Tensor) -> torch.Tensor:
+    y = image_yuv[:, 0:1]
+    u = image_yuv[:, 1:2]
+    v = image_yuv[:, 2:3]
+    r = y + 1.13983 * v
+    g = y - 0.39465 * u - 0.58060 * v
+    b = y + 2.03211 * u
+    return torch.cat([r, g, b], dim=1)
+
+
+def _low_pass_tensor(tensor: torch.Tensor, kernel_size: int) -> torch.Tensor:
+    kernel_size = max(1, int(kernel_size))
+    if kernel_size <= 1:
+        return tensor
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    pad = kernel_size // 2
+    return torch.nn.functional.avg_pool2d(tensor, kernel_size=kernel_size, stride=1, padding=pad)
+
+
+def apply_y_highpass_texture_restore(
+    result_image: PIL.Image.Image,
+    source_image: PIL.Image.Image,
+    mask_image: PIL.Image.Image,
+    strength: float,
+    kernel_size: int,
+) -> PIL.Image.Image:
+    result_rgb = _pil_to_unit_tensor(result_image)
+    source_rgb = _pil_to_unit_tensor(source_image.resize(result_image.size, PIL.Image.Resampling.BILINEAR))
+    mask = _mask_to_unit_tensor(mask_image.resize(result_image.size, PIL.Image.Resampling.BILINEAR)).clamp(0.0, 1.0)
+    result_yuv = _rgb_to_yuv_tensor(result_rgb)
+    source_yuv = _rgb_to_yuv_tensor(source_rgb)
+    source_y_high = source_yuv[:, :1] - _low_pass_tensor(source_yuv[:, :1], kernel_size)
+    restored_y = (result_yuv[:, :1] + float(strength) * source_y_high).clamp(0.0, 1.0)
+    restored_rgb = _yuv_to_rgb_tensor(torch.cat([restored_y, result_yuv[:, 1:]], dim=1)).clamp(0.0, 1.0)
+    return _unit_tensor_to_pil((result_rgb * (1.0 - mask) + restored_rgb * mask).clamp(0.0, 1.0))
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run standalone SD3 h-Edit prototype.")
     parser.add_argument("--image", required=True, help="Path to source image.")
@@ -115,10 +191,43 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--edit-color-detail-protect-scale", type=float, default=0.0)
     parser.add_argument("--edit-color-detail-protect-threshold", type=float, default=0.35)
     parser.add_argument("--edit-color-detail-protect-softness", type=float, default=0.08)
+    parser.add_argument("--edit-color-alpha-matte", action="store_true")
+    parser.add_argument("--edit-color-alpha-matte-mode", choices=("color", "closed_form"), default="color")
+    parser.add_argument("--edit-color-alpha-matte-kernel-size", type=int, default=9)
+    parser.add_argument("--edit-color-alpha-matte-threshold", type=float, default=None)
+    parser.add_argument("--edit-color-alpha-matte-softness", type=float, default=None)
+    parser.add_argument("--edit-color-alpha-matte-max-size", type=int, default=256)
+    parser.add_argument("--edit-color-alpha-matte-epsilon", type=float, default=1e-7)
+    parser.add_argument("--edit-color-alpha-matte-constraint-scale", type=float, default=100.0)
     parser.add_argument("--edit-color-target-chroma-scale", type=float, default=1.0)
     parser.add_argument("--edit-color-smooth-kernel", type=int, default=5)
     parser.add_argument("--edit-color-luma-preserve-scale", type=float, default=0.35)
     parser.add_argument("--edit-color-luma-gradient-preserve-scale", type=float, default=0.15)
+    parser.add_argument("--edit-color-texture-preserve-scale", type=float, default=0.0)
+    parser.add_argument("--edit-color-texture-kernel-size", type=int, default=7)
+    parser.add_argument("--edit-color-boundary-chroma-scale", type=float, default=0.0)
+    parser.add_argument("--edit-color-boundary-kernel-size", type=int, default=7)
+    parser.add_argument("--edit-color-clean-projection-scale", type=float, default=0.0)
+    parser.add_argument(
+        "--edit-color-clean-projection-mode",
+        choices=("soft", "strict", "yuv_texture"),
+        default="soft",
+    )
+    parser.add_argument("--edit-color-clean-projection-texture-kernel-size", type=int, default=7)
+    parser.add_argument("--edit-color-clean-projection-luma-texture-scale", type=float, default=1.0)
+    parser.add_argument("--edit-color-clean-projection-chroma-texture-scale", type=float, default=0.25)
+    parser.add_argument("--edit-color-clean-projection-delta-lowpass-kernel", type=int, default=0)
+    parser.add_argument("--edit-color-clean-projection-alpha-power", type=float, default=1.0)
+    parser.add_argument("--edit-color-clean-projection-boundary-boost", type=float, default=0.0)
+    parser.add_argument("--edit-color-clean-projection-boundary-kernel-size", type=int, default=7)
+    parser.add_argument("--edit-color-clean-projection-composite-mode", choices=("blend", "matte"), default="blend")
+    parser.add_argument("--edit-color-clean-projection-background-kernel-size", type=int, default=31)
+    parser.add_argument("--edit-color-clean-projection-target-mode", choices=("static", "dynamic"), default="static")
+    parser.add_argument("--edit-color-clean-projection-refresh-interval", type=int, default=0)
+    parser.add_argument("--edit-color-texture-restore", action="store_true")
+    parser.add_argument("--edit-color-texture-restore-mask", type=str, default=None)
+    parser.add_argument("--edit-color-texture-restore-strength", type=float, default=0.8)
+    parser.add_argument("--edit-color-texture-restore-kernel-size", type=int, default=9)
     parser.add_argument("--edit-ref-guidance-scale", type=float, default=0.0)
     parser.add_argument("--edit-ref-image", type=str, default=None)
     parser.add_argument("--edit-ref-mask", type=str, default=None)
@@ -455,6 +564,17 @@ def build_parser() -> argparse.ArgumentParser:
             "surface_local_response",
             "decal_surface_local_response",
             "new_x_surface_local_response",
+            "spawn_center",
+            "spawn_center_x_response",
+            "new_x_spawn_center",
+            "spawn_lower_center",
+            "spawn_lower_center_x_response",
+            "host_spawn_center",
+            "host_spawn_center_x_response",
+            "host_spawn_wide",
+            "host_spawn_wide_x_response",
+            "host_top_contact",
+            "host_top_contact_x_response",
             "auto",
             "operation_default",
             "score_auto",
@@ -489,6 +609,17 @@ def build_parser() -> argparse.ArgumentParser:
             "surface_local_response",
             "decal_surface_local_response",
             "new_x_surface_local_response",
+            "spawn_center",
+            "spawn_center_x_response",
+            "new_x_spawn_center",
+            "spawn_lower_center",
+            "spawn_lower_center_x_response",
+            "host_spawn_center",
+            "host_spawn_center_x_response",
+            "host_spawn_wide",
+            "host_spawn_wide_x_response",
+            "host_top_contact",
+            "host_top_contact_x_response",
             "auto",
             "operation_default",
             "score_auto",
@@ -1045,10 +1176,35 @@ def main() -> None:
         edit_color_detail_protect_scale=args.edit_color_detail_protect_scale,
         edit_color_detail_protect_threshold=args.edit_color_detail_protect_threshold,
         edit_color_detail_protect_softness=args.edit_color_detail_protect_softness,
+        edit_color_alpha_matte=args.edit_color_alpha_matte,
+        edit_color_alpha_matte_mode=args.edit_color_alpha_matte_mode,
+        edit_color_alpha_matte_kernel_size=args.edit_color_alpha_matte_kernel_size,
+        edit_color_alpha_matte_threshold=args.edit_color_alpha_matte_threshold,
+        edit_color_alpha_matte_softness=args.edit_color_alpha_matte_softness,
+        edit_color_alpha_matte_max_size=args.edit_color_alpha_matte_max_size,
+        edit_color_alpha_matte_epsilon=args.edit_color_alpha_matte_epsilon,
+        edit_color_alpha_matte_constraint_scale=args.edit_color_alpha_matte_constraint_scale,
         edit_color_target_chroma_scale=args.edit_color_target_chroma_scale,
         edit_color_smooth_kernel=args.edit_color_smooth_kernel,
         edit_color_luma_preserve_scale=args.edit_color_luma_preserve_scale,
         edit_color_luma_gradient_preserve_scale=args.edit_color_luma_gradient_preserve_scale,
+        edit_color_texture_preserve_scale=args.edit_color_texture_preserve_scale,
+        edit_color_texture_kernel_size=args.edit_color_texture_kernel_size,
+        edit_color_boundary_chroma_scale=args.edit_color_boundary_chroma_scale,
+        edit_color_boundary_kernel_size=args.edit_color_boundary_kernel_size,
+        edit_color_clean_projection_scale=args.edit_color_clean_projection_scale,
+        edit_color_clean_projection_mode=args.edit_color_clean_projection_mode,
+        edit_color_clean_projection_texture_kernel_size=args.edit_color_clean_projection_texture_kernel_size,
+        edit_color_clean_projection_luma_texture_scale=args.edit_color_clean_projection_luma_texture_scale,
+        edit_color_clean_projection_chroma_texture_scale=args.edit_color_clean_projection_chroma_texture_scale,
+        edit_color_clean_projection_delta_lowpass_kernel=args.edit_color_clean_projection_delta_lowpass_kernel,
+        edit_color_clean_projection_alpha_power=args.edit_color_clean_projection_alpha_power,
+        edit_color_clean_projection_boundary_boost=args.edit_color_clean_projection_boundary_boost,
+        edit_color_clean_projection_boundary_kernel_size=args.edit_color_clean_projection_boundary_kernel_size,
+        edit_color_clean_projection_composite_mode=args.edit_color_clean_projection_composite_mode,
+        edit_color_clean_projection_background_kernel_size=args.edit_color_clean_projection_background_kernel_size,
+        edit_color_clean_projection_target_mode=args.edit_color_clean_projection_target_mode,
+        edit_color_clean_projection_refresh_interval=args.edit_color_clean_projection_refresh_interval,
         edit_ref_guidance_scale=args.edit_ref_guidance_scale,
         edit_ref_image_path=args.edit_ref_image or None,
         edit_ref_mask_path=args.edit_ref_mask or None,
@@ -1204,6 +1360,36 @@ def main() -> None:
     image_tar = pipe.image_processor.postprocess(image_tar)
 
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
+    texture_restore_mask_path = None
+    if args.edit_color_texture_restore:
+        candidate_mask_paths = []
+        if args.edit_color_texture_restore_mask:
+            candidate_mask_paths.append(args.edit_color_texture_restore_mask)
+        if args.mask_output_dir:
+            candidate_mask_paths.extend(
+                [
+                    os.path.join(args.mask_output_dir, "color_edit_alpha_matte.png"),
+                    os.path.join(args.mask_output_dir, "color_edit_mask.png"),
+                    os.path.join(args.mask_output_dir, "surface_refined_mask.png"),
+                ]
+            )
+        if args.edit_color_mask_image:
+            candidate_mask_paths.append(args.edit_color_mask_image)
+        if external_edit_mask_path:
+            candidate_mask_paths.append(external_edit_mask_path)
+        for candidate in candidate_mask_paths:
+            if candidate and os.path.exists(candidate):
+                texture_restore_mask_path = candidate
+                break
+        if texture_restore_mask_path is None:
+            raise ValueError("--edit-color-texture-restore requires a color/edit mask")
+        image_tar[0] = apply_y_highpass_texture_restore(
+            result_image=image_tar[0],
+            source_image=PIL.Image.open(args.image).convert("RGB"),
+            mask_image=PIL.Image.open(texture_restore_mask_path).convert("L"),
+            strength=args.edit_color_texture_restore_strength,
+            kernel_size=args.edit_color_texture_restore_kernel_size,
+        )
     image_tar[0].save(args.output)
     metadata_output = args.metadata_output
     if metadata_output is None:
@@ -1273,10 +1459,39 @@ def main() -> None:
         "edit_color_detail_protect_scale": args.edit_color_detail_protect_scale,
         "edit_color_detail_protect_threshold": args.edit_color_detail_protect_threshold,
         "edit_color_detail_protect_softness": args.edit_color_detail_protect_softness,
+        "edit_color_alpha_matte": args.edit_color_alpha_matte,
+        "edit_color_alpha_matte_mode": args.edit_color_alpha_matte_mode,
+        "edit_color_alpha_matte_kernel_size": args.edit_color_alpha_matte_kernel_size,
+        "edit_color_alpha_matte_threshold": args.edit_color_alpha_matte_threshold,
+        "edit_color_alpha_matte_softness": args.edit_color_alpha_matte_softness,
+        "edit_color_alpha_matte_max_size": args.edit_color_alpha_matte_max_size,
+        "edit_color_alpha_matte_epsilon": args.edit_color_alpha_matte_epsilon,
+        "edit_color_alpha_matte_constraint_scale": args.edit_color_alpha_matte_constraint_scale,
         "edit_color_target_chroma_scale": args.edit_color_target_chroma_scale,
         "edit_color_smooth_kernel": args.edit_color_smooth_kernel,
         "edit_color_luma_preserve_scale": args.edit_color_luma_preserve_scale,
         "edit_color_luma_gradient_preserve_scale": args.edit_color_luma_gradient_preserve_scale,
+        "edit_color_texture_preserve_scale": args.edit_color_texture_preserve_scale,
+        "edit_color_texture_kernel_size": args.edit_color_texture_kernel_size,
+        "edit_color_boundary_chroma_scale": args.edit_color_boundary_chroma_scale,
+        "edit_color_boundary_kernel_size": args.edit_color_boundary_kernel_size,
+        "edit_color_clean_projection_scale": args.edit_color_clean_projection_scale,
+        "edit_color_clean_projection_mode": args.edit_color_clean_projection_mode,
+        "edit_color_clean_projection_texture_kernel_size": args.edit_color_clean_projection_texture_kernel_size,
+        "edit_color_clean_projection_luma_texture_scale": args.edit_color_clean_projection_luma_texture_scale,
+        "edit_color_clean_projection_chroma_texture_scale": args.edit_color_clean_projection_chroma_texture_scale,
+        "edit_color_clean_projection_delta_lowpass_kernel": args.edit_color_clean_projection_delta_lowpass_kernel,
+        "edit_color_clean_projection_alpha_power": args.edit_color_clean_projection_alpha_power,
+        "edit_color_clean_projection_boundary_boost": args.edit_color_clean_projection_boundary_boost,
+        "edit_color_clean_projection_boundary_kernel_size": args.edit_color_clean_projection_boundary_kernel_size,
+        "edit_color_clean_projection_composite_mode": args.edit_color_clean_projection_composite_mode,
+        "edit_color_clean_projection_background_kernel_size": args.edit_color_clean_projection_background_kernel_size,
+        "edit_color_clean_projection_target_mode": args.edit_color_clean_projection_target_mode,
+        "edit_color_clean_projection_refresh_interval": args.edit_color_clean_projection_refresh_interval,
+        "edit_color_texture_restore": args.edit_color_texture_restore,
+        "edit_color_texture_restore_mask": texture_restore_mask_path,
+        "edit_color_texture_restore_strength": args.edit_color_texture_restore_strength,
+        "edit_color_texture_restore_kernel_size": args.edit_color_texture_restore_kernel_size,
         "edit_ref_guidance_scale": args.edit_ref_guidance_scale,
         "edit_ref_image": args.edit_ref_image or None,
         "edit_ref_mask": args.edit_ref_mask or None,

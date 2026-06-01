@@ -196,6 +196,73 @@ def build_surface_region(
     return normalize_spatial_map(surface).to(device=host.device, dtype=host.dtype)
 
 
+def build_spawn_center_region(
+    placement_mask: torch.Tensor,
+    center_width: float = 0.45,
+    center_height: float = 0.45,
+    sigma_scale: float = 0.28,
+    center_y: float = 0.50,
+) -> torch.Tensor:
+    placement = normalize_spatial_map(placement_mask)
+    bbox = _binary_bbox(placement)
+    if bbox is None:
+        return torch.zeros_like(placement)
+    x0, y0, x1, y1 = bbox
+    bw = max(1, x1 - x0)
+    bh = max(1, y1 - y0)
+    cx = 0.5 * (x0 + x1)
+    cy = y0 + max(0.0, min(1.0, float(center_y))) * bh
+    sx0 = int(round(cx - 0.5 * center_width * bw))
+    sx1 = int(round(cx + 0.5 * center_width * bw))
+    sy0 = int(round(cy - 0.5 * center_height * bh))
+    sy1 = int(round(cy + 0.5 * center_height * bh))
+    center_box = _box_mask_like(placement, (sx0, sy0, sx1, sy1))
+
+    h, w = placement.shape[-2:]
+    yy = torch.arange(h, device=placement.device, dtype=torch.float32).view(1, 1, h, 1)
+    xx = torch.arange(w, device=placement.device, dtype=torch.float32).view(1, 1, 1, w)
+    sigma_x = max(1.0, float(sigma_scale) * float(bw))
+    sigma_y = max(1.0, float(sigma_scale) * float(bh))
+    gaussian = torch.exp(-0.5 * (((xx - cx) / sigma_x) ** 2 + ((yy - cy) / sigma_y) ** 2))
+    spawn = placement.float() * center_box.float() * gaussian
+    if float(spawn.detach().float().max().item()) <= 1e-6:
+        spawn = center_box.float() * gaussian
+    return normalize_spatial_map(spawn).to(device=placement.device, dtype=placement.dtype)
+
+
+def build_host_top_contact_region(
+    host_mask: torch.Tensor,
+    center_width: float = 0.42,
+    above_height: float = 0.07,
+    overlap_height: float = 0.12,
+    sigma_x_scale: float = 0.22,
+    sigma_y_scale: float = 0.09,
+) -> torch.Tensor:
+    host = normalize_spatial_map(host_mask)
+    bbox = _binary_bbox(host)
+    if bbox is None:
+        return torch.zeros_like(host)
+    x0, y0, x1, y1 = bbox
+    bw = max(1, x1 - x0)
+    bh = max(1, y1 - y0)
+    cx = 0.5 * (x0 + x1)
+    cy = y0 + 0.03 * bh
+    rx0 = int(round(cx - 0.5 * center_width * bw))
+    rx1 = int(round(cx + 0.5 * center_width * bw))
+    ry0 = int(round(y0 - above_height * bh))
+    ry1 = int(round(y0 + overlap_height * bh))
+    contact_box = _box_mask_like(host, (rx0, ry0, rx1, ry1))
+
+    h, w = host.shape[-2:]
+    yy = torch.arange(h, device=host.device, dtype=torch.float32).view(1, 1, h, 1)
+    xx = torch.arange(w, device=host.device, dtype=torch.float32).view(1, 1, 1, w)
+    sigma_x = max(1.0, float(sigma_x_scale) * float(bw))
+    sigma_y = max(1.0, float(sigma_y_scale) * float(bh))
+    gaussian = torch.exp(-0.5 * (((xx - cx) / sigma_x) ** 2 + ((yy - cy) / sigma_y) ** 2))
+    contact = contact_box.float() * gaussian
+    return normalize_spatial_map(contact).to(device=host.device, dtype=host.dtype)
+
+
 def build_face_accessory_region(
     host_mask: torch.Tensor,
     upper_height: float = 0.42,
@@ -300,12 +367,37 @@ def build_support_candidates(
     }
     if grounding_mask is not None:
         seg = normalize_spatial_map(grounding_mask)
+        host_spawn_center = build_spawn_center_region(
+            seg,
+            center_width=0.75,
+            center_height=0.55,
+            sigma_scale=0.32,
+        )
+        host_spawn_wide = build_spawn_center_region(
+            seg,
+            center_width=0.95,
+            center_height=0.72,
+            sigma_scale=0.42,
+        )
+        host_top_contact = build_host_top_contact_region(seg)
         candidates.update(
             {
                 "seg_only": seg,
                 "seg_x_clean": seg * clean,
                 "seg_x_velocity": seg * velocity,
                 "seg_x_response": seg * response,
+                "host_spawn_center": host_spawn_center,
+                "host_spawn_center_x_response": normalize_spatial_map(
+                    host_spawn_center * (0.35 + 0.65 * response)
+                ),
+                "host_spawn_wide": host_spawn_wide,
+                "host_spawn_wide_x_response": normalize_spatial_map(
+                    host_spawn_wide * (0.30 + 0.70 * response)
+                ),
+                "host_top_contact": host_top_contact,
+                "host_top_contact_x_response": normalize_spatial_map(
+                    host_top_contact * (0.35 + 0.65 * response)
+                ),
             }
         )
     if relation_map is not None:
@@ -320,6 +412,14 @@ def build_support_candidates(
         )
     if relation_map is not None or grounding_mask is not None:
         surface = normalize_spatial_map(relation_map if relation_map is not None else grounding_mask)
+        spawn_center = build_spawn_center_region(surface)
+        spawn_lower_center = build_spawn_center_region(
+            surface,
+            center_width=0.55,
+            center_height=0.35,
+            sigma_scale=0.25,
+            center_y=0.82,
+        )
         surface_attention = normalize_within_mask(attention_map, surface).pow(max(0.0, float(attention_power)))
         surface_clean = normalize_within_mask(clean_map, surface).pow(max(0.0, float(disagreement_power)))
         surface_velocity = normalize_within_mask(velocity_map, surface).pow(max(0.0, float(disagreement_power)))
@@ -340,6 +440,13 @@ def build_support_candidates(
                 "surface_local_response": surface_response,
                 "decal_surface_local_response": surface_response,
                 "new_x_surface_local_response": normalize_spatial_map(attention * surface_response),
+                "spawn_center": spawn_center,
+                "spawn_center_x_response": normalize_spatial_map(spawn_center * (0.35 + 0.65 * surface_response)),
+                "new_x_spawn_center": normalize_spatial_map(torch.maximum(attention, 0.45 * spawn_center) * spawn_center),
+                "spawn_lower_center": spawn_lower_center,
+                "spawn_lower_center_x_response": normalize_spatial_map(
+                    spawn_lower_center * (0.35 + 0.65 * surface_response)
+                ),
             }
         )
     return {name: normalize_spatial_map(score) for name, score in candidates.items()}
@@ -354,6 +461,8 @@ def default_candidate_for_operation(
     op = parse_edit_operation(edit_operation)
     rel = (relation or "auto").strip().lower()
     if op == "add_object":
+        if has_relation and rel in {"inside_host", "inside"}:
+            return "surface_local_response"
         if has_relation and rel not in {"none", "auto", ""}:
             return "relation_x_response"
         return "attention_x_clean"
@@ -423,15 +532,26 @@ def postprocess_support(
     target_area_ratio: float | None = None,
 ) -> tuple[torch.Tensor, torch.Tensor, dict[str, float | int]]:
     score = normalize_spatial_map(support_score)
-    percentiles = [
-        top_percentile,
-        min(99.0, top_percentile + 5.0),
-        min(99.0, top_percentile + 8.0),
-        max(50.0, top_percentile - 5.0),
-        max(50.0, top_percentile - 10.0),
-    ]
+    percentiles = sorted(
+        {
+            min(99.0, top_percentile + 8.0),
+            min(99.0, top_percentile + 5.0),
+            top_percentile,
+            max(25.0, top_percentile - 5.0),
+            max(25.0, top_percentile - 10.0),
+            max(25.0, top_percentile - 15.0),
+            max(25.0, top_percentile - 20.0),
+            max(25.0, top_percentile - 30.0),
+            max(25.0, top_percentile - 40.0),
+            50.0,
+            35.0,
+            25.0,
+        },
+        reverse=True,
+    )
     best_core = None
     best_stats: dict[str, float | int] = {}
+    best_area_penalty = float("inf")
     use_scored_components = component_score_map is not None or relation_map is not None
     target_area = (
         float(target_area_ratio)
@@ -462,8 +582,14 @@ def postprocess_support(
                 target_area_ratio=target_area,
             )
         area = _area(core)
-        best_core = core
-        best_stats = {
+        if min_area_ratio > 0.0 and area < min_area_ratio:
+            bound_penalty = float(min_area_ratio - area)
+        elif max_area_ratio > 0.0 and area > max_area_ratio:
+            bound_penalty = float(area - max_area_ratio)
+        else:
+            bound_penalty = 0.0
+        area_penalty = bound_penalty + 0.10 * abs(float(area) - float(target_area))
+        stats = {
             "support_threshold": threshold,
             "support_top_percentile": float(percentile),
             "support_area_core_raw": area,
@@ -473,7 +599,13 @@ def postprocess_support(
             "support_component_scoring": int(use_scored_components),
             "support_target_area_ratio": float(target_area),
         }
+        if area_penalty < best_area_penalty:
+            best_core = core
+            best_stats = stats
+            best_area_penalty = area_penalty
         if (min_area_ratio <= 0.0 or area >= min_area_ratio) and (max_area_ratio <= 0.0 or area <= max_area_ratio):
+            best_core = core
+            best_stats = stats
             break
     if best_core is None:
         best_core = score
@@ -786,6 +918,7 @@ def build_operation_support_v3(
         grounding_mask=grounding,
     )
     use_component_scoring = parsed_operation == "add_object" and relation_map is not None
+    component_score_ref = score if parsed_operation == "add_object" else clean
     edit, core, stats = postprocess_support(
         score,
         top_percentile=top_percentile,
@@ -794,7 +927,7 @@ def build_operation_support_v3(
         keep_components=keep_components,
         dilate_radius=dilate_radius,
         blur_kernel=blur_kernel,
-        component_score_map=clean if use_component_scoring else None,
+        component_score_map=component_score_ref if use_component_scoring else None,
         relation_map=(relation_map if relation_map is not None else grounding) if use_component_scoring else None,
     )
     stats.update(

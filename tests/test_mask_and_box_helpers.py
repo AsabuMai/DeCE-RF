@@ -14,6 +14,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from run_edit_sd3 import (  # noqa: E402
+    apply_y_highpass_texture_restore,
     build_proposal_diff_mask,
     clamp_normalized_box,
     estimate_foreground_head_structure_boxes,
@@ -32,7 +33,10 @@ from sd3_hrec import (  # noqa: E402
     _attention_object_mask_from_map,
     _attention_velocity_object_mask,
     _box_from_mask,
+    _build_recolor_clean_projection_image,
     _conservative_attention_box,
+    _estimate_recolor_closed_form_alpha,
+    _estimate_recolor_boundary_alpha,
     _largest_component_box_from_mask,
     _largest_component_mask_from_mask,
     _mask_binary_area_ratio,
@@ -42,6 +46,7 @@ from sd3_hrec import (  # noqa: E402
     filter_spatial_mask_components,
     latent_structure_edge_mask,
     masked_chroma_luma_loss,
+    masked_recolor_texture_boundary_loss,
     normalized_box_mask_like,
     spatial_mask_stats,
     source_color_similarity_mask,
@@ -328,6 +333,196 @@ class SD3MaskHelperTest(unittest.TestCase):
         )
 
         self.assertLess(float(softened_target.item()), float(full_target.item()))
+
+    def test_recolor_texture_boundary_loss_preserves_highpass_texture(self):
+        yy, xx = torch.meshgrid(torch.arange(8), torch.arange(8), indexing="ij")
+        checker = ((xx + yy) % 2).float().view(1, 1, 8, 8)
+        source = checker.expand(1, 3, 8, 8)
+        current = torch.full_like(source, 0.5)
+        mask = torch.ones(1, 1, 8, 8)
+        target_rgb = torch.tensor([0.5, 0.5, 0.5])
+
+        without_texture = masked_recolor_texture_boundary_loss(
+            current,
+            source,
+            target_rgb,
+            mask,
+            luma_preserve_scale=0.0,
+            luma_gradient_preserve_scale=0.0,
+            texture_preserve_scale=0.0,
+        )
+        with_texture = masked_recolor_texture_boundary_loss(
+            current,
+            source,
+            target_rgb,
+            mask,
+            luma_preserve_scale=0.0,
+            luma_gradient_preserve_scale=0.0,
+            texture_preserve_scale=1.0,
+            texture_kernel_size=3,
+        )
+
+        self.assertGreater(float(with_texture.item()), float(without_texture.item()))
+
+    def test_recolor_texture_boundary_loss_boundary_scale_adds_edge_chroma_pressure(self):
+        source = torch.full((1, 3, 6, 6), 0.5)
+        target_rgb = torch.tensor([0.9, 0.05, 0.04])
+        current = target_rgb.view(1, 3, 1, 1).expand_as(source).clone()
+        current[..., 1, 1:5] = torch.tensor([0.0, 0.0, 1.0]).view(3, 1)
+        current[..., 4, 1:5] = torch.tensor([0.0, 0.0, 1.0]).view(3, 1)
+        current[..., 1:5, 1] = torch.tensor([0.0, 0.0, 1.0]).view(3, 1)
+        current[..., 1:5, 4] = torch.tensor([0.0, 0.0, 1.0]).view(3, 1)
+        mask = torch.zeros(1, 1, 6, 6)
+        mask[..., 1:5, 1:5] = 1.0
+
+        without_boundary = masked_recolor_texture_boundary_loss(
+            current,
+            source,
+            target_rgb,
+            mask,
+            luma_preserve_scale=0.0,
+            boundary_chroma_scale=0.0,
+            boundary_kernel_size=3,
+        )
+        with_boundary = masked_recolor_texture_boundary_loss(
+            current,
+            source,
+            target_rgb,
+            mask,
+            luma_preserve_scale=0.0,
+            boundary_chroma_scale=2.0,
+            boundary_kernel_size=3,
+        )
+
+        self.assertGreater(float(with_boundary.item()), float(without_boundary.item()))
+
+    def test_recolor_boundary_alpha_uses_color_only_near_mask_edge(self):
+        source = torch.zeros(1, 3, 7, 7)
+        source[:] = torch.tensor([0.0, 0.0, 1.0]).view(1, 3, 1, 1)
+        source[..., 2:5, 2:5] = torch.tensor([0.9, 0.05, 0.04]).view(3, 1, 1)
+        mask = torch.zeros(1, 1, 7, 7)
+        mask[..., 1:6, 1:6] = 1.0
+
+        alpha = _estimate_recolor_boundary_alpha(
+            source,
+            mask,
+            torch.tensor([0.9, 0.05, 0.04]),
+            threshold=0.2,
+            softness=0.02,
+            boundary_kernel_size=3,
+        )
+
+        self.assertGreater(float(alpha[..., 3, 3].item()), 0.95)
+        self.assertLess(float(alpha[..., 1, 1].item()), 0.05)
+
+    def test_recolor_closed_form_alpha_keeps_known_foreground_and_background(self):
+        source = torch.zeros(1, 3, 12, 12)
+        source[..., :, :6] = torch.tensor([0.9, 0.05, 0.04]).view(3, 1, 1)
+        source[..., :, 6:] = torch.tensor([0.0, 0.0, 1.0]).view(3, 1, 1)
+        mask = torch.zeros(1, 1, 12, 12)
+        mask[..., 2:10, 2:10] = 1.0
+
+        alpha = _estimate_recolor_closed_form_alpha(
+            source,
+            mask,
+            boundary_kernel_size=3,
+            max_size=32,
+            epsilon=1e-7,
+            constraint_scale=100.0,
+        )
+
+        self.assertGreater(float(alpha[..., 5, 5].item()), 0.95)
+        self.assertLess(float(alpha[..., 0, 0].item()), 0.05)
+
+    def test_yuv_texture_projection_matches_soft_without_chroma_texture(self):
+        source = torch.rand(1, 3, 8, 8, generator=torch.Generator().manual_seed(0))
+        alpha = torch.ones(1, 1, 8, 8)
+        target_rgb = torch.tensor([0.0, 0.0, 1.0])
+
+        soft = _build_recolor_clean_projection_image(
+            source,
+            source,
+            None,
+            target_rgb,
+            alpha,
+            mode="soft",
+            texture_kernel_size=3,
+            luma_texture_scale=1.0,
+            chroma_texture_scale=0.0,
+            composite_mode="blend",
+            background_kernel_size=3,
+        )
+        yuv_texture = _build_recolor_clean_projection_image(
+            source,
+            source,
+            None,
+            target_rgb,
+            alpha,
+            mode="yuv_texture",
+            texture_kernel_size=3,
+            luma_texture_scale=1.0,
+            chroma_texture_scale=0.0,
+            composite_mode="blend",
+            background_kernel_size=3,
+        )
+
+        self.assertLess(float((soft - yuv_texture).abs().max().item()), 1e-6)
+
+    def test_yuv_texture_projection_keeps_source_chroma_highpass(self):
+        source = torch.full((1, 3, 8, 8), 0.5)
+        source[..., 2::2, 2::2] = torch.tensor([0.9, 0.05, 0.04]).view(3, 1, 1)
+        source[..., 1::2, 1::2] = torch.tensor([0.4, 0.2, 0.9]).view(3, 1, 1)
+        alpha = torch.ones(1, 1, 8, 8)
+        target_rgb = torch.tensor([0.0, 0.0, 1.0])
+
+        soft = _build_recolor_clean_projection_image(
+            source,
+            source,
+            None,
+            target_rgb,
+            alpha,
+            mode="soft",
+            texture_kernel_size=3,
+            luma_texture_scale=1.0,
+            chroma_texture_scale=0.0,
+            composite_mode="blend",
+            background_kernel_size=3,
+        )
+        yuv_texture = _build_recolor_clean_projection_image(
+            source,
+            source,
+            None,
+            target_rgb,
+            alpha,
+            mode="yuv_texture",
+            texture_kernel_size=3,
+            luma_texture_scale=1.0,
+            chroma_texture_scale=0.75,
+            composite_mode="blend",
+            background_kernel_size=3,
+        )
+
+        self.assertGreater(float((soft - yuv_texture).abs().mean().item()), 1e-3)
+
+    def test_y_highpass_texture_restore_preserves_result_chroma(self):
+        source = Image.new("RGB", (8, 8), (128, 128, 128))
+        draw = ImageDraw.Draw(source)
+        for x in range(0, 8, 2):
+            draw.line((x, 0, x, 7), fill=(230, 230, 230))
+        result = Image.new("RGB", (8, 8), (20, 60, 210))
+        mask = Image.new("L", (8, 8), 255)
+
+        restored = apply_y_highpass_texture_restore(
+            result,
+            source,
+            mask,
+            strength=1.0,
+            kernel_size=3,
+        )
+        restored_tensor = torch.frombuffer(bytearray(restored.tobytes()), dtype=torch.uint8).view(8, 8, 3).float()
+
+        self.assertGreater(float(restored_tensor[..., 2].mean().item()), float(restored_tensor[..., 0].mean().item()))
+        self.assertGreater(float(restored_tensor[..., 0].std().item()), 1.0)
 
     def test_source_color_mask_luma_gate_suppresses_dark_details(self):
         source = torch.zeros(1, 3, 2, 2)

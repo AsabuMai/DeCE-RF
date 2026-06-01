@@ -1,0 +1,41 @@
+[
+  {
+    "name": "old_dynamic",
+    "runtime_seconds": 131.5499256940093,
+    "projection_eval_count": null,
+    "mask_area": 0.18464857360627177,
+    "inside_blue": 0.9756569491025688,
+    "outside_blue": 0.0012624049544699568,
+    "boundary_red": 0.13119743692430916,
+    "source_red_boundary_residual": 0.34101382488479265,
+    "outside_l1": 0.014431281946599483,
+    "inside_l1": 0.24862276017665863,
+    "texture_corr": 0.5557757676714469
+  },
+  {
+    "name": "alpha_matte_dynamic",
+    "runtime_seconds": 88.44904391397722,
+    "projection_eval_count": 24,
+    "mask_area": 0.1885310050087108,
+    "inside_blue": 0.9377786200299602,
+    "outside_blue": 0.005300212595552686,
+    "boundary_red": 0.058828205739724936,
+    "source_red_boundary_residual": 0.14419695193434937,
+    "outside_l1": 0.0576152466237545,
+    "inside_l1": 0.2594614624977112,
+    "texture_corr": 0.07592658685986889
+  },
+  {
+    "name": "alpha_matte_static",
+    "runtime_seconds": 54.94810638600029,
+    "projection_eval_count": 1,
+    "mask_area": 0.1885310050087108,
+    "inside_blue": 0.9247567996823506,
+    "outside_blue": 0.005732112830791551,
+    "boundary_red": 0.05461483424755545,
+    "source_red_boundary_residual": 0.14536928487690504,
+    "outside_l1": 0.05757942423224449,
+    "inside_l1": 0.2555956542491913,
+    "texture_corr": 0.08803273193800908
+  }
+]

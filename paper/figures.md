@@ -1,48 +1,107 @@
 # Figure Plan
 
-Current source of truth: core-5 results in `paper/results.md`, with the final
-experiment design updated to Core-6 after one recolor visual gate.
+Current source of truth: `paper/wacv_experiment_design.md`.
+
+The main paper should use five figures by default and six at most. Target
+about 50-70 result image cells total. More than that starts to read as a
+gallery and weakens the algorithmic story.
+
+Completed server evidence is documented in `paper/results.md`. The updated
+Core-6 design is category-based: attached accessory, container-constrained
+spatial insertion, surface decal, local recolor, surface pattern editing, and
+simple exposed-object removal. The server grids cover T1/T3/T4/T6 evidence plus
+supplementary T1/T3 examples, but not the updated strict T2/T5 rows.
 
 Use only complete runs with `result.png`, `stats.json`, `metadata.json`, and
 `command.txt`.
 
-## Main Figures
+## Main-Paper Figure Budget
+
+| Figure | Content | Approx. result cells | Role |
+| --- | --- | ---: | --- |
+| Figure 1 | teaser: two examples, Source/Target/Direct/Generic/DeCE-RF | 10 | motivation |
+| Figure 2 | method overview | 0 | explain the algorithm |
+| Figure 3 | E1 Core-6 qualitative grid | 24-30 | main effect |
+| Figure 4 | E2 RF-native baseline qualitative comparison | 15 | current alternatives |
+| Figure 5 | E4 Pareto + timestep diagnostics | 0 | controller evidence |
+| Figure 6 | E5 extension/failure cases, optional | 12-18 | scope boundary |
+
+Main-paper target:
+
+```text
+tight: 45-55 result image cells
+complete: 60-75 result image cells
+```
+
+Supplement target:
+
+```text
+150-300 image cells: all seeds, full grids, support masks, RF baselines,
+Pareto sweeps, and failure taxonomy.
+```
+
+## E1 Main Qualitative Grid
 
 Primary qualitative grid:
 
 ```text
-Source | Direct target | Generic support | DeCE-RF | Support overlay
+Source | Target/Instruction | Direct target | Generic support | DeCE-RF
 ```
 
-Rows:
+Updated strict Core-6 target rows:
 
 ```text
-cat_crown
-dog_sunglasses
-mug_heart
-tshirt_star
-backpack_remove_toy_charm
-recolor task: red_chair_blue or red_office_chair_to_blue_office_chair
+T1 attached accessory: dog_sunglasses; cat_crown as secondary/teaser
+T2 container-constrained spatial insertion: bowl_apple_inside
+T3 surface decal/logo: mug_heart
+T4 local recolor: red_chair_blue
+T5 surface pattern edit: pillow_blue_stripes
+T6 simple exposed removal: backpack_remove_toy_charm
 ```
 
-Current generated core-5 grids:
+Current generated server evidence grids:
 
 ```text
-experiments/support_v3_2026-05-11/paper_grids/core5_main_seed10_grid.png
-experiments/support_v3_2026-05-11/paper_grids/core5_main_seed11_grid.png
-experiments/support_v3_2026-05-11/paper_grids/core5_main_seed12_grid.png
+experiments/support_v3_2026-05-11/paper_grids/core6_main_seed10_grid.png
+experiments/support_v3_2026-05-11/paper_grids/core6_main_seed11_grid.png
+experiments/support_v3_2026-05-11/paper_grids/core6_main_seed12_grid.png
 ```
 
 Paper-use guidance:
 
-- `cat_crown`: use as compact insertion success.
-- `dog_sunglasses`: use as positive control / edit-preserve tradeoff.
+- `dog_sunglasses`: use as the attached-accessory success case.
+- `cat_crown`: use as T1 secondary/teaser; do not use as the final T2 spatial
+  insertion row.
 - `mug_heart`: use as clean rigid-surface decal success.
-- `tshirt_star`: use as clothing-surface decal generalization.
+- `tshirt_star`: server evidence supports this as a clothing/surface decal
+  expansion. Do not relabel it as the final T5 row unless the paper narrows T5
+  to clothing-decal evidence.
+- `bowl_apple_inside`: updated T2 target, but not yet a successful generated
+  row. Server bowl/apple probes remain diagnostic because placement drifts
+  toward the rim/shadow.
+- `pillow_blue_stripes`: updated T5 target, but not yet implemented or
+  generated.
 - `backpack_remove_toy_charm`: use as exposed-object removal success with a
   caveat that global CLIP underestimates removal quality.
-- `red_chair_blue` / `red_office_chair_to_blue_office_chair`: use only after
-  the seed-10 recolor gate passes; its role is localized attribute editing.
+- `red_chair_blue`: server evidence supports it as the localized
+  attribute/recolor row; do not claim general recoloring.
+- `red_office_chair_to_blue_office_chair`: fallback only if `red_chair_blue`
+  fails final visual audit.
+
+Do not include `support_v3_fixed` in this main qualitative grid unless the
+layout still fits. Fixed DeCE belongs mainly in the controller ablation figure
+and table.
+
+## E2 RF Baseline Figure
+
+Use three representative examples:
+
+```text
+Source | FlowEdit / RF baseline | OT-RF or RF-Solver | Direct target | DeCE-RF
+```
+
+This figure should be compact because the main E2 evidence is the RF-native
+baseline table.
 
 ## Extension Probe Figure
 

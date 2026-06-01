@@ -1,0 +1,50 @@
+[
+  {
+    "name": "old_dynamic",
+    "runtime_seconds": 131.5499256940093,
+    "projection_eval_count": null,
+    "inside_blue": 0.9756569491025688,
+    "outside_blue": 0.0012624049544699568,
+    "boundary_red": 0.13119743692430916,
+    "source_red_boundary_residual": 0.34101382488479265,
+    "outside_l1": 0.014431281946599483,
+    "inside_l1": 0.24862276017665863,
+    "texture_corr": 0.5557757676714469
+  },
+  {
+    "name": "cf_soft",
+    "runtime_seconds": 62.706228104187176,
+    "projection_eval_count": 1,
+    "inside_blue": 0.9488331799231144,
+    "outside_blue": 0.006774124563382408,
+    "boundary_red": 0.03974878766197631,
+    "source_red_boundary_residual": 0.11160609613130129,
+    "outside_l1": 0.057648666203022,
+    "inside_l1": 0.26168501377105713,
+    "texture_corr": 0.07596781774784236
+  },
+  {
+    "name": "yuv_c050",
+    "runtime_seconds": 63.48950986005366,
+    "projection_eval_count": 1,
+    "inside_blue": 0.9486346490515639,
+    "outside_blue": 0.006679777424616636,
+    "boundary_red": 0.04372366642817394,
+    "source_red_boundary_residual": 0.12121922626025791,
+    "outside_l1": 0.057631682604551315,
+    "inside_l1": 0.26147276163101196,
+    "texture_corr": 0.08532000854121492
+  },
+  {
+    "name": "yuv_c050_dlp3",
+    "runtime_seconds": 63.515712591819465,
+    "projection_eval_count": 1,
+    "inside_blue": 0.9375981374194596,
+    "outside_blue": 0.005692277372201559,
+    "boundary_red": 0.046585579139836235,
+    "source_red_boundary_residual": 0.12286049237983587,
+    "outside_l1": 0.057625435292720795,
+    "inside_l1": 0.26187506318092346,
+    "texture_corr": 0.10287569447186369
+  }
+]

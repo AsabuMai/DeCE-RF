@@ -29,6 +29,7 @@ from guidance_fields import (
     limit_guidance_rms_relative_to_anchor,
     masked_chroma_luma_loss,
     masked_reference_image_loss,
+    masked_recolor_texture_boundary_loss,
     masked_rms,
     masked_total_variation,
     ramp_schedule_from_progress,
@@ -99,6 +100,382 @@ def _encode_unit_image_to_latent(pipe, image: torch.Tensor) -> torch.Tensor:
     with torch.autocast("cuda", enabled=autocast_enabled), torch.inference_mode():
         latent_denorm = vae.encode(image_input).latent_dist.mode()
     return (latent_denorm - vae.config.shift_factor) * vae.config.scaling_factor
+
+
+def _yuv_to_rgb(image_yuv: torch.Tensor) -> torch.Tensor:
+    y = image_yuv[:, 0:1]
+    u = image_yuv[:, 1:2]
+    v = image_yuv[:, 2:3]
+    r = y + 1.13983 * v
+    g = y - 0.39465 * u - 0.58060 * v
+    b = y + 2.03211 * u
+    return torch.cat([r, g, b], dim=1)
+
+
+def _spatial_low_pass(tensor: torch.Tensor, kernel_size: int) -> torch.Tensor:
+    kernel_size = max(1, int(kernel_size))
+    if kernel_size <= 1:
+        return tensor
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    pad = kernel_size // 2
+    return torch.nn.functional.avg_pool2d(tensor, kernel_size=kernel_size, stride=1, padding=pad)
+
+
+def _luma_low_pass(luma: torch.Tensor, kernel_size: int) -> torch.Tensor:
+    return _spatial_low_pass(luma, kernel_size)
+
+
+def _estimate_local_background(
+    image: torch.Tensor,
+    alpha: torch.Tensor,
+    kernel_size: int,
+) -> torch.Tensor:
+    kernel_size = max(1, int(kernel_size))
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    outside = (1.0 - alpha).clamp(0.0, 1.0)
+    if kernel_size <= 1:
+        return image
+    pad = kernel_size // 2
+    weighted = torch.nn.functional.avg_pool2d(image * outside, kernel_size=kernel_size, stride=1, padding=pad)
+    denom = torch.nn.functional.avg_pool2d(outside, kernel_size=kernel_size, stride=1, padding=pad).clamp_min(1e-4)
+    estimate = weighted / denom
+    return torch.where(denom > 1e-3, estimate, image).clamp(0.0, 1.0)
+
+
+def _soft_mask_boundary_band(alpha: torch.Tensor, kernel_size: int) -> torch.Tensor:
+    kernel_size = max(1, int(kernel_size))
+    if kernel_size <= 1:
+        return torch.zeros_like(alpha)
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    pad = kernel_size // 2
+    dilated = torch.nn.functional.max_pool2d(alpha, kernel_size=kernel_size, stride=1, padding=pad)
+    eroded = -torch.nn.functional.max_pool2d(-alpha, kernel_size=kernel_size, stride=1, padding=pad)
+    return (dilated - eroded).clamp(0.0, 1.0)
+
+
+def _estimate_recolor_boundary_alpha(
+    source_image: torch.Tensor,
+    mask: torch.Tensor,
+    source_rgb: torch.Tensor,
+    threshold: float,
+    softness: float,
+    boundary_kernel_size: int,
+) -> torch.Tensor:
+    """Use source color evidence only in a narrow band around the support edge."""
+    alpha = mask.to(dtype=torch.float32, device=source_image.device)
+    if alpha.shape[-2:] != source_image.shape[-2:]:
+        alpha = torch.nn.functional.interpolate(
+            alpha,
+            size=source_image.shape[-2:],
+            mode="bilinear",
+            align_corners=False,
+        )
+    alpha = alpha.clamp(0.0, 1.0)
+    boundary = _soft_mask_boundary_band(alpha, boundary_kernel_size)
+    if float(boundary.max().item()) <= 0.0:
+        return alpha
+    color_alpha = source_color_similarity_mask(
+        source_image.to(dtype=torch.float32),
+        source_rgb.to(dtype=torch.float32, device=source_image.device),
+        None,
+        threshold=threshold,
+        softness=softness,
+    ).clamp(0.0, 1.0)
+    return (alpha * (1.0 - boundary) + color_alpha * boundary).clamp(0.0, 1.0)
+
+
+def _closed_form_alpha_crop(
+    image: "np.ndarray",
+    known_alpha: "np.ndarray",
+    known_mask: "np.ndarray",
+    epsilon: float,
+    constraint_scale: float,
+) -> "np.ndarray":
+    import numpy as np
+    from scipy import sparse
+    from scipy.sparse import linalg
+
+    height, width, channels = image.shape
+    if channels != 3:
+        raise ValueError("closed-form matting expects RGB input")
+    radius = 1
+    win_size = (2 * radius + 1) ** 2
+    flat_image = image.reshape(-1, 3).astype(np.float64)
+    inds = np.arange(height * width).reshape(height, width)
+    row_inds = []
+    col_inds = []
+    values = []
+    eye = np.eye(3)
+    for y in range(radius, height - radius):
+        for x in range(radius, width - radius):
+            win_inds = inds[y - radius : y + radius + 1, x - radius : x + radius + 1].reshape(-1)
+            win_i = flat_image[win_inds]
+            mean = win_i.mean(axis=0)
+            centered = win_i - mean
+            cov = centered.T @ centered / win_size
+            inv = np.linalg.inv(cov + (float(epsilon) / win_size) * eye)
+            affinity = (1.0 + centered @ inv @ centered.T) / win_size
+            local_l = np.eye(win_size) - affinity
+            row_inds.extend(np.repeat(win_inds, win_size))
+            col_inds.extend(np.tile(win_inds, win_size))
+            values.extend(local_l.reshape(-1))
+    n = height * width
+    laplacian = sparse.coo_matrix((values, (row_inds, col_inds)), shape=(n, n)).tocsr()
+    known = known_mask.reshape(-1).astype(bool)
+    alpha0 = known_alpha.reshape(-1).astype(np.float64)
+    constraints = sparse.diags(known.astype(np.float64) * float(constraint_scale), format="csr")
+    rhs = known.astype(np.float64) * float(constraint_scale) * alpha0
+    alpha = linalg.spsolve(laplacian + constraints, rhs)
+    return np.clip(alpha.reshape(height, width), 0.0, 1.0).astype(np.float32)
+
+
+def _estimate_recolor_closed_form_alpha(
+    source_image: torch.Tensor,
+    mask: torch.Tensor,
+    boundary_kernel_size: int,
+    max_size: int,
+    epsilon: float,
+    constraint_scale: float,
+) -> torch.Tensor:
+    import numpy as np
+
+    alpha = mask.to(dtype=torch.float32, device=source_image.device)
+    if alpha.shape[-2:] != source_image.shape[-2:]:
+        alpha = torch.nn.functional.interpolate(
+            alpha,
+            size=source_image.shape[-2:],
+            mode="bilinear",
+            align_corners=False,
+        )
+    alpha = alpha.clamp(0.0, 1.0)
+    hard = (alpha > 0.5).to(dtype=torch.float32)
+    kernel_size = max(3, int(boundary_kernel_size))
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    pad = kernel_size // 2
+    eroded = -torch.nn.functional.max_pool2d(-hard, kernel_size=kernel_size, stride=1, padding=pad)
+    dilated = torch.nn.functional.max_pool2d(hard, kernel_size=kernel_size, stride=1, padding=pad)
+    unknown = (dilated - eroded).clamp(0.0, 1.0) > 0.0
+    if not bool(unknown.any().item()):
+        return alpha
+
+    active = (dilated[0, 0] > 0.0).detach().cpu().numpy()
+    ys, xs = np.where(active)
+    if len(xs) == 0:
+        return alpha
+    margin = max(2, pad + 2)
+    height, width = alpha.shape[-2:]
+    x0 = max(0, int(xs.min()) - margin)
+    x1 = min(width, int(xs.max()) + margin + 1)
+    y0 = max(0, int(ys.min()) - margin)
+    y1 = min(height, int(ys.max()) + margin + 1)
+
+    image_crop = source_image[:, :, y0:y1, x0:x1].to(dtype=torch.float32)
+    alpha_crop = alpha[:, :, y0:y1, x0:x1]
+    eroded_crop = eroded[:, :, y0:y1, x0:x1]
+    dilated_crop = dilated[:, :, y0:y1, x0:x1]
+    crop_h, crop_w = alpha_crop.shape[-2:]
+    scale = min(1.0, float(max(16, int(max_size))) / float(max(crop_h, crop_w)))
+    solve_h = max(8, int(round(crop_h * scale)))
+    solve_w = max(8, int(round(crop_w * scale)))
+    if (solve_h, solve_w) != (crop_h, crop_w):
+        image_solve = torch.nn.functional.interpolate(
+            image_crop,
+            size=(solve_h, solve_w),
+            mode="bilinear",
+            align_corners=False,
+        )
+        alpha_solve = torch.nn.functional.interpolate(
+            alpha_crop,
+            size=(solve_h, solve_w),
+            mode="bilinear",
+            align_corners=False,
+        )
+        eroded_solve = torch.nn.functional.interpolate(eroded_crop, size=(solve_h, solve_w), mode="nearest")
+        dilated_solve = torch.nn.functional.interpolate(dilated_crop, size=(solve_h, solve_w), mode="nearest")
+    else:
+        image_solve = image_crop
+        alpha_solve = alpha_crop
+        eroded_solve = eroded_crop
+        dilated_solve = dilated_crop
+
+    known_fg = eroded_solve[0, 0] > 0.5
+    known_bg = dilated_solve[0, 0] < 0.5
+    known_mask = (known_fg | known_bg).detach().cpu().numpy()
+    known_alpha = alpha_solve[0, 0].detach().cpu().numpy()
+    known_alpha[known_fg.detach().cpu().numpy()] = 1.0
+    known_alpha[known_bg.detach().cpu().numpy()] = 0.0
+    if not known_mask.any() or known_mask.all():
+        return alpha
+    image_np = image_solve[0].detach().cpu().permute(1, 2, 0).numpy()
+    alpha_np = _closed_form_alpha_crop(
+        image_np,
+        known_alpha,
+        known_mask,
+        epsilon=epsilon,
+        constraint_scale=constraint_scale,
+    )
+    alpha_tensor = torch.from_numpy(alpha_np).to(dtype=torch.float32, device=source_image.device).view(1, 1, solve_h, solve_w)
+    if (solve_h, solve_w) != (crop_h, crop_w):
+        alpha_tensor = torch.nn.functional.interpolate(
+            alpha_tensor,
+            size=(crop_h, crop_w),
+            mode="bilinear",
+            align_corners=False,
+        ).clamp(0.0, 1.0)
+    unknown_crop = ((dilated_crop - eroded_crop).clamp(0.0, 1.0) > 0.0).to(dtype=torch.float32)
+    refined_crop = alpha_crop * (1.0 - unknown_crop) + alpha_tensor * unknown_crop
+    refined = alpha.clone()
+    refined[:, :, y0:y1, x0:x1] = refined_crop.clamp(0.0, 1.0)
+    return refined.clamp(0.0, 1.0)
+
+
+def _prepare_recolor_projection_alpha(
+    alpha: torch.Tensor,
+    size: tuple[int, int],
+    alpha_power: float,
+    boundary_boost: float,
+    boundary_kernel_size: int,
+    device: torch.device,
+) -> torch.Tensor:
+    alpha = torch.nn.functional.interpolate(
+        alpha.to(dtype=torch.float32, device=device),
+        size=size,
+        mode="bilinear",
+        align_corners=False,
+    ).clamp(0.0, 1.0)
+    alpha_power = max(0.01, float(alpha_power))
+    shaped = alpha.pow(alpha_power)
+    if boundary_boost <= 0.0:
+        return shaped
+    boundary_kernel_size = max(1, int(boundary_kernel_size))
+    if boundary_kernel_size % 2 == 0:
+        boundary_kernel_size += 1
+    if boundary_kernel_size <= 1:
+        inner_boundary = alpha
+    else:
+        pad = boundary_kernel_size // 2
+        eroded = -torch.nn.functional.max_pool2d(
+            -alpha,
+            kernel_size=boundary_kernel_size,
+            stride=1,
+            padding=pad,
+        )
+        inner_boundary = (alpha - eroded).clamp(0.0, 1.0) * alpha
+    return (shaped + float(boundary_boost) * inner_boundary).clamp(0.0, 1.0)
+
+
+def _build_recolor_clean_projection_image(
+    current_image: torch.Tensor,
+    source_image: torch.Tensor,
+    reference_image: torch.Tensor | None,
+    target_rgb: torch.Tensor,
+    alpha: torch.Tensor,
+    mode: str,
+    texture_kernel_size: int,
+    luma_texture_scale: float,
+    chroma_texture_scale: float,
+    composite_mode: str,
+    background_kernel_size: int,
+) -> torch.Tensor:
+    current_yuv = rgb_to_yuv(current_image.to(torch.float32))
+    source_yuv = rgb_to_yuv(source_image.to(torch.float32))
+    if reference_image is not None:
+        chroma_yuv = rgb_to_yuv(reference_image.to(torch.float32))
+    else:
+        target_image = target_rgb.to(dtype=torch.float32, device=current_image.device).view(1, 3, 1, 1).expand_as(
+            current_image
+        )
+        chroma_yuv = rgb_to_yuv(target_image)
+
+    mode = mode.strip().lower()
+    if mode == "strict":
+        target_y = source_yuv[:, :1]
+    elif mode == "soft":
+        source_low = _luma_low_pass(source_yuv[:, :1], texture_kernel_size)
+        current_low = _luma_low_pass(current_yuv[:, :1], texture_kernel_size)
+        target_y = (current_low + (source_yuv[:, :1] - source_low)).clamp(0.0, 1.0)
+    elif mode == "yuv_texture":
+        source_low = _luma_low_pass(source_yuv, texture_kernel_size)
+        current_low_y = _luma_low_pass(current_yuv[:, :1], texture_kernel_size)
+        luma_high = source_yuv[:, :1] - source_low[:, :1]
+        chroma_high = source_yuv[:, 1:] - source_low[:, 1:]
+        target_y = (current_low_y + float(luma_texture_scale) * luma_high).clamp(0.0, 1.0)
+        chroma_yuv = torch.cat(
+            [
+                chroma_yuv[:, :1],
+                chroma_yuv[:, 1:] + float(chroma_texture_scale) * chroma_high,
+            ],
+            dim=1,
+        )
+    else:
+        raise ValueError(f"Unsupported recolor clean projection mode: {mode}")
+
+    target_yuv = torch.cat([target_y, chroma_yuv[:, 1:]], dim=1)
+    target_rgb_image = _yuv_to_rgb(target_yuv).clamp(0.0, 1.0)
+    alpha = alpha.to(dtype=torch.float32, device=current_image.device).clamp(0.0, 1.0)
+    composite_mode = composite_mode.strip().lower()
+    if composite_mode == "blend":
+        background = current_image.to(torch.float32)
+    elif composite_mode == "matte":
+        background = _estimate_local_background(
+            source_image.to(dtype=torch.float32, device=current_image.device),
+            alpha,
+            kernel_size=background_kernel_size,
+        )
+    else:
+        raise ValueError(f"Unsupported recolor clean projection composite mode: {composite_mode}")
+    return (background * (1.0 - alpha) + target_rgb_image * alpha).clamp(0.0, 1.0)
+
+
+def _build_recolor_projection_latent_target(
+    pipe,
+    current_image: torch.Tensor,
+    source_image: torch.Tensor,
+    reference_image: torch.Tensor | None,
+    target_rgb: torch.Tensor,
+    composite_alpha_image: torch.Tensor,
+    gate_alpha_image: torch.Tensor,
+    mode: str,
+    texture_kernel_size: int,
+    luma_texture_scale: float,
+    chroma_texture_scale: float,
+    composite_mode: str,
+    background_kernel_size: int,
+    latent_size: tuple[int, int],
+    latent_device: torch.device,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    if reference_image is not None and reference_image.shape[-2:] != current_image.shape[-2:]:
+        reference_image = torch.nn.functional.interpolate(
+            reference_image.to(dtype=torch.float32, device=current_image.device),
+            size=current_image.shape[-2:],
+            mode="bilinear",
+            align_corners=False,
+        )
+    target_image = _build_recolor_clean_projection_image(
+        current_image=current_image,
+        source_image=source_image.to(dtype=torch.float32, device=current_image.device),
+        reference_image=reference_image,
+        target_rgb=target_rgb.to(device=current_image.device),
+        alpha=composite_alpha_image.to(dtype=torch.float32, device=current_image.device),
+        mode=mode,
+        texture_kernel_size=texture_kernel_size,
+        luma_texture_scale=luma_texture_scale,
+        chroma_texture_scale=chroma_texture_scale,
+        composite_mode=composite_mode,
+        background_kernel_size=background_kernel_size,
+    )
+    target_latent = _encode_unit_image_to_latent(pipe, target_image).to(dtype=torch.float32, device=latent_device)
+    gate_latent = torch.nn.functional.interpolate(
+        gate_alpha_image.to(dtype=torch.float32, device=latent_device),
+        size=latent_size,
+        mode="bilinear",
+        align_corners=False,
+    ).clamp(0.0, 1.0)
+    return target_latent, gate_latent
 
 
 def _mask_bbox_for_image(
@@ -230,10 +607,35 @@ def HRecSD3Edit(
     edit_color_detail_protect_scale: float = 0.0,
     edit_color_detail_protect_threshold: float = 0.35,
     edit_color_detail_protect_softness: float = 0.08,
+    edit_color_alpha_matte: bool = False,
+    edit_color_alpha_matte_mode: str = "color",
+    edit_color_alpha_matte_kernel_size: int = 9,
+    edit_color_alpha_matte_threshold: float | None = None,
+    edit_color_alpha_matte_softness: float | None = None,
+    edit_color_alpha_matte_max_size: int = 256,
+    edit_color_alpha_matte_epsilon: float = 1e-7,
+    edit_color_alpha_matte_constraint_scale: float = 100.0,
     edit_color_target_chroma_scale: float = 1.0,
     edit_color_smooth_kernel: int = 5,
     edit_color_luma_preserve_scale: float = 0.35,
     edit_color_luma_gradient_preserve_scale: float = 0.15,
+    edit_color_texture_preserve_scale: float = 0.0,
+    edit_color_texture_kernel_size: int = 7,
+    edit_color_boundary_chroma_scale: float = 0.0,
+    edit_color_boundary_kernel_size: int = 7,
+    edit_color_clean_projection_scale: float = 0.0,
+    edit_color_clean_projection_mode: str = "soft",
+    edit_color_clean_projection_texture_kernel_size: int = 7,
+    edit_color_clean_projection_luma_texture_scale: float = 1.0,
+    edit_color_clean_projection_chroma_texture_scale: float = 0.25,
+    edit_color_clean_projection_delta_lowpass_kernel: int = 0,
+    edit_color_clean_projection_alpha_power: float = 1.0,
+    edit_color_clean_projection_boundary_boost: float = 0.0,
+    edit_color_clean_projection_boundary_kernel_size: int = 7,
+    edit_color_clean_projection_composite_mode: str = "blend",
+    edit_color_clean_projection_background_kernel_size: int = 31,
+    edit_color_clean_projection_target_mode: str = "static",
+    edit_color_clean_projection_refresh_interval: int = 0,
     edit_ref_guidance_scale: float = 0.0,
     edit_ref_image_path: str | None = None,
     edit_ref_mask_path: str | None = None,
@@ -1289,6 +1691,7 @@ def HRecSD3Edit(
 
     color_mask_image = None
     color_mask_latent = None
+    color_projection_alpha_image = None
     source_color_reference = None
     ref_mask_image = None
     ref_mask_latent = None
@@ -1300,7 +1703,9 @@ def HRecSD3Edit(
         (use_auxiliary_edit_fields and edit_clip_guidance_scale > 0.0)
         or (use_text_diff_edit_field and edit_text_guidance_scale > 0.0)
     )
-    if needs_clip_reward or edit_color_guidance_scale > 0.0 or edit_ref_guidance_scale > 0.0:
+    needs_recolor_projection = edit_color_clean_projection_scale > 0.0
+    needs_color_reference = edit_color_guidance_scale > 0.0 or needs_recolor_projection
+    if needs_clip_reward or needs_color_reference or edit_ref_guidance_scale > 0.0:
         # Offloaded diffusers modules wrap the pipeline VAE with accelerate
         # hooks that produce inference tensors. A dedicated copy keeps the VAE
         # decode path differentiable for image-space edit rewards.
@@ -1308,7 +1713,7 @@ def HRecSD3Edit(
         grad_vae.eval()
         for param in grad_vae.parameters():
             param.requires_grad_(False)
-    if edit_color_guidance_scale > 0.0 and color_source is not None and M_edit is not None:
+    if needs_color_reference and color_source is not None and M_edit is not None:
         with torch.no_grad():
             source_color_image = decode_latent_to_unit_image(pipe, x_src, vae_override=grad_vae)
             source_color_reference = source_color_image.detach()
@@ -1334,6 +1739,34 @@ def HRecSD3Edit(
                     detail_protect_threshold=edit_color_detail_protect_threshold,
                     detail_protect_softness=edit_color_detail_protect_softness,
                 )
+            if edit_color_alpha_matte:
+                alpha_matte_mode = edit_color_alpha_matte_mode.strip().lower()
+                if alpha_matte_mode == "color":
+                    color_projection_alpha_image = _estimate_recolor_boundary_alpha(
+                        source_color_image,
+                        color_mask_image,
+                        color_source[1],
+                        threshold=edit_color_mask_threshold
+                        if edit_color_alpha_matte_threshold is None
+                        else edit_color_alpha_matte_threshold,
+                        softness=edit_color_mask_softness
+                        if edit_color_alpha_matte_softness is None
+                        else edit_color_alpha_matte_softness,
+                        boundary_kernel_size=edit_color_alpha_matte_kernel_size,
+                    )
+                elif alpha_matte_mode == "closed_form":
+                    color_projection_alpha_image = _estimate_recolor_closed_form_alpha(
+                        source_color_image,
+                        color_mask_image,
+                        boundary_kernel_size=edit_color_alpha_matte_kernel_size,
+                        max_size=edit_color_alpha_matte_max_size,
+                        epsilon=edit_color_alpha_matte_epsilon,
+                        constraint_scale=edit_color_alpha_matte_constraint_scale,
+                    )
+                else:
+                    raise ValueError(f"Unsupported recolor alpha matte mode: {edit_color_alpha_matte_mode}")
+            else:
+                color_projection_alpha_image = color_mask_image
             color_mask_latent = torch.nn.functional.interpolate(
                 color_mask_image,
                 size=x_src.shape[-2:],
@@ -1342,6 +1775,11 @@ def HRecSD3Edit(
             ).clamp(0.0, 1.0)
             if mask_output_dir is not None:
                 save_mask_image(color_mask_image, os.path.join(mask_output_dir, "color_edit_mask.png"))
+                if edit_color_alpha_matte:
+                    save_mask_image(
+                        color_projection_alpha_image,
+                        os.path.join(mask_output_dir, "color_edit_alpha_matte.png"),
+                    )
     if edit_ref_guidance_scale > 0.0:
         if edit_ref_image_path is None:
             raise ValueError("--edit-ref-guidance-scale requires --edit-ref-image")
@@ -1442,6 +1880,64 @@ def HRecSD3Edit(
                 target_prompt=edit_text_target_prompt or tar_prompt,
                 mask=M_edit,
             )
+
+    recolor_projection_target_mode = edit_color_clean_projection_target_mode.strip().lower()
+    if recolor_projection_target_mode not in {"static", "dynamic"}:
+        raise ValueError(
+            "Unsupported recolor clean projection target mode: "
+            f"{edit_color_clean_projection_target_mode}"
+        )
+    recolor_projection_refresh_interval = max(0, int(edit_color_clean_projection_refresh_interval))
+    recolor_projection_target_latent: torch.Tensor | None = None
+    recolor_projection_gate_latent: torch.Tensor | None = None
+    recolor_projection_eval_count = 0
+    recolor_projection_refresh_count = 0
+    recolor_projection_enabled = (
+        edit_color_clean_projection_scale > 0.0
+        and source_color_reference is not None
+        and color_projection_alpha_image is not None
+        and color_target is not None
+    )
+    if recolor_projection_enabled:
+        with torch.no_grad():
+            recolor_projection_composite_alpha_image = _prepare_recolor_projection_alpha(
+                alpha=color_projection_alpha_image,
+                size=source_color_reference.shape[-2:],
+                alpha_power=edit_color_clean_projection_alpha_power,
+                boundary_boost=edit_color_clean_projection_boundary_boost,
+                boundary_kernel_size=edit_color_clean_projection_boundary_kernel_size,
+                device=source_color_reference.device,
+            )
+            recolor_projection_gate_alpha_image = _prepare_recolor_projection_alpha(
+                alpha=color_mask_image,
+                size=source_color_reference.shape[-2:],
+                alpha_power=edit_color_clean_projection_alpha_power,
+                boundary_boost=edit_color_clean_projection_boundary_boost,
+                boundary_kernel_size=edit_color_clean_projection_boundary_kernel_size,
+                device=source_color_reference.device,
+            )
+            if recolor_projection_target_mode == "static":
+                recolor_projection_target_latent, recolor_projection_gate_latent = (
+                    _build_recolor_projection_latent_target(
+                        pipe=pipe,
+                        current_image=source_color_reference.to(dtype=torch.float32),
+                        source_image=source_color_reference.to(dtype=torch.float32),
+                        reference_image=ref_image_reference,
+                        target_rgb=color_target[1],
+                        composite_alpha_image=recolor_projection_composite_alpha_image,
+                        gate_alpha_image=recolor_projection_gate_alpha_image,
+                        mode=edit_color_clean_projection_mode,
+                        texture_kernel_size=edit_color_clean_projection_texture_kernel_size,
+                        luma_texture_scale=edit_color_clean_projection_luma_texture_scale,
+                        chroma_texture_scale=edit_color_clean_projection_chroma_texture_scale,
+                        composite_mode=edit_color_clean_projection_composite_mode,
+                        background_kernel_size=edit_color_clean_projection_background_kernel_size,
+                        latent_size=x_src.shape[-2:],
+                        latent_device=x_src.device,
+                    )
+                )
+                recolor_projection_eval_count += 1
+                recolor_projection_refresh_count += 1
 
     # --- Controlled reverse ODE ---
     z_t = z_T.clone()
@@ -2061,15 +2557,30 @@ def HRecSD3Edit(
                 )
                 x0_color = predict_x0_from_linear_rf_path(zt_for_color, v_color_src, t_i)
                 color_image = decode_latent_to_unit_image(pipe, x0_color, vae_override=grad_vae)
-                color_edit_energy = masked_chroma_luma_loss(
-                    color_image,
-                    source_color_reference,
-                color_target[1],
-                color_mask_image,
-                target_chroma_scale=edit_color_target_chroma_scale,
-                luma_preserve_scale=edit_color_luma_preserve_scale,
-                luma_gradient_preserve_scale=edit_color_luma_gradient_preserve_scale,
-            )
+                if edit_color_texture_preserve_scale > 0.0 or edit_color_boundary_chroma_scale > 0.0:
+                    color_edit_energy = masked_recolor_texture_boundary_loss(
+                        color_image,
+                        source_color_reference,
+                        color_target[1],
+                        color_mask_image,
+                        target_chroma_scale=edit_color_target_chroma_scale,
+                        luma_preserve_scale=edit_color_luma_preserve_scale,
+                        luma_gradient_preserve_scale=edit_color_luma_gradient_preserve_scale,
+                        texture_preserve_scale=edit_color_texture_preserve_scale,
+                        texture_kernel_size=edit_color_texture_kernel_size,
+                        boundary_chroma_scale=edit_color_boundary_chroma_scale,
+                        boundary_kernel_size=edit_color_boundary_kernel_size,
+                    )
+                else:
+                    color_edit_energy = masked_chroma_luma_loss(
+                        color_image,
+                        source_color_reference,
+                        color_target[1],
+                        color_mask_image,
+                        target_chroma_scale=edit_color_target_chroma_scale,
+                        luma_preserve_scale=edit_color_luma_preserve_scale,
+                        luma_gradient_preserve_scale=edit_color_luma_gradient_preserve_scale,
+                    )
             grad_color = torch.autograd.grad(color_edit_energy, zt_for_color)[0].detach().to(torch.float32)
             grad_color = smooth_guidance_field(grad_color, kernel_size=int(edit_color_smooth_kernel))
             grad_color_rms = grad_color.square().mean().sqrt() + 1e-8
@@ -2208,6 +2719,89 @@ def HRecSD3Edit(
             + color_guidance
             + ref_guidance
         )
+        recolor_clean_projection_norm = 0.0
+        recolor_clean_projection_rms = 0.0
+        recolor_clean_projection_refresh = 0.0
+        if recolor_projection_enabled:
+            should_refresh_projection = recolor_projection_target_latent is None
+            if (
+                recolor_projection_target_mode == "dynamic"
+                and recolor_projection_refresh_interval > 0
+                and active_edit_step % recolor_projection_refresh_interval == 0
+            ):
+                should_refresh_projection = True
+            if recolor_projection_target_mode == "dynamic" and recolor_projection_refresh_interval <= 0:
+                should_refresh_projection = True
+            if should_refresh_projection:
+                with torch.no_grad():
+                    if recolor_projection_target_mode == "dynamic":
+                        projection_current_image = decode_latent_to_unit_image(pipe, x0_src_step)
+                    else:
+                        projection_current_image = source_color_reference.to(dtype=torch.float32)
+                    projection_composite_alpha_image = _prepare_recolor_projection_alpha(
+                        alpha=color_projection_alpha_image,
+                        size=projection_current_image.shape[-2:],
+                        alpha_power=edit_color_clean_projection_alpha_power,
+                        boundary_boost=edit_color_clean_projection_boundary_boost,
+                        boundary_kernel_size=edit_color_clean_projection_boundary_kernel_size,
+                        device=projection_current_image.device,
+                    )
+                    projection_gate_alpha_image = _prepare_recolor_projection_alpha(
+                        alpha=color_mask_image,
+                        size=projection_current_image.shape[-2:],
+                        alpha_power=edit_color_clean_projection_alpha_power,
+                        boundary_boost=edit_color_clean_projection_boundary_boost,
+                        boundary_kernel_size=edit_color_clean_projection_boundary_kernel_size,
+                        device=projection_current_image.device,
+                    )
+                    recolor_projection_target_latent, recolor_projection_gate_latent = (
+                        _build_recolor_projection_latent_target(
+                            pipe=pipe,
+                            current_image=projection_current_image,
+                            source_image=source_color_reference.to(
+                                dtype=torch.float32,
+                                device=projection_current_image.device,
+                            ),
+                            reference_image=ref_image_reference,
+                            target_rgb=color_target[1],
+                            composite_alpha_image=projection_composite_alpha_image,
+                            gate_alpha_image=projection_gate_alpha_image,
+                            mode=edit_color_clean_projection_mode,
+                            texture_kernel_size=edit_color_clean_projection_texture_kernel_size,
+                            luma_texture_scale=edit_color_clean_projection_luma_texture_scale,
+                            chroma_texture_scale=edit_color_clean_projection_chroma_texture_scale,
+                            composite_mode=edit_color_clean_projection_composite_mode,
+                            background_kernel_size=edit_color_clean_projection_background_kernel_size,
+                            latent_size=x0_src_step.shape[-2:],
+                            latent_device=z_t.device,
+                        )
+                    )
+                recolor_projection_eval_count += 1
+                recolor_projection_refresh_count += 1
+                recolor_clean_projection_refresh = 1.0
+            projection_gate = recolor_projection_gate_latent.to(dtype=torch.float32, device=z_t.device)
+            projection_clean_delta = recolor_projection_target_latent.to(dtype=torch.float32, device=z_t.device) - x0_src_step.to(
+                torch.float32
+            )
+            if edit_color_clean_projection_delta_lowpass_kernel > 1:
+                projection_clean_delta = _spatial_low_pass(
+                    projection_clean_delta,
+                    edit_color_clean_projection_delta_lowpass_kernel,
+                )
+            projection_clean_delta = projection_clean_delta * projection_gate
+            projection_velocity = clean_delta_to_velocity(
+                projection_clean_delta,
+                t_i,
+                eps=float(linear_path_t_min),
+            )
+            recolor_clean_projection_guidance = (
+                beta_t * float(edit_color_clean_projection_scale) * projection_velocity
+            )
+            v_edit_total = v_edit_total + recolor_clean_projection_guidance
+            recolor_clean_projection_norm = float(recolor_clean_projection_guidance.norm().item())
+            recolor_clean_projection_rms = float(
+                masked_rms(projection_clean_delta, projection_gate).item()
+            )
         if (
             completion_clean_delta_scale > 0.0
             and completion_clean_target is not None
@@ -2761,11 +3355,59 @@ def HRecSD3Edit(
             "edit_color_detail_protect_scale": float(edit_color_detail_protect_scale),
             "edit_color_detail_protect_threshold": float(edit_color_detail_protect_threshold),
             "edit_color_detail_protect_softness": float(edit_color_detail_protect_softness),
+            "edit_color_alpha_matte": bool(edit_color_alpha_matte),
+            "edit_color_alpha_matte_mode": edit_color_alpha_matte_mode,
+            "edit_color_alpha_matte_kernel_size": int(edit_color_alpha_matte_kernel_size),
+            "edit_color_alpha_matte_threshold": None
+            if edit_color_alpha_matte_threshold is None
+            else float(edit_color_alpha_matte_threshold),
+            "edit_color_alpha_matte_softness": None
+            if edit_color_alpha_matte_softness is None
+            else float(edit_color_alpha_matte_softness),
+            "edit_color_alpha_matte_max_size": int(edit_color_alpha_matte_max_size),
+            "edit_color_alpha_matte_epsilon": float(edit_color_alpha_matte_epsilon),
+            "edit_color_alpha_matte_constraint_scale": float(edit_color_alpha_matte_constraint_scale),
             "edit_color_target_chroma_scale": float(edit_color_target_chroma_scale),
             "edit_color_smooth_kernel": int(edit_color_smooth_kernel),
             "edit_color_luma_preserve_scale": float(edit_color_luma_preserve_scale),
             "edit_color_luma_gradient_preserve_scale": float(edit_color_luma_gradient_preserve_scale),
+            "edit_color_texture_preserve_scale": float(edit_color_texture_preserve_scale),
+            "edit_color_texture_kernel_size": int(edit_color_texture_kernel_size),
+            "edit_color_boundary_chroma_scale": float(edit_color_boundary_chroma_scale),
+            "edit_color_boundary_kernel_size": int(edit_color_boundary_kernel_size),
+            "edit_color_clean_projection_scale": float(edit_color_clean_projection_scale),
+            "edit_color_clean_projection_mode": edit_color_clean_projection_mode,
+            "edit_color_clean_projection_texture_kernel_size": int(edit_color_clean_projection_texture_kernel_size),
+            "edit_color_clean_projection_luma_texture_scale": float(
+                edit_color_clean_projection_luma_texture_scale
+            ),
+            "edit_color_clean_projection_chroma_texture_scale": float(
+                edit_color_clean_projection_chroma_texture_scale
+            ),
+            "edit_color_clean_projection_delta_lowpass_kernel": int(
+                edit_color_clean_projection_delta_lowpass_kernel
+            ),
+            "edit_color_clean_projection_alpha_power": float(edit_color_clean_projection_alpha_power),
+            "edit_color_clean_projection_boundary_boost": float(edit_color_clean_projection_boundary_boost),
+            "edit_color_clean_projection_boundary_kernel_size": int(edit_color_clean_projection_boundary_kernel_size),
+            "edit_color_clean_projection_composite_mode": edit_color_clean_projection_composite_mode,
+            "edit_color_clean_projection_background_kernel_size": int(edit_color_clean_projection_background_kernel_size),
+            "edit_color_clean_projection_target_mode": recolor_projection_target_mode,
+            "edit_color_clean_projection_refresh_interval": int(recolor_projection_refresh_interval),
+            "recolor_clean_projection_eval_count": int(recolor_projection_eval_count),
+            "recolor_clean_projection_refresh_count": int(recolor_projection_refresh_count),
             **spatial_mask_stats(color_mask_latent, prefix="color_mask"),
+            **spatial_mask_stats(
+                None
+                if color_projection_alpha_image is None
+                else torch.nn.functional.interpolate(
+                    color_projection_alpha_image,
+                    size=x_src.shape[-2:],
+                    mode="bilinear",
+                    align_corners=False,
+                ).clamp(0.0, 1.0),
+                prefix="color_projection_alpha",
+            ),
             "edit_ref_guidance_scale": float(edit_ref_guidance_scale),
             "edit_ref_image_path": edit_ref_image_path,
             "edit_ref_mask_path": edit_ref_mask_path,
@@ -2805,6 +3447,9 @@ def HRecSD3Edit(
             "completion_clean_delta_norm": float(completion_clean_delta_norm),
             "completion_clean_delta_schedule_weight": float(completion_clean_delta_schedule_weight),
             "completion_clean_delta_rms": float(completion_clean_delta_rms),
+            "recolor_clean_projection_norm": float(recolor_clean_projection_norm),
+            "recolor_clean_projection_rms": float(recolor_clean_projection_rms),
+            "recolor_clean_projection_refresh": float(recolor_clean_projection_refresh),
             "rec_guidance_norm": float(rec_guidance_norm),
             "removal_controller_norm": float(removal_controller_norm),
             "removal_fill_norm": float(removal_fill_norm),

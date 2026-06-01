@@ -1,0 +1,38 @@
+[
+  {
+    "name": "old_dynamic",
+    "runtime_seconds": 131.5499256940093,
+    "projection_eval_count": null,
+    "inside_blue": 0.9756569491025688,
+    "outside_blue": 0.0012624049544699568,
+    "boundary_red": 0.13119743692430916,
+    "source_red_boundary_residual": 0.34101382488479265,
+    "outside_l1": 0.014431281946599483,
+    "inside_l1": 0.24862276017665863,
+    "texture_corr": 0.5557757676714469
+  },
+  {
+    "name": "closedform_coupled_static",
+    "runtime_seconds": 62.91894848900847,
+    "projection_eval_count": 1,
+    "inside_blue": 0.9489414694894147,
+    "outside_blue": 0.006642038569110328,
+    "boundary_red": 0.0426107003736386,
+    "source_red_boundary_residual": 0.12004689331770223,
+    "outside_l1": 0.05765913054347038,
+    "inside_l1": 0.26206621527671814,
+    "texture_corr": 0.08907334478775233
+  },
+  {
+    "name": "closedform_rgbonly_static",
+    "runtime_seconds": 62.706228104187176,
+    "projection_eval_count": 1,
+    "inside_blue": 0.9488331799231144,
+    "outside_blue": 0.006774124563382408,
+    "boundary_red": 0.03974878766197631,
+    "source_red_boundary_residual": 0.11160609613130129,
+    "outside_l1": 0.057648666203022,
+    "inside_l1": 0.26168501377105713,
+    "texture_corr": 0.07596781774784236
+  }
+]
