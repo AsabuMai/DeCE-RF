@@ -4,6 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEFAULT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 ROOT="${ROOT:-${DEFAULT_ROOT}}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-${ROOT}/outputs/pretty_matrix}"
 PYTHON="${PYTHON:-${ROOT}/.venv/bin/python}"
 if [[ -z "${HF_HOME:-}" && -d "${ROOT}/../.cache/huggingface" ]]; then
   export HF_HOME="${ROOT}/../.cache/huggingface"
@@ -307,7 +308,7 @@ run_one() {
     METHOD_NAME="${METHOD_NAME}${METHOD_NAME_SUFFIX}"
   fi
 
-  local out_dir="${ROOT}/outputs/pretty_matrix/${TASK_NAME}/${METHOD_NAME}/seed_${seed}"
+  local out_dir="${OUTPUT_ROOT}/${TASK_NAME}/${METHOD_NAME}/seed_${seed}"
   if [[ "${SKIP_EXISTING}" == "1" && -s "${out_dir}/result.png" && -s "${out_dir}/stats.json" && -s "${out_dir}/metadata.json" && -s "${out_dir}/command.txt" ]]; then
     echo "[pretty-matrix] skip existing complete run: ${out_dir}"
     return 0
