@@ -16,17 +16,22 @@ localized regions toward the target clean estimate and a preservation component
 that pulls non-edit regions back to the source latent. An operation-conditioned
 support interface estimates the spatial geometry of these displacements, and
 clean-estimate feedback adaptively balances their weights along the ODE
-trajectory. Our experiments evaluate this control view across localized
-insertion, decal, and removal tasks, with failure analysis showing that support
-quality remains the main bottleneck for fully automatic editing.
+trajectory. Our experiments evaluate this control view across the strict Core-6
+suite: attached accessory insertion, container-constrained insertion, surface
+decal editing, local recoloring, surface material-strip editing, and
+exposed-object removal. We further separate SD3-matched RF baselines from
+native-backbone contextual comparisons, keeping the main claim tied to
+matched-backbone evidence.
 
 ## 1. Introduction
 
 Text-guided image editing asks a generative model to change a specified part of
 an image while preserving the source identity, layout, and background. This
 edit-preserve requirement is especially sharp for local edits such as adding an
-accessory to an animal, placing a decal on a surface, or removing a small object
-from a scene. A target prompt alone often does not specify which aspects of the
+accessory to an animal, inserting an object inside a container, placing a decal
+on a surface, recoloring an object, editing a local material strip, or removing
+a small exposed object from a scene. A target prompt alone often does not
+specify which aspects of the
 source should remain fixed. As a result, direct target guidance can improve
 semantic alignment while also changing pose, texture, object identity, or
 background content.

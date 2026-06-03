@@ -24,7 +24,7 @@ Use only complete runs with `result.png`, `stats.json`, `metadata.json`, and
 | Figure 1 | teaser: two examples, Source/Target/Direct/Generic/DeCE-RF | 10 | motivation |
 | Figure 2 | method overview | 0 | explain the algorithm |
 | Figure 3 | E1 Core-6 qualitative grid | 24-30 | main effect |
-| Figure 4 | E2 RF-native baseline qualitative comparison | 15 | current alternatives |
+| Figure 4 | E2-A SD3-matched RF baseline qualitative comparison | 15 | matched RF alternatives |
 | Figure 5 | E4 Pareto + timestep diagnostics | 0 | controller evidence |
 | Figure 6 | E5 extension/failure cases, optional | 12-18 | scope boundary |
 

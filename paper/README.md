@@ -1,19 +1,55 @@
 # Paper Workspace
 
-Current source of truth for the redesigned WACV experiment plan:
+Current source of truth for the WACV paper package.
 
-- paper/wacv_experiment_design.md
-- paper/core6_phase1_images_prompts.md
+## Active Experiment Design
 
-Current paper-to-code alignment and cleanup boundary:
+- `wacv_experiment_design.md`: canonical experiment design and claim boundary.
+- `core6_phase1_images_prompts.md`: frozen strict Core-6 Phase 1 task/image plan.
+- `phase2_core6_images_prompts.md`: planned Phase 2 Core-6 expansion manifest.
+- `results.md`: current result readout and safe wording.
+- `figures.md`: current main/supplement figure plan.
+- `tables.md`: current main/supplement table plan.
 
-- docs/wacv_phase1_code_map.md
-- scripts/run_wacv_phase1.sh
+## Active Manuscript Files
 
-The current strict Core-6 design is category-based. After quick human audit, T1 is `cat_crown` rather than `dog_sunglasses`, and T3 is `tshirt_star` rather than `mug_heart`; the full 6-task x 4-method x 3-seed Phase 1 matrix is complete.
+- `manuscript.md`: main manuscript draft to keep synchronized with the current experiment design.
+- `draft.md`: working draft/notes; useful for section material, not the final authority.
+- `outline.md`: current paper structure sketch.
+- `argument_blueprint.md`: claim/evidence map.
+- `limitations.md`: limitation language aligned to strict Core-6.
+- `references.bib`: bibliography stub/source file.
 
-Archived legacy material from the previous Core-6/server-evidence pass lives in:
+## Current Experimental Scope
 
-- paper/archive_old_core6_20260602/
+The active strict Core-6 tasks are:
 
-Use archived old Core-6 results only as supplementary diagnostics. The active strict Phase 1 rows are documented in `docs/wacv_phase1_code_map.md` and `experiments/support_v3_2026-06-02/`.
+```text
+cat_crown
+bowl_apple_inside
+tshirt_star
+red_chair_blue
+pillow_vertical_fabric_strip
+backpack_remove_toy_charm
+```
+
+The active E2 split is:
+
+```text
+E2-A: SD3-matched RF comparison against FlowEdit, FlowAlign, and SplitFlow.
+E2-B: native-backbone RF / FLUX contextual rows, reported separately.
+Non-RF supplement: InstructPix2Pix and H-Edit / P2P-style only for positioning.
+```
+
+Do not promote archived Core-5, old Core-6, or server-snapshot rows into the
+main claim unless they are rerun under the current strict protocol.
+
+## Archives
+
+- `archive_superseded_2026-06-03/`: superseded drafts and handoff/precheck files that conflict with the current experiment design.
+- `archive_old_core6_20260602/`: old Core-6/server-evidence materials.
+- `archive_superseded_2026-06-02/`: earlier experiment-plan drafts.
+- `server_snapshot_2026-06-02/`: raw snapshot from the server before the current cleanup.
+
+Use archived material only for history, diagnostics, or wording recovery. The
+active files listed above are the paper-facing source of truth.

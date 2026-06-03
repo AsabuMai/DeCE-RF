@@ -832,7 +832,8 @@ is the preferred target before writing final experiment results.
 | Experiment | Matrix | Outputs |
 | --- | --- | ---: |
 | E1 main benchmark | 6 categories x 3 examples x 4 methods x 3 seeds | 216 |
-| E2 RF-native baselines | 6 categories x 2 examples x 3 RF baselines x 3 seeds | 108 |
+| E2-A SD3-matched RF baselines | 6 categories x 2 examples x 3 SD3 RF baselines x 3 seeds | 108 |
+| E2-B native-backbone contextual rows | 6 categories x 2 examples x 1-2 contextual baselines x 3 seeds | 36-72 |
 | E3 support ablation | 6 categories x 2 examples x 5 support variants x 2 seeds | 120 |
 | E4 controller ablation/stress | 6 categories x 2 examples x 5 controller variants x 2 seeds | 120 |
 | E5 extension/failure examples | selected probes | 30 |
@@ -840,13 +841,14 @@ is the preferred target before writing final experiment results.
 Total:
 
 ```text
-about 594 output images, within the 550-650 recommended band
+about 630-666 output images, depending on whether one or two E2-B contextual
+baselines become runnable
 ```
 
 Runtime estimate:
 
 ```text
-600 outputs x 2 min/output = 1200 min = about 20 hours pure generation
+630-666 outputs x 2 min/output = about 21-22 hours pure generation
 2-3 days realistic wall-clock with metrics, failed reruns, grids, and audits
 ```
 
@@ -870,7 +872,8 @@ WACV-ready robustness cache.
 | Experiment | Matrix | Outputs |
 | --- | --- | ---: |
 | E1 main benchmark | 6 categories x 5 examples x 4 methods x 3 seeds | 360 |
-| E2 RF-native baselines | 6 categories x 3 examples x 3 RF baselines x 3 seeds | 162 |
+| E2-A SD3-matched RF baselines | 6 categories x 3 examples x 3 SD3 RF baselines x 3 seeds | 162 |
+| E2-B native-backbone contextual rows | 6 categories x 3 examples x 1-2 contextual baselines x 3 seeds | 54-108 |
 | E3 support ablation | 6 categories x 3 examples x 5 support variants x 2 seeds | 180 |
 | E4 controller ablation/stress | 6 categories x 3 examples x 5 controller variants x 2 seeds | 180 |
 | E5 extension/failure examples | selected probes | 30-50 |
@@ -927,12 +930,13 @@ main paper must still be self-contained without the supplement.
 
 ## Main-Paper Table Budget
 
-Use three tables by default:
+Use three quantitative tables plus one compact contextual audit table by default:
 
 | Table | Content | Job |
 | --- | --- | --- |
 | Table 1 | E1 main edit/preserve/leakage metrics | headline quantitative evidence |
-| Table 2 | E2 RF-native baseline comparison | answer current-alternatives question |
+| Table 2a | E2-A SD3-matched RF baseline comparison | answer matched-backbone alternatives question |
+| Table 2b | E2-B native-backbone contextual audit/status | disclose cross-backbone context without turning it into the main claim |
 | Table 3 | E3+E4 component ablation | support geometry and controller evidence |
 
 If space allows, split Table 3 into separate support and controller tables. If

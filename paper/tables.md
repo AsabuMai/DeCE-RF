@@ -1,7 +1,6 @@
 # Table Plan
 
-Current source of truth: `paper/archive_old_core6_20260602/old_core6_server_results.md` for completed server evidence and
-`paper/wacv_experiment_design.md` for the updated WACV Core-6 taxonomy.
+Current source of truth: `paper/wacv_experiment_design.md` for experiment scope and claim boundary, and `paper/results.md` for the current strict Core-6 / E2-A evidence readout. Archived server results are diagnostic only.
 
 ## Main Comparison
 

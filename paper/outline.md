@@ -69,8 +69,9 @@ The method story has three linked components:
 ## Draft Structure
 
 1. Introduction: RF/ODE editing needs clean-estimate edit-preserve control.
-2. Related Work: h-Edit, FlowEdit, RF-Solver, FireFlow, ReFlex, PnP/P2P-style
-   source feature reuse.
+2. Related Work: h-Edit, FlowEdit, FlowAlign, SplitFlow, RF-Solver-Edit,
+   FireFlow, ReFlex, OT-RF/OTIP-style, DVRF, and PnP/P2P-style source feature
+   reuse.
 3. Method: local RF editing as clean-estimate displacement control,
    edit-preserve displacement components, operation-conditioned control
    geometry, feedback-updated displacement weights, algorithm and
