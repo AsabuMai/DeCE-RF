@@ -167,15 +167,13 @@ were created under `/workspace/baselines/envs`; after quota pressure, the active
 server keeps the RF-family environments needed for E2 target-mode validation.
 FlowEdit, FlowAlign, and SplitFlow now have revised strict Core-6 target-mode
 generation, fixed-mask metrics, and internal visual audit over 6 tasks x seeds
-10/11/12, so they enter the reduced RF comparison. E2-B now registers four
-preservation-aware / fidelity-oriented RF candidates: `rf_solver_edit`,
-`ot_rf_otip`, `reflex`, and `dvrf`. RF-Solver-Edit and ReFlex reached strict
-smoke but are blocked by gated `black-forest-labs/FLUX.1-dev` checkpoint access;
-OT-RF / OTIP and DVRF are planned entries that still need verified repos,
-environments, smoke tests, and Core-6 adapters. stable-flow also requires an
-authenticated FLUX.1-dev token and has no completed strict adapter output.
-LEDITS++ has legacy Core-6 artifacts only and must be rerun on the revised
-strict T2/T5 task set before paper-facing comparison use.
+10/11/12, so they enter the SD3-matched E2-A comparison. E2-B is now a
+native-backbone contextual RF / FLUX comparison: `rf_solver_edit`, `reflex`,
+`fireflow`, and `stable_flow` are FLUX.1-dev rows blocked by gated checkpoint
+access or adapter gaps; `ot_rf_otip` and `dvrf` are planned entries that still
+need verified repos, environments, smoke tests, and Core-6 adapters. LEDITS++
+has legacy Core-6 artifacts only and must be rerun on the revised strict T2/T5
+task set before paper-facing supplement use.
 
 Downloaded baseline repositories:
 
@@ -196,22 +194,22 @@ h-edit
 ledits_pp
 ```
 
-Registered but not-yet-downloaded E2-B candidates:
+Registered but not-yet-downloaded E2-B contextual candidates:
 
 ```text
-OT-RF / OTIP-style
-DVRF / Delta Velocity RF
+OT-RF / OTIP-style, backbone TBD
+DVRF / Delta Velocity RF, backbone TBD
 ```
 
 Existing baseline artifacts are older core-4 or legacy Core-6 evidence and
 should be reported as availability/qualitative context unless rerun under the
 current revised strict evidence protocol.
 
-Do not use this table to claim that DeCE-RF beats all RF baselines. Report it
-as a reduced target-mode RF comparison against FlowEdit, FlowAlign, and
-SplitFlow, paired with an E2-B status/audit table covering `rf_solver_edit`,
-`ot_rf_otip`, `reflex`, and `dvrf` until at least one preservation-aware RF
-baseline is runnable under the strict Core-6 protocol.
+Do not use this table to claim that DeCE-RF beats all RF or FLUX baselines.
+Report it as a SD3-matched RF comparison against FlowEdit, FlowAlign, and
+SplitFlow, paired with an E2-B native-backbone contextual status/audit table
+covering FLUX rows and planned RF candidates. The main algorithmic claim comes
+from E2-A, not cross-backbone rows.
 
 Reduced RF comparison artifacts:
 

@@ -122,8 +122,9 @@ over-preserves and misses the intended edit.
 
 ## E2 Readout
 
-E2 should now be treated as an upgraded RF-native and preservation-aware
-baseline comparison.
+E2 should now be treated as a separated backbone-matched and native-backbone
+RF comparison: E2-A is the SD3-matched algorithmic comparison, while E2-B is a
+native-backbone RF / FLUX contextual comparison.
 
 Completed E2-A evidence:
 
@@ -139,30 +140,32 @@ target-mode protocol. DeCE-RF has lower outside-mask change and stronger
 source-preservation metrics under the fixed task masks, but this result should
 be written narrowly as E2-A rather than as the full RF-baseline answer.
 
-Pending E2-B upgrade:
+Pending E2-B contextual upgrade:
 
 ```text
-Registered E2-B candidates:
-rf_solver_edit = RF-Solver-Edit / RF-Edit
-ot_rf_otip = OT-RF / OTIP-style
-reflex = ReFlex
-dvrf = DVRF / Delta Velocity RF
+Native-backbone contextual candidates:
+rf_solver_edit = RF-Solver-Edit / RF-Edit, FLUX.1-dev
+reflex = ReFlex, FLUX.1-dev
+stable_flow = stable-flow, FLUX.1-dev
+fireflow = FireFlow, FLUX.1-dev
+ot_rf_otip = OT-RF / OTIP-style, backbone TBD
+dvrf = DVRF / Delta Velocity RF, backbone TBD
 ```
 
-At least one preservation-aware / fidelity-oriented RF baseline should become
-runnable before making the stronger claim that existing RF methods do not close
-the localized edit-preserve gap.
+At least one native-backbone RF / FLUX baseline should become runnable before
+making the stronger contextual statement that existing RF editors do not close
+the localized edit-preserve gap. The main algorithmic claim remains SD3-matched.
 
-Minimum E2-B target:
+Minimum E2-B contextual target:
 
 ```text
-1 preservation-aware RF baseline x 6 tasks x 3 seeds = 18 new outputs
+1 native-backbone RF / FLUX baseline x 6 tasks x 3 seeds = 18 contextual outputs
 ```
 
 Resource-saving fallback:
 
 ```text
-1 preservation-aware RF baseline x 6 tasks x 2 seeds = 12 new outputs
+1 native-backbone RF / FLUX baseline x 6 tasks x 2 seeds = 12 contextual outputs
 ```
 
 Do not write:
@@ -174,17 +177,19 @@ DeCE-RF beats all RF baselines.
 Use this safer wording:
 
 ```text
-E2-A shows that RF-native target-mode editing baselines do not by themselves
-solve localized edit-preserve control. E2-B is needed to test whether
-preservation-aware RF methods already close this gap.
+E2-A shows, under a matched SD3 backbone, whether RF-native target-mode editing
+baselines solve localized edit-preserve control. E2-B is needed to contextualize
+DeCE-RF against native-backbone RF / FLUX editors without treating those rows as
+pure algorithmic controls.
 ```
 
-RF-Solver-Edit (`rf_solver_edit`) and ReFlex (`reflex`) remain registered E2-B
-candidates but are blocked by gated FLUX.1-dev checkpoint access. OT-RF / OTIP
-(`ot_rf_otip`) and DVRF (`dvrf`) are registered planned E2-B candidates that
-still need repo verification, environment creation, smoke tests, and Core-6
-adapters. If those blockers remain, report them explicitly in the E2 audit
-rather than silently omitting the baselines.
+RF-Solver-Edit (`rf_solver_edit`), ReFlex (`reflex`), FireFlow (`fireflow`),
+and stable-flow (`stable_flow`) are native-backbone FLUX rows currently blocked
+by gated FLUX.1-dev access or adapter gaps. OT-RF / OTIP (`ot_rf_otip`) and DVRF
+(`dvrf`) are registered planned E2-B candidates that still need repo
+verification, environment creation, smoke tests, and Core-6 adapters. If those
+blockers remain, report them explicitly in the E2 audit rather than silently
+omitting the baselines.
 
 ## Component Evidence
 
@@ -224,7 +229,8 @@ large standalone gains from feedback control without stress/Pareto evidence
 4. Report `laptop_remove_sticker` as a high-confidence completion-prior
    extension probe and `whiteboard_probe_red_star_sticker` as a non-glyph
    replacement probe, not as base DeCE-RF rows.
-5. Upgrade E2 with one preservation-aware RF baseline before claiming that
-   existing RF methods cannot replace DeCE-RF.
+5. Upgrade E2 with one native-backbone RF / FLUX contextual baseline before
+   claiming that existing strong RF editors cannot replace DeCE-RF in practice;
+   keep the main algorithmic claim tied to SD3-matched E2-A.
 6. Strengthen E4 with controller stress/Pareto evidence if feedback control
    becomes reviewer-critical.

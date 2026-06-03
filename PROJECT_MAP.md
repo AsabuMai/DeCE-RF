@@ -103,7 +103,7 @@ experiments/archive_legacy_2026-05-11/
 
 ## E2 Baseline Upgrade Note
 
-`experiments/support_v3_2026-06-02/` currently contains completed E2-A reduced RF-native comparison artifacts. E2-B now registers four preservation-aware / fidelity-oriented RF candidates in the baseline registry, validation sheet, and strict manifest: `rf_solver_edit` (RF-Solver-Edit / RF-Edit), `ot_rf_otip` (OT-RF / OTIP-style), `reflex` (ReFlex), and `dvrf` (DVRF / Delta Velocity RF). Broad RF-baseline language should wait until at least one E2-B candidate is runnable or the blockers are explicitly disclosed.
+`experiments/support_v3_2026-06-02/` currently contains completed E2-A SD3-matched RF-native comparison artifacts. E2-B is now a native-backbone contextual RF / FLUX comparison: `rf_solver_edit` (RF-Solver-Edit / RF-Edit, FLUX), `reflex` (ReFlex, FLUX), `fireflow` and `stable_flow` (FLUX rows), plus planned `ot_rf_otip` (OT-RF / OTIP-style) and `dvrf` (DVRF / Delta Velocity RF). Broad cross-backbone language should wait until at least one E2-B contextual candidate is runnable or the blockers are explicitly disclosed.
 
 ## Generated Outputs
 

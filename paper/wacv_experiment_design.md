@@ -246,54 +246,69 @@ Method | Edit success audit | Outside L1 down | Source SSIM up | Locality audit 
 Then add a compact appendix/supplement table with per-task rows. Do not spend
 half a WACV page on a giant per-task table in the main paper.
 
-## Experiment E2: RF-Native And Preservation-Aware Baseline Comparison
+## Experiment E2: Backbone-Matched And Native-Backbone RF Comparison
 
 ### Purpose
 
-E2 should answer a stronger reviewer question than the original RF-native
-baseline comparison:
+E2 should answer two related but distinct reviewer questions:
 
 ```text
-Do existing RF-native and preservation-aware RF editing methods already solve
-localized edit-preserve control?
+1. Under the same SD3 backbone, does DeCE-RF improve localized edit-preserve
+   control over RF-native editing baselines?
+2. How does DeCE-RF relate to strong native-backbone RF / FLUX editors that use
+   different backbones or editing interfaces?
 ```
 
-Keep E2 in the main experimental chain; do not create a separate E6 for
-preservation-aware baselines. The point is not to make a broad claim that
-DeCE-RF beats every RF method. The point is to test whether methods designed
-for RF editing, transport quality, inversion quality, reconstruction fidelity,
-or preservation already remove the need for an explicit localized controller.
+Separate these questions explicitly. SD3 and FLUX are both flow/RF-family
+backbones, but a direct table that treats SD3-DeCE and FLUX baselines as pure
+algorithmic competitors would confound the controller with backbone capacity,
+text encoders, image priors, inversion error, sampler settings, resolution, and
+input interface.
 
 The paper-facing claim should be:
 
 ```text
-Existing RF-native and preservation/fidelity-oriented editing methods improve
-source-to-target editing or global fidelity, but they do not explicitly model
-operation-conditioned edit/preserve geometry. DeCE-RF targets this localized
-edit-preserve tradeoff through M_edit, M_core/contact, and M_preserve.
+Backbone-matched SD3 results support the algorithmic contribution: DeCE-RF
+improves localized edit-preserve control under a fixed RF backbone and fixed
+evaluation masks. Native-backbone FLUX/RF results contextualize DeCE-RF against
+strong external editors but are not the main algorithmic win/loss evidence.
 ```
 
 ### Internal Structure
 
-Organize E2 as one experiment with two required layers and one optional fairness
-probe:
+Organize E2 as one experiment with a primary matched comparison, a contextual
+native-backbone comparison, and one optional transfer probe:
 
 ```text
-E2-A: Native RF editing baselines
-E2-B: Preservation-aware / fidelity-oriented RF baselines
-E2-C: Optional support-matched compact comparison
+E2-A: SD3-matched RF baseline comparison
+E2-B: Native-backbone RF / FLUX contextual comparison
+E2-C: Optional cross-backbone transfer or support-matched fairness probe
 ```
 
-Main-paper presentation can still be one compact table. The subsection split is
-for argument clarity, not for adding another experiment slot.
+Main-paper results should keep E2-A and E2-B visually distinct. Use Table 2a for
+backbone-matched SD3 evidence and Table 2b or a clearly separated panel for
+native-backbone contextual evidence. Do not average SD3 and FLUX rows into one
+undifferentiated leaderboard.
 
-### E2-A: Native RF Editing Baselines
+### E2-A: SD3-Matched RF Baseline Comparison
 
-This is the part already completed in the current workspace. It asks whether
-off-the-shelf RF editing methods naturally produce localized edit-preserve
-behavior.
+This is the primary algorithmic comparison. It asks whether DeCE-RF improves the
+localized edit-preserve tradeoff when the backbone and evaluation protocol are
+held fixed.
 
-Current completed reduced RF-native suite:
+Matched conditions:
+
+```text
+same backbone: SD3
+same strict Core-6 source images
+same source / target prompts
+same max image size and fixed evaluation masks
+same metric implementation
+same number of samples per method
+same no-cherry-pick qualitative selection policy
+```
+
+Current completed SD3-matched suite:
 
 ```text
 6 tasks x 4 methods x 3 seeds = 72 outputs
@@ -301,12 +316,12 @@ Current completed reduced RF-native suite:
 
 Completed methods:
 
-| Method | Type | Extra support? | Current status |
-| --- | --- | --- | --- |
-| FlowEdit | RF-native editing | no | completed on strict Core-6 seeds 10/11/12 |
-| FlowAlign | RF-native editing | no | completed on strict Core-6 seeds 10/11/12 |
-| SplitFlow | RF-native editing | no | completed on strict Core-6 seeds 10/11/12 |
-| DeCE-RF | localized RF controller | operation support | completed on strict Core-6 seeds 10/11/12 |
+| Method | Backbone | Type | Extra support? | Current status |
+| --- | --- | --- | --- | --- |
+| FlowEdit | SD3 | RF-native editing | no | completed on strict Core-6 seeds 10/11/12 |
+| FlowAlign | SD3 | RF-native editing | no | completed on strict Core-6 seeds 10/11/12 |
+| SplitFlow | SD3 | RF-native editing | no | completed on strict Core-6 seeds 10/11/12 |
+| DeCE-RF | SD3 | localized RF controller | operation support | completed on strict Core-6 seeds 10/11/12 |
 
 Current E2-A artifacts:
 
@@ -318,101 +333,135 @@ experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.csv
 experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.md
 ```
 
-This completed table should be described as a reduced target-mode RF-native
-comparison. Do not write it as evidence that DeCE-RF beats all RF baselines.
-
-### E2-B: Preservation-Aware / Fidelity-Oriented RF Baselines
-
-This is the missing upgrade. It answers whether RF methods that explicitly care
-about fidelity, inversion, transport, or preservation already solve the
-non-edit-region protection problem.
-
-Recommended priority order:
-
-| Priority | Baseline slug | Paper-facing candidate | Reason to include | Current baseline status |
-| --- | --- | --- | --- | --- |
-| 1 | `rf_solver_edit` | RF-Solver-Edit / RF-Edit | strongest direct response to fidelity-aware RF editing | registered; repo/env present; strict run currently blocked by FLUX.1-dev access |
-| 2 | `ot_rf_otip` | OT-RF / OTIP-style method | transport/fidelity-aware RF comparator | registered; repo/env/adapter pending |
-| 3 | `reflex` | ReFlex | preservation/trajectory-aware RF alternative | registered; repo/env present; help smoke passes; strict run currently blocked by FLUX.1-dev access |
-| 4 | `dvrf` | DVRF / Delta Velocity RF | delta-velocity/path-aware RF alternative | registered; repo/env/adapter pending |
-
-Minimum acceptable E2-B:
+Safe E2-A conclusion:
 
 ```text
-1 preservation-aware RF baseline x 6 tasks x 3 seeds = 18 new outputs
+Under the same SD3 backbone and fixed evaluation masks, DeCE-RF improves the
+localized edit-preserve tradeoff over SD3 RF-native baselines.
+```
+
+Do not write this as evidence that DeCE-RF beats every RF method or every FLUX
+editor.
+
+### E2-B: Native-Backbone RF / FLUX Contextual Comparison
+
+This is a contextual comparison, not the main algorithmic control. It answers
+whether strong method-native RF / FLUX editors already solve the same localized
+edit-preserve setting in practice.
+
+Candidate rows:
+
+| Baseline slug | Paper-facing candidate | Native backbone | Type | Input interface | Current baseline status |
+| --- | --- | --- | --- | --- | --- |
+| `rf_solver_edit` | RF-Solver-Edit / RF-Edit | FLUX.1-dev | fidelity-aware RF edit | method-native image edit | registered; repo/env present; strict run currently blocked by FLUX.1-dev access |
+| `reflex` | ReFlex | FLUX.1-dev | RF/FLUX trajectory-attention edit | source image + prompt interface | registered; repo/env present; help smoke passes; strict run currently blocked by FLUX.1-dev access |
+| `stable_flow` | stable-flow | FLUX.1-dev | RF-flow editing | source/target prompt interface | registered; adapter pending |
+| `fireflow` | FireFlow | FLUX.1-dev | RF-flow editing | source/target prompt interface | registered; strict run blocked by FLUX.1-dev access |
+| `ot_rf_otip` | OT-RF / OTIP-style | TBD | transport/fidelity-aware RF candidate | TBD | registered; repo/env/adapter pending |
+| `dvrf` | DVRF / Delta Velocity RF | TBD | delta-velocity/path-aware RF candidate | TBD | registered; repo/env/adapter pending |
+
+Minimum acceptable E2-B if a native-backbone RF/FLUX baseline becomes runnable:
+
+```text
+1 native-backbone RF/FLUX baseline x 6 tasks x 3 seeds = 18 contextual outputs
 ```
 
 Resource-saving fallback if compute is tight:
 
 ```text
-1 preservation-aware RF baseline x 6 tasks x 2 seeds = 12 new outputs
+1 native-backbone RF/FLUX baseline x 6 tasks x 2 seeds = 12 contextual outputs
 ```
 
 Preferred stronger E2-B:
 
 ```text
-2 preservation-aware RF baselines x 6 tasks x 3 seeds = 36 new outputs
+2 native-backbone RF/FLUX baselines x 6 tasks x 3 seeds = 36 contextual outputs
 ```
 
-Use the same strict Core-6 source images, prompts, seeds, fixed evaluation masks,
-and metric code. If a preservation-aware baseline cannot be made runnable under
-a comparable condition, include it in a baseline-audit disclosure table with
-failure reason, required backbone/checkpoint, and input condition. Do not
-silently omit it and do not claim superiority over an unrunnable method.
+Use the same strict Core-6 source images, prompts/instructions as closely as the
+method interface permits, fixed evaluation masks, metric code, and visual-audit
+rubric. Do not require same seed across SD3 and FLUX because the random seed is
+not a comparable control across different pipelines. Use the same number of
+samples per method and report mean +/- std.
 
-Current audit caveat: RF-Solver-Edit (`rf_solver_edit`) and ReFlex (`reflex`)
-are registered E2-B candidates but their strict attempts are blocked by
-FLUX.1-dev gated checkpoint access. OT-RF / OTIP (`ot_rf_otip`) and DVRF
-(`dvrf`) are registered as planned E2-B candidates but still need exact repo
-verification, environment creation, smoke testing, and Core-6 adapters. If no
-preservation-aware baseline becomes runnable, report the blocker explicitly in
-the audit table instead of claiming superiority over unrunnable methods.
+Current audit caveat: RF-Solver-Edit (`rf_solver_edit`), ReFlex (`reflex`),
+FireFlow (`fireflow`), and stable-flow (`stable_flow`) are FLUX.1-dev based rows
+whose strict runs are blocked by gated checkpoint access or adapter gaps.
+OT-RF / OTIP (`ot_rf_otip`) and DVRF (`dvrf`) are registered as planned E2-B
+candidates but still need exact repo verification, environment creation, smoke
+testing, and Core-6 adapters. If no native-backbone baseline becomes runnable,
+report the blocker explicitly in the audit table instead of claiming superiority
+over unrunnable methods.
 
-### E2-C: Optional Support-Matched Fairness Probe
-
-If time allows, add a small support-matched probe to address the reviewer
-question:
+Safe E2-B conclusion:
 
 ```text
-Is DeCE-RF better only because it receives an edit mask/support?
+Native FLUX/RF editors provide strong contextual baselines, but because they use
+different backbones and often different interfaces, we treat them as contextual
+comparisons rather than direct algorithmic controls.
 ```
 
-Minimum support-matched design:
+### E2-C: Optional Cross-Backbone Transfer Or Support-Matched Probe
+
+The strongest optional extension is to port DeCE-RF to FLUX and report relative
+improvement over same-backbone controls:
 
 ```text
-6 tasks x 1 support condition x 2 seeds
+SD3:  Direct target / FlowEdit / DeCE-RF
+FLUX: Direct target / FlowEdit or RF-Edit / DeCE-RF-FLUX
 ```
 
-Candidate rows:
+If this is not feasible, keep the limitation explicit:
+
+```text
+The current DeCE-RF implementation is SD3-specific; FLUX transfer requires a
+separate implementation and validation.
+```
+
+A smaller optional fairness probe can test whether baselines benefit from the
+same locality information:
 
 | Method | Support condition | Role |
 | --- | --- | --- |
 | Direct target + same M_edit | fixed DeCE/support mask | checks whether target guidance alone benefits from the same locality |
 | FlowEdit + same M_edit | fixed DeCE/support mask if implementable | checks RF-native baseline under matched locality |
-| Preservation-aware RF + same M_edit | fixed DeCE/support mask if implementable | checks whether preservation-aware RF still lacks edit/preserve decomposition |
+| Native RF/FLUX baseline + same M_edit | fixed DeCE/support mask if implementable | checks whether native editors still lack edit/preserve decomposition |
 | Fixed DeCE | operation support, no feedback | component reference |
 | DeCE-RF | operation support + feedback | full method |
 
-This is optional. It should not replace E2-A or E2-B. It can be a small main-text
-sanity row or a supplement table.
+This is optional. It should not replace E2-A or E2-B.
 
-### Main E2 Table Layout
+### Table Layout
 
-Use one compact table rather than splitting baselines across multiple unrelated
-tables. The table must include method type and support condition so that the
-comparison is transparent.
+Use separated table labels:
 
-Recommended columns:
+```text
+Table 2a: SD3-matched RF comparison
+Table 2b: Native-backbone RF / FLUX contextual comparison
+```
+
+Recommended columns for Table 2a:
 
 | Column | Purpose |
 | --- | --- |
 | Method | baseline or proposed method |
-| Type | RF target guidance / RF-native editing / preservation-aware RF / localized RF controller |
+| Backbone | fixed to SD3 |
+| Type | RF target guidance / RF-native editing / localized RF controller |
 | Extra support? | no, native, same fixed support, or operation support |
 | Edit success | masked/local CLIP delta or visual audit success |
 | Preserve fidelity | outside-mask LPIPS/SSIM/DINO/source where available |
 | Leakage/locality | outside-mask L1 or drift energy |
-| Notes | gated checkpoint, adapter caveat, or support condition if needed |
+
+Recommended columns for Table 2b:
+
+| Column | Purpose |
+| --- | --- |
+| Method | native-backbone baseline or DeCE-RF context row |
+| Native backbone | SD3, FLUX.1-dev, FLUX Kontext, or TBD |
+| Input interface | source/target prompts, image+instruction, method-native edit prompt |
+| Extra support? | no, operation support, or method-native |
+| Runnable status | complete, blocked, pending adapter |
+| Caveat | gated checkpoint, API/native interface, or adapter limitation |
 
 A minimal main-paper table can aggregate over tasks and seeds, with per-task
 breakdowns in supplement. Do not collapse edit success and preservation into a
@@ -423,56 +472,54 @@ single composite score.
 Current completed E2-A:
 
 ```text
-6 tasks x 4 methods x 3 seeds = 72 outputs
+6 tasks x 4 SD3 methods x 3 seeds = 72 outputs
 ```
 
 Minimum upgraded E2:
 
 ```text
-E2-A completed 72 outputs
-+ E2-B one preservation-aware RF baseline x 6 tasks x 3 seeds = 18 outputs
+E2-A completed 72 SD3-matched outputs
++ E2-B one native-backbone RF/FLUX baseline x 6 tasks x 3 seeds = 18 contextual outputs
 = 90 E2 outputs total
 ```
 
 Stronger upgraded E2:
 
 ```text
-E2-A completed 72 outputs
-+ E2-B two preservation-aware RF baselines x 6 tasks x 3 seeds = 36 outputs
+E2-A completed 72 SD3-matched outputs
++ E2-B two native-backbone RF/FLUX baselines x 6 tasks x 3 seeds = 36 contextual outputs
 = 108 E2 outputs total
 ```
 
-If support-matched E2-C is added, keep it compact and clearly mark it as a
-fairness probe rather than a headline baseline table.
+If E2-C is added, keep it compact and clearly mark it as optional transfer or
+fairness evidence rather than a headline baseline table.
 
 ### Wording Rules
 
 Use these safe formulations:
 
 ```text
-E2 evaluates whether existing RF-native and preservation-oriented editing
-methods already solve localized edit-preserve control.
+Backbone-matched SD3 results support the algorithmic contribution; native-backbone
+FLUX/RF results contextualize DeCE-RF against strong external editors.
 ```
 
 ```text
-While these methods can improve source-to-target editing or global fidelity,
-they do not explicitly construct operation-conditioned edit and preserve
-regions, leading to a weaker localized edit-preserve tradeoff under our fixed
-mask evaluation.
+Under the same SD3 backbone and fixed evaluation masks, DeCE-RF improves
+localized edit-preserve control over RF-native baselines.
+```
+
+```text
+Native FLUX-based editors are strong contextual baselines and may achieve higher
+absolute perceptual quality due to backbone and interface differences; we do not
+treat those rows as pure algorithmic controls.
 ```
 
 Avoid these unsafe formulations:
 
 ```text
+DeCE-RF beats FLUX.
 DeCE-RF beats all RF editing methods.
-```
-
-```text
-Existing RF methods are bad.
-```
-
-```text
-Preservation-aware RF baselines are only appendix material.
+SD3-DeCE is directly superior to FLUX-based RF editors.
 ```
 
 ## Experiment E3: Support Geometry Ablation
@@ -1038,8 +1085,9 @@ Run the compact RF suite on two examples per category:
 Prioritize:
 
 ```text
-Completed E2-A: FlowEdit, FlowAlign, SplitFlow
-E2-B candidates: rf_solver_edit, ot_rf_otip, reflex, dvrf
+Completed E2-A SD3-matched: FlowEdit, FlowAlign, SplitFlow
+E2-B native-backbone contextual: rf_solver_edit, reflex, fireflow, stable_flow
+E2-B planned contextual: ot_rf_otip, dvrf
 ```
 
 #### Phase 2 E3 Support Ablation

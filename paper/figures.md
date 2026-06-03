@@ -107,10 +107,12 @@ experiments/support_v3_2026-06-02/e2_baseline_audit.md
 As of the 2026-06-03 audit, 14 external repositories are downloaded and 2
 additional E2-B candidates are registered as planned entries. FlowEdit,
 FlowAlign, and SplitFlow have revised strict target-mode outputs for 6 tasks x
-seeds 10/11/12 and are available as the reduced RF comparison. RF-Solver-Edit
-(`rf_solver_edit`) and ReFlex (`reflex`) are E2-B candidates blocked by gated
-FLUX.1-dev access; OT-RF / OTIP (`ot_rf_otip`) and DVRF (`dvrf`) are E2-B
-planned candidates that still need repo/env/adapter validation.
+seeds 10/11/12 and are available as the SD3-matched E2-A comparison. RF-Solver-
+Edit (`rf_solver_edit`), ReFlex (`reflex`), FireFlow (`fireflow`), and
+stable-flow (`stable_flow`) are native-backbone FLUX contextual rows blocked by
+gated FLUX.1-dev access or adapter gaps; OT-RF / OTIP (`ot_rf_otip`) and DVRF
+(`dvrf`) are planned contextual candidates that still need repo/env/adapter
+validation.
 
 Current reduced figure grids:
 
