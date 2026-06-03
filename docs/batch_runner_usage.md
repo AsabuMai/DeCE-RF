@@ -94,6 +94,36 @@ bash scripts/run_wacv_phase1_batch.sh
 '
 ```
 
+## Excess Preserve Error Evaluation
+
+`evaluate_paper_metrics.py` now annotates preserve metrics with a reconstruction
+floor when a `base_only` row is available for the same task and seed:
+
+```text
+Excess Preserve Error = E_pres(method) - E_pres(base_only)
+```
+
+For E1/internal runs where `base_only` is in the same output tree, no extra flag
+is needed. For E2 baseline-only outputs, pass the strict E1 metrics CSV as the
+floor source:
+
+```bash
+.venv/bin/python scripts/evaluate_paper_metrics.py \
+  --outputs-dir outputs/e2_rf_comparison \
+  --csv-output experiments/support_v3_2026-06-02/e2_reduced_rf_fixed_mask_metrics.csv \
+  --json-output experiments/support_v3_2026-06-02/e2_reduced_rf_fixed_mask_metrics.json \
+  --task-names all \
+  --method-names all \
+  --seeds 10 11 12 \
+  --eval-mask-dir experiments/support_v3_2026-06-02/eval_masks \
+  --preserve-floor-csv experiments/support_v3_2026-06-02/strict_fixed_mask_metrics.csv
+```
+
+The added columns include `preserve_floor_available`, `*_preserve_floor`, and
+`*_excess_preserve_error` for outside-mask L1/RMSE, source L1/RMSE, optional
+LPIPS, and derived SSIM/DINO/CLIP preserve-error forms when those metrics are
+present.
+
 ## Important Environment Variables
 
 - `RUN_ID`: output directory name under `outputs/` unless `OUTPUT_ROOT` is set.

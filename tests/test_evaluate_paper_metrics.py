@@ -4,7 +4,7 @@ from pathlib import Path
 
 from PIL import Image
 
-from scripts.evaluate_paper_metrics import evaluate_run, find_run_dirs
+from scripts.evaluate_paper_metrics import annotate_excess_preserve_errors, evaluate_run, find_run_dirs
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -108,6 +108,61 @@ def test_find_run_dirs_can_filter_seeds(tmp_path: Path):
         (directory / "metadata.json").write_text("{}\n", encoding="utf-8")
 
     assert find_run_dirs(tmp_path / "outputs", seeds={"10"}) == [keep_dir]
+
+
+def test_annotate_excess_preserve_errors_uses_base_floor():
+    records = [
+        {
+            "task": "cat_crown",
+            "method": "base_only",
+            "seed": "10",
+            "outside_mask_l1": 0.10,
+            "source_ssim_luma": 0.90,
+            "dino_source_similarity": 0.80,
+        },
+        {
+            "task": "cat_crown",
+            "method": "flowedit",
+            "seed": "10",
+            "outside_mask_l1": 0.25,
+            "source_ssim_luma": 0.70,
+            "dino_source_similarity": 0.65,
+        },
+    ]
+
+    annotate_excess_preserve_errors(records)
+
+    edited = records[1]
+    assert edited["preserve_floor_available"] is True
+    assert edited["outside_mask_l1_preserve_floor"] == 0.10
+    assert round(edited["outside_mask_l1_excess_preserve_error"], 6) == 0.15
+    assert round(edited["source_ssim_luma_loss_excess_preserve_error"], 6) == 0.20
+    assert round(edited["dino_source_distance_excess_preserve_error"], 6) == 0.15
+
+
+def test_annotate_excess_preserve_errors_can_use_external_floor_records():
+    records = [
+        {
+            "task": "cat_crown",
+            "method": "flowedit",
+            "seed": "10",
+            "outside_mask_rmse": "0.30",
+        }
+    ]
+    floor_records = [
+        {
+            "task": "cat_crown",
+            "method": "base_only",
+            "seed": "10",
+            "outside_mask_rmse": "0.12",
+        }
+    ]
+
+    annotate_excess_preserve_errors(records, external_floor_records=floor_records)
+
+    assert records[0]["preserve_floor_available"] is True
+    assert records[0]["outside_mask_rmse_preserve_floor"] == 0.12
+    assert round(records[0]["outside_mask_rmse_excess_preserve_error"], 6) == 0.18
 
 
 def test_init_pretty_visual_audit_writes_full_go_no_go_template(tmp_path: Path, monkeypatch):
