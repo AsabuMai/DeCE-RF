@@ -7,6 +7,10 @@ Current paper source of truth:
 
 ## Minimal Paper Runner
 
+For multi-image SD3 generation, prefer the batch runner documented in
+`docs/batch_runner_usage.md`. Use the non-batch wrapper only for tiny one-off
+runs or command preparation checks.
+
 Use this wrapper instead of calling `scripts/run_pretty_matrix.sh` directly for WACV Phase 1 work:
 
 ```bash

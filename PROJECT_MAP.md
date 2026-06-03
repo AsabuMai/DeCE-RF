@@ -73,6 +73,7 @@ side branch, not the mainline.
 - `docs/rmsgap_mainline_mechanism_audit.md`: current rmsgap mainline mechanism
   map and next-step implications.
 - `docs/wacv_phase1_code_map.md`: current paper-to-code alignment and cleanup boundary for the redesigned WACV Phase 1 plan.
+- `docs/batch_runner_usage.md`: command recipes for SD3 batch generation on Slurm/A100.
 
 Older notes were moved to:
 
