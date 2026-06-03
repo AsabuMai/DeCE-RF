@@ -832,8 +832,8 @@ is the preferred target before writing final experiment results.
 | Experiment | Matrix | Outputs |
 | --- | --- | ---: |
 | E1 main benchmark | 6 categories x 3 examples x 4 methods x 3 seeds | 216 |
-| E2-A SD3-matched RF baselines | 6 categories x 2 examples x 3 SD3 RF baselines x 3 seeds | 108 |
-| E2-B native-backbone contextual rows | 6 categories x 2 examples x 1-2 contextual baselines x 3 seeds | 36-72 |
+| E2-A SD3-matched RF expansion | 6 categories x 2 examples x 3 completed SD3 RF baselines x 3 seeds | 108 |
+| E2-B native-backbone contextual rows | 6 categories x 2 examples x 1-2 runnable contextual baselines x 3 seeds | 36-72 |
 | E3 support ablation | 6 categories x 2 examples x 5 support variants x 2 seeds | 120 |
 | E4 controller ablation/stress | 6 categories x 2 examples x 5 controller variants x 2 seeds | 120 |
 | E5 extension/failure examples | selected probes | 30 |
@@ -872,8 +872,8 @@ WACV-ready robustness cache.
 | Experiment | Matrix | Outputs |
 | --- | --- | ---: |
 | E1 main benchmark | 6 categories x 5 examples x 4 methods x 3 seeds | 360 |
-| E2-A SD3-matched RF baselines | 6 categories x 3 examples x 3 SD3 RF baselines x 3 seeds | 162 |
-| E2-B native-backbone contextual rows | 6 categories x 3 examples x 1-2 contextual baselines x 3 seeds | 54-108 |
+| E2-A SD3-matched RF expansion | 6 categories x 3 examples x 3 completed SD3 RF baselines x 3 seeds | 162 |
+| E2-B native-backbone contextual rows | 6 categories x 3 examples x 1-2 runnable contextual baselines x 3 seeds | 54-108 |
 | E3 support ablation | 6 categories x 3 examples x 5 support variants x 2 seeds | 180 |
 | E4 controller ablation/stress | 6 categories x 3 examples x 5 controller variants x 2 seeds | 180 |
 | E5 extension/failure examples | selected probes | 30-50 |
@@ -881,7 +881,7 @@ WACV-ready robustness cache.
 Total:
 
 ```text
-about 900 output images
+about 966-1040 output images if E2-B generation runs; about 912-932 without E2-B generation
 ```
 
 Use Phase 3 to fill supplement tables, full seed grids, support-mask audits,
@@ -986,40 +986,43 @@ Optional expanded T1 teaser/supplement run:
 7 task instances x 4 methods x 3 seeds = 84
 ```
 
-#### Phase 1 E2-A: Compact SD3-Matched RF Baselines
+#### Phase 1 E2-A: Completed SD3-Matched RF Baselines
 
-Planned status: external RF-native baselines are not yet validated for the
-revised strict matrix. Run them on the same six tasks with two seeds only after
-the baseline wrappers pass a runnable-validation audit:
+Status: the revised strict E2-A cache is complete. Do not rerun this block just
+because the Phase 1 run order still lists it; reuse the validated artifacts
+unless prompts, image normalization, or metric code change.
 
-```text
-FlowEdit / FlowAlign / SplitFlow for completed E2-A
-rf_solver_edit = RF-Solver-Edit / RF-Edit
-ot_rf_otip = OT-RF / OTIP-style
-reflex = ReFlex
-dvrf = DVRF / Delta Velocity RF
-```
-
-Use seeds:
+Completed E2-A rows:
 
 ```text
-10, 11
+FlowEdit
+FlowAlign
+SplitFlow
+DeCE-RF
 ```
 
-Direct target guidance is reused from E1 as the simplest internal RF baseline;
-do not double-count it in the 36-output E2 budget.
-
-Target output count after validation:
+Completed matrix:
 
 ```text
-6 x 3 x 2 = 36
+6 strict Core-6 tasks x 4 SD3 methods x seeds 10/11/12 = 72 outputs
 ```
 
-If only one external RF baseline is stable on day one, run FlowEdit first, then
-one inversion/OT-style method. Record unavailable baselines in the baseline
-audit rather than dropping them silently. Until this validation is complete,
-write the paper claim as a controlled internal comparison plus pending/reduced
-RF-baseline evidence, not as superiority over RF baselines.
+Artifacts:
+
+```text
+outputs/e2_rf_comparison/
+experiments/support_v3_2026-06-02/e2_strict_rf_baseline_manifest.csv
+experiments/support_v3_2026-06-02/e2_reduced_rf_fixed_mask_metrics.csv
+experiments/support_v3_2026-06-02/e2_reduced_rf_comparison_summary.md
+experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.md
+```
+
+Direct target guidance is reused from E1 as the simplest internal RF control,
+but it is not counted as one of the three external SD3 RF baseline rows.
+
+E2-B native-backbone methods remain separate contextual rows. RF-Solver-Edit,
+ReFlex, FireFlow, stable-flow, OT-RF/OTIP, and DVRF must not be moved into
+E2-A unless they are ported to a matched SD3 protocol.
 
 #### Phase 1 E4: Controller Variants
 
@@ -1079,19 +1082,42 @@ support_v3_controller_rmsgap
 
 #### Phase 2 E2 Expansion: SD3-Matched Plus Native-Backbone Context
 
-Run the compact RF suite on two examples per category:
+Keep E2 split into two non-averaged blocks.
+
+E2-A expands only the already validated SD3-matched baseline set to two source
+examples per category:
 
 ```text
-6 categories x 2 examples x 3 RF baselines x 3 seeds = 108 outputs
+6 categories x 2 examples x 3 SD3 RF baselines x 3 seeds = 108 outputs
 ```
 
-Prioritize:
+E2-A methods:
 
 ```text
-Completed E2-A SD3-matched: FlowEdit, FlowAlign, SplitFlow
-E2-B native-backbone contextual: rf_solver_edit, reflex, fireflow, stable_flow
-E2-B planned contextual: ot_rf_otip, dvrf
+FlowEdit
+FlowAlign
+SplitFlow
 ```
+
+DeCE-RF rows come from the matching E1 expansion and are joined during E2-A
+analysis. Do not add new SD3 methods unless a reviewer-critical gap remains.
+
+E2-B is contextual and should run only after a native-backbone method is truly
+runnable under the strict Core-6 interface:
+
+```text
+1-2 native-backbone contextual baselines x 6 categories x 2 examples x 3 seeds
+= 36-72 outputs
+```
+
+E2-B candidates:
+
+```text
+rf_solver_edit, reflex, fireflow, stable_flow, ot_rf_otip, dvrf
+```
+
+If E2-B remains blocked by FLUX access or adapter gaps, keep it as Table 2b
+status/audit evidence instead of adding weak non-RF baselines to E2.
 
 #### Phase 2 E3 Support Ablation
 
@@ -1156,19 +1182,23 @@ Do not aggregate extension routes into the base DeCE-RF mean.
 Only run Phase 3 if Phase 2 supports the paper claim and the remaining risk is
 sample breadth rather than method correctness.
 
-Phase 3 expands to:
+Phase 3 expands the same split design rather than introducing new baseline
+families:
 
 ```text
 E1: 6 categories x 5 examples x 4 methods x 3 seeds = 360
-E2: 6 categories x 3 examples x 3 RF baselines x 3 seeds = 162
+E2-A: 6 categories x 3 examples x 3 SD3 RF baselines x 3 seeds = 162
+E2-B: 6 categories x 3 examples x 1-2 runnable contextual baselines x 3 seeds = 54-108
 E3: 6 categories x 3 examples x 5 support variants x 2 seeds = 180
 E4: 6 categories x 3 examples x 5 controller variants x 2 seeds = 180
 E5: 30-50 selected outputs
-total: about 900 outputs
+total: about 966-1040 outputs if E2-B runs; about 912-932 without E2-B generation
 ```
 
-Use Phase 3 to complete supplement grids, full per-task tables, and robustness
-audits. It should not change the core method story.
+Use Phase 3 to complete supplement grids, full per-task tables, robustness
+audits, and any E2-B contextual rows that became runnable after Phase 2. It
+should not change the core method story or turn non-RF supplement baselines into
+E2 evidence.
 
 ### Fixed-Control Cache Note
 
