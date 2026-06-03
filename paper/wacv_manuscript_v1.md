@@ -406,7 +406,7 @@ broadly solved, especially for small objects, tags, and precise glyph edits.
 
 External baselines must be compared under matched prompts, seeds, resolution,
 backbone assumptions, and mask inputs. Existing older baseline artifacts should
-be labeled as contextual evidence unless rerun under the Core-5/Core-6
+be labeled as contextual evidence unless rerun under the revised strict Core-6
 protocol.
 
 ## 7. Conclusion

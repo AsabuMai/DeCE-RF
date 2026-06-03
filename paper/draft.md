@@ -28,8 +28,10 @@ geometry from operation-conditioned evidence, and adapt their weights with
 clean-estimate feedback.
 ```
 
-This draft should be populated only from complete core-5 runs and the fixed-mask
-metric artifacts listed in `paper/results.md`.
+Status note: the experiment section has been resynchronized to the strict
+Core-6 / E2-A SD3-matched / E2-B native-backbone contextual design. The source of
+truth remains `paper/wacv_experiment_design.md`, `paper/results.md`, and
+`docs/wacv_phase1_code_map.md`.
 
 ## Introduction
 
@@ -50,10 +52,10 @@ failures with poor support remain part of the evidence.
 ## Related Work
 
 The final related-work section should cover RF/ODE editing methods and
-source-reference controls, including h-Edit, FlowEdit, RF-Solver, FireFlow,
-ReFlex, and PnP/P2P-style attention or feature reuse. External baselines should
-be reported only when they are run under matched image, prompt, resolution,
-seed, and mask conditions.
+source-reference controls, including FlowEdit, FlowAlign, SplitFlow, RF-Solver /
+RF-Edit, FireFlow, ReFlex, and PnP/P2P-style attention or feature reuse. The
+experiment section must separate SD3-matched algorithmic comparisons from
+native-backbone FLUX contextual comparisons and non-RF supplement baselines.
 
 ## Method
 
@@ -129,16 +131,18 @@ adapt how strongly each correction is applied.
 
 ## Experiments
 
-The current completed matrix is the core-5 DeCE-RF matrix documented in
-`paper/results.md`. The main tasks are:
+The current completed headline matrix is the strict Core-6 DeCE-RF matrix
+documented in `paper/results.md` and `experiments/support_v3_2026-06-02/`. The
+active tasks are:
 
 - `cat_crown`: compact above-host accessory insertion.
-- `dog_sunglasses`: face/accessory insertion positive control.
-- `mug_heart`: rigid surface decal placement.
+- `bowl_apple_inside`: container-constrained insertion.
 - `tshirt_star`: clothing-surface decal placement.
+- `red_chair_blue`: local object recoloring.
+- `pillow_vertical_fabric_strip`: surface material-strip editing.
 - `backpack_remove_toy_charm`: exposed-object removal and preservation probe.
 
-Each task is evaluated with:
+Each strict E1 task is evaluated with:
 
 - RF reconstruction / base reconstruction.
 - Direct target guidance.
@@ -153,18 +157,20 @@ trajectory summaries, source L1/RMSE, luma SSIM, mask-outside drift, mask-inside
 change, runtime, peak GPU memory when available, optional CLIP edit alignment,
 optional DINO source similarity, and manual failure flags.
 
-The current 60-row core-5 matrix has complete fixed-mask metrics and internal
-visual audit annotations. DeCE-RF is strongest on localized add/decal tasks
-(`cat_crown`, `mug_heart`, `tshirt_star`), remains competitive on
-`dog_sunglasses`, and succeeds visually on the exposed-object removal task
-`backpack_remove_toy_charm` despite weak global CLIP removal scores. The
-defensible claim is an edit-preserve control result under reasonable support,
-not broad arbitrary editing.
+E2 is split by backbone fairness. E2-A is the completed SD3-matched comparison
+against FlowEdit, FlowAlign, and SplitFlow under the same strict Core-6 tasks and
+seeds. E2-B is a native-backbone RF / FLUX contextual comparison for methods
+such as RF-Solver-Edit, ReFlex, FireFlow, stable-flow, OT-RF/OTIP, and DVRF; it
+must not be used as the main algorithmic win/loss evidence against SD3-DeCE.
+InstructPix2Pix and H-Edit / P2P-style are supplement-only non-RF baselines.
 
-The current fixed-control ablation cache covers the original core-4 task set.
-It should be used as component evidence for feedback-updated control, not as a
-headline main-table method. Completing `support_v3_fixed` for any promoted
-final task set remains the next ablation cleanup item.
+The current strict 72-row E1 matrix and 72-row SD3-matched E2-A matrix have
+complete fixed-mask metrics and visual audit artifacts. The defensible claim is
+an edit-preserve control result under matched SD3 backbone and reasonable
+support, not broad arbitrary editing or superiority over FLUX editors.
+
+`support_v3_fixed` belongs to E4 as component evidence for feedback-updated
+control, not as a headline main-table method.
 
 ## Failure Analysis
 
@@ -180,14 +186,15 @@ Known failure modes should remain visible:
   background completion;
 - accurate support can still leave residual labels, marks, or transformed
   objects when local target formation is weak;
-- replacement and recolor remain candidate expansion/stress tasks rather than
-  part of the current core-5 claim.
+- replacement remains a boundary/extension probe rather than part of the strict
+  Core-6 headline claim; recolor is included only as the controlled
+  `red_chair_blue` local recolor probe.
 
 ## Limitations
 
 - The method depends on reliable spatial support for local edits.
 - The implementation is SD3-specific.
-- External baselines require matched conditions before they can support a
-  paper claim; current FireFlow/ReFlex artifacts are exploratory only.
+- Main external algorithmic claims require backbone-matched conditions. FLUX
+  baselines are contextual E2-B rows, and non-RF baselines are supplement-only.
 - CLIP/DINO metrics are populated, but LPIPS/VLM-style perceptual or
   instruction-following metrics are not yet included.

@@ -51,7 +51,7 @@ Main active files:
 - `energies.py`: clean-estimate-space reconstruction/edit energy and velocity
   surrogate terms.
 - `scripts/evaluate_paper_metrics.py` and
-  `scripts/analyze_controller_stress.py`: metrics and stress summaries.
+  `legacy/cleanup_20260603/scripts/analyze_controller_stress.py`: legacy stress summary helper, not part of the active runner surface.
 
 ## Task And Method Routing
 

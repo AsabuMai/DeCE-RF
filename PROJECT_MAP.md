@@ -56,7 +56,6 @@ side branch, not the mainline.
 - `scripts/evaluate_paper_metrics.py`: current metric evaluator.
 - `scripts/make_semantic_mask.py` and reference-mask builders: current support
   and reference preparation utilities.
-- `scripts/init_pretty_visual_audit.py`: current visual-audit template helper.
 - `tests/test_operation_support_v3.py`: support-v3 unit coverage.
 
 ## Active Documents
@@ -69,7 +68,7 @@ side branch, not the mainline.
 - `docs/operation_conditioned_support_interface.md`: paper-facing abstraction
   that reframes support-v3 as operation-conditioned support rather than a
   task-specific heuristic.
-- `docs/worklog_2026-05-11.md`: current worklog and experiment readout.
+- `docs/worklog_2026-06-03.md`: current E2 baseline/environment worklog and experiment readout.
 - `docs/rmsgap_mainline_mechanism_audit.md`: current rmsgap mainline mechanism
   map and next-step implications.
 - `docs/wacv_phase1_code_map.md`: current paper-to-code alignment and cleanup boundary for the redesigned WACV Phase 1 plan.
@@ -132,7 +131,7 @@ Previous server-evidence tasks such as dog_sunglasses, mug_heart, and pillow_blu
 - Keep active code and current docs at repo root / `docs/`.
 - Put old planning notes in `docs/archive_legacy_2026-05-11/`.
 - Put old metric summaries in `experiments/archive_legacy_2026-05-11/`.
-- Put old table runners, baseline wrappers, audit helpers, and workshop
+- Put old table runners, baseline wrappers, audit helpers, visual-audit initializers, and workshop
   builders in `legacy/cleanup_20260603/scripts/` or `scripts/archive_legacy_2026-05-11/`.
 - Keep new experiment packs as dated subdirectories under `experiments/`.
 - Do not delete output runs unless they are known failed scratch runs.

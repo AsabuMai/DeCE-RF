@@ -2,7 +2,7 @@
 
 Date: 2026-05-10
 
-Scope: baseline evidence package after the external-baseline run.
+Scope: archived baseline evidence package after the 2026-05-10 external-baseline run.
 
 This is a precheck for entering academic-pipeline Stage 2.5. It is not the final
 paper integrity report. The full Stage 2.5 check should run after the paper
@@ -13,7 +13,7 @@ draft is assembled.
 Baseline manifest:
 
 ```text
-experiments/baseline_parity_manifest.csv
+experiments/archive_legacy_2026-05-11/baseline_parity_manifest.csv
 ```
 
 Status:
@@ -27,17 +27,17 @@ Status:
 Evidence package:
 
 ```text
-experiments/baseline_summary.csv
-experiments/baseline_summary.md
-experiments/baseline_visual_score_template.csv
-experiments/baseline_visual_scores_seed10_12.csv
+experiments/archive_legacy_2026-05-11/baseline_summary.csv
+experiments/archive_legacy_2026-05-11/baseline_summary.md
+experiments/archive_legacy_2026-05-11/baseline_visual_score_template.csv
+experiments/archive_legacy_2026-05-11/baseline_visual_scores_seed10_12.csv
 ```
 
 Paper figure candidates:
 
 ```text
-outputs/paper_figures/baseline_backpack_remove_toy_charm_seed10.png
-outputs/paper_figures/baseline_dog_sunglasses_seed10.png
+The old paper-figure candidates are not retained as active artifacts; regenerate
+figures from the current `experiments/support_v3_2026-06-02/` package if needed.
 ```
 
 ## Integrity Notes
@@ -50,7 +50,7 @@ outputs/paper_figures/baseline_dog_sunglasses_seed10.png
   constraints.
 - SteerFlow is recorded as failed because no public runnable code was found as
   of 2026-05-10.
-- `experiments/baseline_visual_scores_seed10_12.csv` is an internal visual
+- `experiments/archive_legacy_2026-05-11/baseline_visual_scores_seed10_12.csv` is an internal visual
   audit, not a user study.
 
 ## Gate Result

@@ -782,7 +782,7 @@ days on full evidence generation.
 | Experiment | Matrix | Outputs |
 | --- | --- | ---: |
 | E1 main internal benchmark | 6 categories x 1 example x 4 methods x 3 seeds | 72 |
-| E2 RF-native compact baselines | 6 categories x 1 example x 3 RF baselines x 2 seeds | 36 |
+| E2-A SD3-matched compact baselines | 6 categories x 1 example x 3 SD3 RF baselines x 2 seeds | 36 |
 | E4 controller variants | 6 categories x 1 example x 5 variants x 2 seeds | 60 |
 
 Total:
@@ -896,7 +896,7 @@ an algorithms paper.
 | Figure 1 | teaser: 2 examples, Source/Target/Direct/Generic/DeCE-RF | state the problem and result |
 | Figure 2 | method overview with clean-estimate decomposition, support, feedback | explain method |
 | Figure 3 | E1 Core-6 qualitative grid | show task diversity |
-| Figure 4 | E2 RF-native qualitative comparison | baseline audit or reduced RF comparison, only after runnable validation |
+| Figure 4 | E2-A SD3-matched qualitative comparison | Table 2a visual companion; E2-B contextual rows only if clearly separated |
 | Figure 5 | E4 Pareto + timestep diagnostics | prove feedback behavior |
 | Figure 6 | E5 extension + failure cases, optional if space permits | mark scope boundary |
 
@@ -982,7 +982,7 @@ Optional expanded T1 teaser/supplement run:
 7 task instances x 4 methods x 3 seeds = 84
 ```
 
-#### Phase 1 E2: Compact RF Baselines
+#### Phase 1 E2-A: Compact SD3-Matched RF Baselines
 
 Planned status: external RF-native baselines are not yet validated for the
 revised strict matrix. Run them on the same six tasks with two seeds only after
@@ -1046,7 +1046,6 @@ After the three blocks, evaluate with fixed masks and build quick grids:
 
 ```bash
 python scripts/evaluate_paper_metrics.py
-python scripts/summarize_fixed_mask_audit.py
 python scripts/make_paper_grids.py
 ```
 
@@ -1074,7 +1073,7 @@ adaptive_full_generic_support
 support_v3_controller_rmsgap
 ```
 
-#### Phase 2 E2 Expansion
+#### Phase 2 E2 Expansion: SD3-Matched Plus Native-Backbone Context
 
 Run the compact RF suite on two examples per category:
 
@@ -1119,15 +1118,15 @@ Run controller variants on two examples per category:
 6 categories x 2 examples x 5 variants x 2 seeds = 120 outputs
 ```
 
-Then run a targeted stress sweep on the most diagnostic subset. Use the existing
-stress script when applicable:
+Then run a targeted stress sweep on the most diagnostic subset. Use the legacy
+stress script when applicable; restore it to active `scripts/` only if the sweep becomes paper-critical:
 
 ```bash
 TASKS="cat_crown bowl_apple_inside tshirt_star" \
 METHODS="support_v3_fixed support_v3_controller_rmsgap" \
 SEEDS="10 11" \
 SKIP_EXISTING=1 \
-bash scripts/run_controller_stress_sweeps.sh
+bash legacy/cleanup_20260603/scripts/run_controller_stress_sweeps.sh
 ```
 
 The stress sweep is for Pareto and trajectory figures. Do not let it replace

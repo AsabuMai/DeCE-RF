@@ -63,7 +63,7 @@ Keep these as active for Phase 1:
 - `scripts/run_wacv_phase1.sh`: paper-facing runner wrapper.
 - `scripts/run_pretty_matrix.sh`: slim Core-6 matrix executor used by the paper wrapper.
 - `scripts/core6_tasks.sh`, `scripts/core6_methods.sh`: separated task and method configuration for the revised strict Core-6.
-- `scripts/evaluate_paper_metrics.py`, `scripts/make_paper_grids.py`, `scripts/summarize_fixed_mask_audit.py`: current evaluation/grids.
+- `scripts/evaluate_paper_metrics.py`, `scripts/make_paper_grids.py`, `legacy/cleanup_20260603/scripts/summarize_fixed_mask_audit.py`: current evaluation/grids.
 
 ## Parked Or Diagnostic Surface
 

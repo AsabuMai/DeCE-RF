@@ -2,7 +2,7 @@
 
 Date: 2026-06-03
 
-Claim boundary: downloaded source, command-level smoke, and strict Core-6 output validation are separate states. A method enters the SD3-matched reduced RF comparison only after strict Core-6 generation is stable and is evaluated with the same human/metric gates as DeCE-RF. Native-backbone RF / FLUX rows are contextual, not pure algorithmic controls.
+Claim boundary: downloaded source, command-level smoke, and strict Core-6 output validation are separate states. A method enters the SD3-matched E2-A comparison only after strict Core-6 generation is stable and is evaluated with the same human/metric gates as DeCE-RF. Native-backbone RF / FLUX rows are contextual, not pure algorithmic controls.
 
 Revised strict tasks: cat_crown, bowl_apple_inside, tshirt_star, red_chair_blue, pillow_vertical_fabric_strip, backpack_remove_toy_charm.
 
@@ -10,7 +10,7 @@ Revised strict tasks: cat_crown, bowl_apple_inside, tshirt_star, red_chair_blue,
 
 - Downloaded repositories: 14/16.
 - Command smoke `--help` passed: 1/16.
-- SD3-matched reduced RF comparison entries now: 3.
+- SD3-matched E2-A comparison entries now: 3.
 - E2-B native-backbone contextual candidates registered: 6 (`fireflow`, `rf_solver_edit`, `reflex`, `stable_flow`, `ot_rf_otip`, `dvrf`).
 - E2-B contextual runnable status: FLUX rows are blocked by gated FLUX.1-dev access or adapter gaps; `ot_rf_otip` and `dvrf` still need repo/backbone verification, environment creation, smoke testing, and Core-6 adapters.
 - Non-RF supplement candidates selected: 2 (`instruct_pix2pix`, `h_edit_r_p2p`). These are supplement-only positioning baselines and must not support RF-specific claims.
@@ -57,7 +57,7 @@ Revised strict tasks: cat_crown, bowl_apple_inside, tshirt_star, red_chair_blue,
 
 ## Interpretation
 
-- `reduced_rf_comparison` means the method has completed the current SD3-matched strict Core-6 comparison cache and can be reported in Table 2a.
+- `reduced_rf_comparison` is the legacy bucket name for methods that have completed the current SD3-matched E2-A strict Core-6 comparison cache and can be reported in Table 2a.
 - `e2b_native_context_candidate` means the method is part of the native-backbone RF / FLUX contextual pool; it must not be used as pure algorithmic evidence against SD3-DeCE.
 - `non_rf_supplement_candidate` means the method is selected for supplement positioning only; it must not be averaged into E2-A/E2-B or used for RF-specific claims.
 - `baseline_audit` means the method remains useful for transparency, but it must not support a claim that DeCE-RF beats that baseline.

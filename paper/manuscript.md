@@ -436,32 +436,34 @@ a complete solution to automatic support proposal or general object formation.
 ### 3.1 Experimental Setup
 
 We evaluate DeCE-RF on localized text-guided image editing tasks that require
-both target-directed change and source preservation. The benchmark is organized
-by operation type rather than by object category, because the method is designed
-around operation-conditioned control. The main tasks are:
+both target-directed change and source preservation. The strict Core-6 suite is
+organized by operation type rather than by object category, because the method is
+designed around operation-conditioned control. The active tasks are:
 
 ```text
 cat_crown: add_object / above_host
-dog_sunglasses: add_object / on_face
-mug_heart: add_decal / on_surface
-tshirt_star: add_decal / on_clothing_surface
+bowl_apple_inside: add_object / inside
+tshirt_star: add_decal / on_surface
+red_chair_blue: recolor / inside
+pillow_vertical_fabric_strip: add_decal / on_surface
 backpack_remove_toy_charm: remove_object / remove_source_object
 ```
 
-These tasks cover compact object insertion, face-region accessory insertion,
-surface decal placement on rigid and clothing-like supports, and source-object
-removal. The add-object and decal tasks test whether the controller can form a
-local target while preserving the surrounding source. The removal task is
-included as a stress case because successful removal requires suppressing
-source evidence rather than merely adding target evidence.
+These tasks cover compact accessory insertion, container-constrained insertion,
+surface decal placement, local object recoloring, surface material-strip editing,
+and exposed-object removal. The add/decal/recolor tasks test whether the
+controller can form a local target while preserving the surrounding source. The
+removal task is included as a stress case because successful removal requires
+suppressing source evidence rather than merely adding target evidence.
 
-Unless otherwise stated, all methods use the same source image, source prompt,
-target prompt, random seed, number of RF steps, and image resolution. We report
-results over seeds \(10,11,12\). The primary evaluation uses automatic metrics,
-controller diagnostics, and qualitative figures. For local-edit tasks, automatic
-metrics are not sufficient on their own; therefore, the qualitative figures
-include the source image, edited image, edit support, preserve support, and
-clean-estimate response maps.
+Unless otherwise stated, all SD3-matched methods use the same source image,
+source prompt, target prompt, random seed, number of RF steps, image resolution,
+and fixed evaluation masks. We report results over seeds \(10,11,12\). Native-
+backbone FLUX comparisons are reported separately as contextual E2-B rows
+because their backbone and input interface differ from SD3-DeCE. For local-edit
+tasks, automatic metrics are not sufficient on their own; therefore, the
+qualitative figures include the source image, edited image, edit support,
+preserve support, and clean-estimate response maps.
 
 ### 3.2 Compared Methods
 
@@ -483,6 +485,13 @@ We compare the following methods:
 - **Manual/external support.** When available, an externally specified support
   mask is used as an upper-bound diagnostic for support quality rather than as
   the main automatic method.
+- **SD3-matched RF baselines.** FlowEdit, FlowAlign, and SplitFlow are reported
+  as the primary E2-A external baselines because they run under the same SD3
+  backbone and strict Core-6 protocol.
+- **Native-backbone contextual baselines.** FLUX-based RF editors such as
+  RF-Solver-Edit, ReFlex, FireFlow, and stable-flow are E2-B contextual rows, not
+  pure algorithmic controls against SD3-DeCE. InstructPix2Pix and H-Edit/P2P are
+  supplement-only non-RF positioning baselines.
 
 This comparison separates the three claims of the paper. Direct target versus
 fixed displacement weights tests the benefit of clean-estimate displacement
@@ -537,17 +546,25 @@ control geometry. DeCE-RF should further improve the edit-preserve tradeoff by
 increasing edit pressure when the local target gap remains large and increasing
 reconstruction pressure when preserve drift exceeds the budget.
 
-The qualitative figure should use the completed core-5 task set and compare the
-paper-facing methods:
+The main qualitative figure should use the completed strict Core-6 task set and
+compare the paper-facing E1 methods:
 
 ```text
 source | direct target | generic support | DeCE-RF | support overlay
 ```
 
-Each edited image should be paired with the edit mask and an outside-drift heat
-map. This figure is important because the central claim is not simply that the
-target prompt score improves, but that target change is localized while source
-content remains stable.
+The E2-A figure should separately show the SD3-matched RF baselines:
+
+```text
+source | FlowEdit-SD3 | FlowAlign-SD3 | SplitFlow-SD3 | DeCE-RF-SD3
+```
+
+Native-backbone FLUX rows, if runnable, should be labeled as contextual and not
+merged into the SD3-matched algorithmic table. Each edited image should be paired
+with the edit mask and an outside-drift heat map where space permits. This
+figure is important because the central claim is not simply that the target
+prompt score improves, but that target change is localized while source content
+remains stable.
 
 ### 3.5 Ablation: Decoupled Clean-Estimate Displacement
 

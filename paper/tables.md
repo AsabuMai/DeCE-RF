@@ -140,13 +140,10 @@ using Telea and Navier-Stokes OpenCV inpainting with the DeCE-RF support mask.
 Report it separately from the main comparison because it receives the same
 support mask and only applies to removal/fill cases.
 
-Artifacts:
-
-```text
-experiments/support_v3_2026-05-11/backpack_same_support_inpaint_metrics.csv
-experiments/support_v3_2026-05-11/backpack_same_support_inpaint_metrics.json
-experiments/support_v3_2026-05-11/backpack_same_support_inpaint_summary.md
-```
+Artifact status: this is a legacy diagnostic row. The active repository no
+longer tracks summary CSV/JSON files for this run; generated images remain under
+ignored generated same-support inpaint output directories and should
+not be cited as active paper evidence unless regenerated and summarized.
 
 Readout: same-support inpainting gives lower outside drift on the backpack case but produces visible fill artifacts around the strap/zipper region, while DeCE-RF removes the target charm but locally smooths the occluded zipper/fabric.
 
@@ -211,7 +208,7 @@ SplitFlow, paired with an E2-B native-backbone contextual status/audit table
 covering FLUX rows and planned RF candidates. The main algorithmic claim comes
 from E2-A, not cross-backbone rows.
 
-Reduced RF comparison artifacts:
+SD3-matched E2-A comparison artifacts:
 
 ```text
 experiments/support_v3_2026-06-02/e2_strict_rf_baseline_manifest.csv
@@ -226,21 +223,20 @@ experiments/support_v3_2026-06-02/visual_audit/e2_flowedit_seed11_grid.png
 experiments/support_v3_2026-06-02/visual_audit/e2_flowedit_seed12_grid.png
 ```
 
-Readout: FlowEdit, FlowAlign, and SplitFlow are runnable in target mode and
-frequently form the requested target, but human visual audit rejects all 54
-external strict outputs because the source identity, object geometry, crop, or
-background is substantially redrawn. Quantitatively, the external target-mode RF
-baselines show higher outside-mask change or weaker source preservation than
-DeCE-RF under the same fixed masks. Phrase this as a reduced target-mode RF
-comparison, not a broad claim over all RF baselines.
+Readout: FlowEdit, FlowAlign, and SplitFlow are runnable SD3 target-mode RF
+baselines and frequently form the requested target, but human visual audit
+rejects all 54 external strict outputs because the source identity, object
+geometry, crop, or background is substantially redrawn. Quantitatively, the
+SD3-matched target-mode RF baselines show higher outside-mask change or weaker
+source preservation than DeCE-RF under the same fixed masks. Phrase this as a
+SD3-matched E2-A comparison, not a broad claim over all RF or FLUX baselines.
 
-Artifacts:
+Legacy baseline artifacts, for historical audit only:
 
 ```text
-experiments/baseline_parity_manifest.csv
-experiments/baseline_summary.csv
-experiments/baseline_summary.md
-experiments/baseline_visual_scores_seed10_12.csv
+experiments/archive_legacy_2026-05-11/baseline_parity_manifest.csv
+experiments/archive_legacy_2026-05-11/baseline_summary.csv
+experiments/archive_legacy_2026-05-11/baseline_summary.md
 paper/archive_old_core6_20260602/old_stage2_5_integrity_precheck.md
 ```
 
@@ -253,11 +249,7 @@ Recommended disclosure columns:
 - seed-matching caveat
 - whether the baseline used text-only, automatic masks, manual masks, or same-support masks
 
-LEDITS++ completed baseline artifacts:
-
-```text
-experiments/support_v3_2026-05-11/leditspp_core6_seed10_12_metrics.csv
-experiments/support_v3_2026-05-11/leditspp_core6_seed10_12_metrics.json
-experiments/support_v3_2026-05-11/leditspp_core6_baseline_summary.md
-experiments/support_v3_2026-05-11/visual_gates/leditspp_core6_seed10_12_grid.png
-```
+LEDITS++ status: legacy outputs exist only as ignored/generated review assets
+and are not active strict Core-6 evidence. Do not list LEDITS++ as a completed
+paper-facing baseline unless it is rerun and summarized under the current
+`experiments/support_v3_2026-06-02/` protocol.

@@ -75,7 +75,7 @@ Fixed evaluation masks:
 experiments/support_v3_2026-06-02/eval_masks/
 ```
 
-E2-A reduced RF-native comparison:
+E2-A SD3-matched RF comparison:
 
 ```text
 experiments/support_v3_2026-06-02/e2_reduced_rf_fixed_mask_metrics.csv
@@ -132,7 +132,7 @@ Completed E2-A evidence:
 Native / target-mode RF baselines: FlowEdit, FlowAlign, SplitFlow
 Tasks: strict Core-6
 Seeds: 10, 11, 12
-Status: complete reduced RF-native comparison
+Status: complete SD3-matched RF comparison
 ```
 
 FlowEdit, FlowAlign, and SplitFlow are runnable under the revised strict
@@ -172,6 +172,7 @@ Do not write:
 
 ```text
 DeCE-RF beats all RF baselines.
+DeCE-RF beats FLUX.
 ```
 
 Use this safer wording:

@@ -88,13 +88,13 @@ Do not include `support_v3_fixed` in this main qualitative grid unless the
 layout still fits. Fixed DeCE belongs mainly in the controller ablation figure
 and table.
 
-## E2 RF Baseline Figure
+## E2-A SD3-Matched RF Baseline Figure
 
-Status: reduced target-mode RF comparison is complete for FlowEdit, FlowAlign,
-and SplitFlow. Do not present it as a complete comparison against every RF
-baseline; FireFlow, RF-Solver-Edit, ReFlex, and stable-flow remain in the
-baseline audit because strict target-mode generation is blocked by FLUX.1-dev
-checkpoint access or missing strict adapter output.
+Status: SD3-matched target-mode RF comparison is complete for FlowEdit,
+FlowAlign, and SplitFlow. Do not present it as a complete comparison against
+every RF or FLUX baseline; FireFlow, RF-Solver-Edit, ReFlex, and stable-flow are
+native-backbone contextual rows blocked by FLUX.1-dev checkpoint access or
+missing strict adapter output.
 
 Current E2 audit artifacts:
 
@@ -114,7 +114,7 @@ gated FLUX.1-dev access or adapter gaps; OT-RF / OTIP (`ot_rf_otip`) and DVRF
 (`dvrf`) are planned contextual candidates that still need repo/env/adapter
 validation.
 
-Current reduced figure grids:
+Current SD3-matched figure grids:
 
 ```text
 experiments/support_v3_2026-06-02/visual_audit/e2_flowedit_seed10_grid.png
@@ -122,14 +122,14 @@ experiments/support_v3_2026-06-02/visual_audit/e2_flowedit_seed11_grid.png
 experiments/support_v3_2026-06-02/visual_audit/e2_flowedit_seed12_grid.png
 ```
 
-Figure 4 can now be a compact reduced RF comparison:
+Figure 4 can now be a compact SD3-matched E2-A comparison:
 
 ```text
 Source | FlowEdit | FlowAlign | SplitFlow | DeCE-RF
 ```
 
-Use three to six strict rows depending on space. Label it explicitly as reduced
-target-mode RF comparison, not as a broad RF-baseline victory claim.
+Use three to six strict rows depending on space. Label it explicitly as a
+SD3-matched target-mode RF comparison, not as a broad RF/FLUX victory claim.
 
 Use two or three representative strict examples:
 
@@ -137,8 +137,8 @@ Use two or three representative strict examples:
 Source | external target-mode RF baseline | Direct target | DeCE-RF
 ```
 
-This figure should be compact because the main E2 evidence is the reduced
-target-mode RF table plus the RF baseline-audit table.
+This figure should be compact because the main E2 evidence is the SD3-matched
+Table 2a plus the native-backbone contextual audit/status table.
 
 ## Extension Probe Figure
 
