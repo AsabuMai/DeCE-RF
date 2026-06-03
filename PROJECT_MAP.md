@@ -51,6 +51,7 @@ side branch, not the mainline.
 - `attention_mask.py`, `energies.py`, `schedules.py`, `clip_text_reward.py`:
   support utilities.
 - `scripts/run_wacv_phase1.sh`: paper-facing WACV Phase 1 runner wrapper. Use this first for current paper runs.
+- `scripts/run_wacv_phase1_batch.sh`, `scripts/run_sd3_batch.py`: batch execution path that queues matrix commands and reuses one loaded SD3 pipeline for large runs.
 - `scripts/run_pretty_matrix.sh`: slim Core-6 matrix executor; task and method definitions are sourced from `scripts/core6_tasks.sh` and `scripts/core6_methods.sh`.
 - `scripts/core6_tasks.sh`, `scripts/core6_methods.sh`: paper-facing Core-6 task and method configuration.
 - `scripts/evaluate_paper_metrics.py`: current metric evaluator.
