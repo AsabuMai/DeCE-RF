@@ -1,11 +1,28 @@
+import importlib.util
 import json
 from pathlib import Path
 
 from PIL import Image
 
-from scripts.init_pretty_visual_audit import main as init_pretty_visual_audit_main
-from scripts.init_baseline_parity_manifest import main as init_baseline_parity_manifest_main
 from scripts.evaluate_paper_metrics import evaluate_run, find_run_dirs
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+LEGACY_SCRIPTS = PROJECT_ROOT / "legacy" / "cleanup_20260603" / "scripts"
+
+
+def _load_legacy_main(script_name: str):
+    path = LEGACY_SCRIPTS / script_name
+    spec = importlib.util.spec_from_file_location(path.stem, path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Cannot load legacy script: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.main
+
+
+init_pretty_visual_audit_main = _load_legacy_main("init_pretty_visual_audit.py")
+init_baseline_parity_manifest_main = _load_legacy_main("init_baseline_parity_manifest.py")
 
 
 def test_evaluate_run_uses_failure_annotations(tmp_path: Path):
