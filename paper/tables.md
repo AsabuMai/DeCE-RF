@@ -1,6 +1,6 @@
 # Table Plan
 
-Current source of truth: `paper/wacv_experiment_design.md` for experiment scope and claim boundary, and `paper/results.md` for the current strict Core-6 / E2-A evidence readout. Archived server results are diagnostic only.
+Current source of truth: `paper/wacv_experiment_design.md` for experiment scope and claim boundary, and `paper/results.md` for the current strict Core-6 / E2.2 evidence readout. Archived server results are diagnostic only.
 
 ## Main Comparison
 
@@ -146,7 +146,7 @@ not be cited as active paper evidence unless regenerated and summarized.
 
 Readout: same-support inpainting gives lower outside drift on the backpack case but produces visible fill artifacts around the strap/zipper region, while DeCE-RF removes the target charm but locally smooths the occluded zipper/fabric.
 
-## External Baseline Table
+## E2 Fairness Tables
 
 Baseline gap audit and external-baseline protocol:
 
@@ -156,58 +156,21 @@ experiments/support_v3_2026-06-02/e2_baseline_runnable_validation.csv
 experiments/support_v3_2026-06-02/e2_baseline_audit.md
 ```
 
-Current server check: external baseline source repositories have been downloaded
-under `/workspace/baselines/src`, with pinned clone status in
-`/workspace/baselines/download_status.tsv`. Separate per-baseline environments
-were created under `/workspace/baselines/envs`; after quota pressure, the active
-server keeps the RF-family environments needed for E2 target-mode validation.
-FlowEdit, FlowAlign, and SplitFlow now have revised strict Core-6 target-mode
-generation, fixed-mask metrics, and internal visual audit over 6 tasks x seeds
-10/11/12, so they enter the SD3-matched E2-A comparison. E2-B is now a
-native-backbone contextual RF / FLUX comparison: `rf_solver_edit`, `reflex`,
-`fireflow`, and `stable_flow` are FLUX.1-dev rows blocked by gated checkpoint
-access or adapter gaps; `ot_rf_otip` and `dvrf` are planned entries that still
-need verified repos, environments, smoke tests, and Core-6 adapters. LEDITS++
-has legacy Core-6 artifacts only and must be rerun on the revised strict T2/T5
-task set before paper-facing supplement use.
-
-Downloaded baseline repositories:
+E2 is no longer a flat external-baseline leaderboard. It is a layered fairness
+comparison:
 
 ```text
-FlowEdit
-SplitFlow
-FireFlow
-RF-Solver-Edit
-ReFlex
-FlowAlign
-stable-flow
-ZONE
-instruct-pix2pix
-pix2pix-zero
-MasaCtrl
-prompt-to-prompt
-h-edit
-ledits_pp
+E2.1 backbone calibration
+E2.2 same-backbone SD3 algorithm comparison
+E2.3 native preservation-aware RF comparison
+E2.4 support-matched diagnostic
 ```
 
-Registered but not-yet-downloaded E2-B contextual candidates:
+### Table 2a: Same-Backbone SD3 Algorithm Comparison
 
-```text
-OT-RF / OTIP-style, backbone TBD
-DVRF / Delta Velocity RF, backbone TBD
-```
+This is the main E2 algorithmic table.
 
-Existing baseline artifacts are older core-4 or legacy Core-6 evidence and
-should be reported as availability/qualitative context unless rerun under the
-current revised strict evidence protocol.
-
-Do not use this table to claim that DeCE-RF beats all RF or FLUX baselines.
-Report it as a SD3-matched RF comparison against FlowEdit, FlowAlign, and
-SplitFlow, paired with an E2-B native-backbone contextual status/audit table
-covering FLUX rows and planned RF candidates. The main algorithmic claim comes
-from E2-A, not cross-backbone rows.
-
-SD3-matched E2-A comparison artifacts:
+Current completed artifacts:
 
 ```text
 experiments/support_v3_2026-06-02/e2_strict_rf_baseline_manifest.csv
@@ -217,20 +180,90 @@ experiments/support_v3_2026-06-02/e2_reduced_rf_comparison_summary.csv
 experiments/support_v3_2026-06-02/e2_reduced_rf_comparison_summary.md
 experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.csv
 experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.md
-experiments/support_v3_2026-06-02/visual_audit/e2_flowedit_seed10_grid.png
-experiments/support_v3_2026-06-02/visual_audit/e2_flowedit_seed11_grid.png
-experiments/support_v3_2026-06-02/visual_audit/e2_flowedit_seed12_grid.png
 ```
 
-Readout: FlowEdit, FlowAlign, and SplitFlow are runnable SD3 target-mode RF
-baselines and frequently form the requested target, but human visual audit
-rejects all 54 external strict outputs because the source identity, object
-geometry, crop, or background is substantially redrawn. Quantitatively, the
-SD3-matched target-mode RF baselines show higher outside-mask change or weaker
-source preservation than DeCE-RF under the same fixed masks. Phrase this as a
-SD3-matched E2-A comparison, not a broad claim over all RF or FLUX baselines.
+Rows:
 
-Legacy baseline artifacts, for historical audit only:
+```text
+direct_target-SD3
+FlowEdit-SD3
+FlowAlign-SD3
+SplitFlow-SD3
+Fixed DeCE-SD3, when strict fixed cache is joined
+DeCE-RF-SD3
+```
+
+Optional row only if genuinely same-backbone:
+
+```text
+OT-RF/OTIP-SD3 or RF-Edit-SD3
+```
+
+Required columns:
+
+```text
+method | backbone | input condition | support used for control | edit success |
+preserve fidelity | excess preserve error | leakage/locality | NFE/runtime | caveat
+```
+
+### Table 2b: Calibration And Native Preservation-Aware RF Context
+
+This table has two blocks.
+
+Calibration block:
+
+```text
+SD3 reconstruction/direct-target floors
+FLUX reconstruction/direct-target floors if FLUX access and adapters are valid
+```
+
+Native preservation-aware block:
+
+```text
+RF-Solver-Edit / RF-Edit
+ReFlex
+FireFlow
+stable-flow
+OT-RF / OTIP-style
+DVRF / Delta Velocity RF
+```
+
+Rows that are blocked by FLUX.1-dev access or adapter gaps should remain in the
+status table with exact failure reasons. Do not silently drop them and do not
+replace them with unrelated non-RF baselines.
+
+Caption requirement:
+
+```text
+Backbones and input conditions differ across native rows. This table evaluates
+whether off-the-shelf preservation-aware RF editors solve the localized
+edit-preserve tasks in practice; algorithm-level conclusions are drawn from the
+same-backbone SD3 comparison.
+```
+
+### Table S-E2: Support-Matched Diagnostic
+
+This supplement table answers whether DeCE-RF is only winning because it has a
+support mask.
+
+Rows:
+
+```text
+direct_target + same M_edit diagnostic
+FlowEdit + same M_edit diagnostic if wrapper is stable
+optional native preserve-aware + same M_edit if method supports it
+Fixed DeCE
+DeCE-RF
+```
+
+Use only a binary edit support for baseline diagnostic rows. Do not give baseline
+rows DeCE-RF's `M_core`, `M_contact`, `M_preserve`, feedback weights, or
+projection. Output blending must be labeled as diagnostic, not as a fair main
+baseline.
+
+### Legacy Baseline Artifacts
+
+Legacy baseline artifacts are historical audit material only:
 
 ```text
 experiments/archive_legacy_2026-05-11/baseline_parity_manifest.csv
@@ -239,16 +272,5 @@ experiments/archive_legacy_2026-05-11/baseline_summary.md
 paper/archive_old_core6_20260602/old_stage2_5_integrity_precheck.md
 ```
 
-Recommended disclosure columns:
-
-- runnable status
-- complete rows
-- failed rows and concrete reason
-- model family / backbone
-- seed-matching caveat
-- whether the baseline used text-only, automatic masks, manual masks, or same-support masks
-
-LEDITS++ status: legacy outputs exist only as ignored/generated review assets
-and are not active strict Core-6 evidence. Do not list LEDITS++ as a completed
-paper-facing baseline unless it is rerun and summarized under the current
-`experiments/support_v3_2026-06-02/` protocol.
+Do not use legacy Core-4 or old Core-6 artifacts as active paper evidence unless
+they are rerun under the current strict protocol.

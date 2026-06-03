@@ -246,280 +246,557 @@ Method | Edit success audit | Outside L1 down | Source SSIM up | Locality audit 
 Then add a compact appendix/supplement table with per-task rows. Do not spend
 half a WACV page on a giant per-task table in the main paper.
 
-## Experiment E2: Backbone-Matched And Native-Backbone RF Comparison
+## Experiment E2: Backbone-Controlled And Preservation-Aware RF Comparison
 
 ### Purpose
 
-E2 should answer two related but distinct reviewer questions:
+E2 is redesigned as a layered fairness experiment rather than a flat baseline
+leaderboard. It should answer four reviewer questions:
 
 ```text
-1. Under the same SD3 backbone, does DeCE-RF improve localized edit-preserve
-   control over RF-native editing baselines?
-2. How does DeCE-RF relate to strong native-backbone RF / FLUX editors that use
-   different backbones or editing interfaces?
+1. What part of the result is due to the RF backbone itself?
+2. Under the same SD3 backbone, does DeCE-RF improve localized edit-preserve
+   behavior over RF-native and fidelity-oriented editing baselines?
+3. Do official/native preservation-aware RF editors already solve the same
+   localized edit-preserve tasks in practice, even when they use FLUX or another
+   backbone?
+4. Is DeCE-RF's advantage merely caused by having an edit mask/support input,
+   or by the clean-estimate edit/preserve controller built on top of that
+   support?
 ```
 
-Separate these questions explicitly. SD3 and FLUX are both flow/RF-family
-backbones, but a direct table that treats SD3-DeCE and FLUX baselines as pure
-algorithmic competitors would confound the controller with backbone capacity,
-text encoders, image priors, inversion error, sampler settings, resolution, and
-input interface.
-
-The paper-facing claim should be:
+The central fairness rule is:
 
 ```text
-Backbone-matched SD3 results support the algorithmic contribution: DeCE-RF
-improves localized edit-preserve control under a fixed RF backbone and fixed
-evaluation masks. Native-backbone FLUX/RF results contextualize DeCE-RF against
-strong external editors but are not the main algorithmic win/loss evidence.
+Same-backbone comparison = algorithmic evidence.
+Different-backbone comparison = native implementation / ecosystem context.
 ```
 
-### Internal Structure
+Do not place `DeCE-RF-SD3` and `ReFlex-FLUX`, `RF-Edit-FLUX`, or
+`FlowEdit-FLUX` in a single undifferentiated leaderboard and then claim a pure
+algorithmic win. Backbone differences can change prompt following, reconstruction
+fidelity, inversion error, image priors, resolution, memory use, and preserve
+behavior. Cross-backbone rows are useful, but they must be interpreted as native
+implementation context.
 
-Organize E2 as one experiment with a primary matched comparison, a contextual
-native-backbone comparison, and one optional transfer probe:
+The paper-facing E2 claim should be:
 
 ```text
-E2-A: SD3-matched RF baseline comparison
-E2-B: Native-backbone RF / FLUX contextual comparison
-E2-C: Optional cross-backbone transfer or support-matched fairness probe
+Backbone-controlled SD3 results provide the algorithmic evidence for DeCE-RF;
+native preservation-aware RF / FLUX rows test whether strong off-the-shelf RF
+editors solve the same localized edit-preserve setting, while backbone and input
+condition differences are reported explicitly.
 ```
 
-Main-paper results should keep E2-A and E2-B visually distinct. Use Table 2a for
-backbone-matched SD3 evidence and Table 2b or a clearly separated panel for
-native-backbone contextual evidence. Do not average SD3 and FLUX rows into one
-undifferentiated leaderboard.
+### E2 Structure
 
-### E2-A: SD3-Matched RF Baseline Comparison
+Use four layers:
 
-This is the primary algorithmic comparison. It asks whether DeCE-RF improves the
-localized edit-preserve tradeoff when the backbone and evaluation protocol are
-held fixed.
+```text
+E2.1 Backbone calibration
+E2.2 Same-backbone SD3 algorithm comparison
+E2.3 Native preservation-aware RF comparison
+E2.4 Support-matched diagnostic
+```
 
-Matched conditions:
+Optional extension:
+
+```text
+E2.5 Cross-backbone DeCE-RF transfer probe
+```
+
+E2.5 is useful only if a FLUX version of DeCE-RF is implemented and smoke-tested.
+It should not be allowed to destabilize the main SD3 paper claim.
+
+### E2.1 Backbone Calibration
+
+#### Question
+
+Before comparing methods across SD3 and FLUX, estimate the baseline behavior of
+each backbone on the same Core-6 inputs.
+
+This layer asks:
+
+```text
+How much reconstruction/preservation error does each backbone already have
+before any sophisticated editing method is applied?
+```
+
+#### Methods
+
+Use the simplest two controls per backbone:
+
+| Method family | SD3 row | FLUX row | Role |
+| --- | --- | --- | --- |
+| Source reconstruction / inversion | `base_only` or SD3 reconstruction row | FLUX reconstruction/inversion row if runnable | estimates reconstruction floor |
+| Direct target guidance | `direct_target` | FLUX direct target or method-native target guidance if runnable | estimates naive edit/preserve behavior |
+
+For SD3, the strict E1 cache already provides `base_only` and `direct_target`
+for the canonical Core-6 tasks. For FLUX, this calibration should run only after
+FLUX access and the adapter are validated. If FLUX remains blocked, E2.1 should
+report a status/audit row rather than inventing cross-backbone numbers.
+
+#### Matrix
+
+Minimum calibration:
+
+```text
+6 strict Core-6 tasks x 2 backbones x 2 base methods x 2 seeds = 48 outputs
+seeds: 10, 11
+```
+
+Preferred calibration if FLUX access is stable:
+
+```text
+6 strict Core-6 tasks x 2 backbones x 2 base methods x 3 seeds = 72 outputs
+seeds: 10, 11, 12
+```
+
+Phase 2 can reuse existing SD3 `base_only` and `direct_target` outputs; only the
+FLUX calibration rows would be new generation if FLUX becomes runnable.
+
+#### Metrics
+
+Report a compact calibration table:
+
+| Backbone | Base method | Reconstruction LPIPS down | Reconstruction SSIM up | Direct-target edit up | Direct-target preserve down | NFE | Resolution | Runtime | Memory |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: |
+
+The purpose is not to prove SD3 or FLUX is better. The purpose is to show that
+backbone-dependent reconstruction floors are measured before any cross-backbone
+interpretation.
+
+### E2.2 Same-Backbone SD3 Algorithm Comparison
+
+#### Question
+
+This is the primary algorithmic comparison:
+
+```text
+Under the same SD3 backbone and fixed evaluation masks, does DeCE-RF improve the
+localized edit-preserve tradeoff over RF-native and preservation/fidelity-aware
+controls?
+```
+
+Only this layer should support the main method-level claim.
+
+#### Required Conditions
+
+All rows must use:
 
 ```text
 same backbone: SD3
-same strict Core-6 source images
+same source images
 same source / target prompts
-same max image size and fixed evaluation masks
+same max image size and normalization policy
+same fixed evaluation masks, not each method's own support mask
 same metric implementation
-same number of samples per method
+same seed count per method whenever the method exposes seed control
 same no-cherry-pick qualitative selection policy
 ```
 
-Current completed SD3-matched suite:
+#### Method Rows
+
+Use two groups: existing validated SD3 RF rows, and preservation-aware controls.
+
+| Paper row | Runner / source | Backbone | Input condition | Support condition | Role | Current status |
+| --- | --- | --- | --- | --- | --- | --- |
+| Direct target guidance | `direct_target` | SD3 | source image + source/target prompts | no support | simplest coupled target RF control | complete from E1 strict cache |
+| FlowEdit-SD3 | `flowedit` | SD3 | source image + source/target prompts | no support | RF-native source-to-target editing | complete strict Core-6 seeds 10/11/12 |
+| FlowAlign-SD3 | `flowalign` | SD3 | source image + source/target prompts | no support | RF alignment/editing baseline | complete strict Core-6 seeds 10/11/12 |
+| SplitFlow-SD3 | `splitflow` | SD3 | source image + source/target prompts | no support | flow decomposition/aggregation baseline | complete strict Core-6 seeds 10/11/12 |
+| Fixed DeCE-SD3 | `support_v3_fixed` | SD3 | prompts + operation/relation tokens | operation support, no feedback | isolates fixed decoupled displacement and support geometry | use as E2.2 preservation-control row if strict fixed cache is complete |
+| OT-RF / OTIP-SD3 | `ot_rf_otip_sd3` if verified | SD3 | source image + prompts | no/native support | desired fidelity/transport-aware RF baseline | optional; only if repo/backbone/adapter are verified |
+| RF-Edit-SD3 / RF-Solver-SD3 | `rf_solver_edit_sd3` if portable | SD3 | source image + prompts | no/native support | desired preservation-aware RF baseline | optional; use only if port is real, not FLUX masquerading as SD3 |
+| DeCE-RF-SD3 | `support_v3_controller_rmsgap` | SD3 | prompts + operation/relation tokens | operation support + feedback/projection | full method | complete from E1 strict cache |
+
+Current minimum E2.2 is already strong because `FlowEdit`, `FlowAlign`, and
+`SplitFlow` are complete under the strict SD3 protocol. The preservation-aware
+upgrade should add `Fixed DeCE` as an internal preservation-control row and then
+attempt one true same-backbone external preservation-aware row only if it can be
+verified under SD3. Do not relabel a FLUX-only method as an SD3 baseline.
+
+#### Matrix
+
+Current strict canonical E2.2 readout:
 
 ```text
-6 tasks x 4 methods x 3 seeds = 72 outputs
+6 tasks x 5 core SD3 rows x 3 seeds = 90 analyzed rows
+rows: direct_target, FlowEdit, FlowAlign, SplitFlow, DeCE-RF
 ```
 
-Completed methods:
+Preservation-control upgrade:
 
-| Method | Backbone | Type | Extra support? | Current status |
-| --- | --- | --- | --- | --- |
-| FlowEdit | SD3 | RF-native editing | no | completed on strict Core-6 seeds 10/11/12 |
-| FlowAlign | SD3 | RF-native editing | no | completed on strict Core-6 seeds 10/11/12 |
-| SplitFlow | SD3 | RF-native editing | no | completed on strict Core-6 seeds 10/11/12 |
-| DeCE-RF | SD3 | localized RF controller | operation support | completed on strict Core-6 seeds 10/11/12 |
+```text
++ 6 tasks x Fixed DeCE x 3 seeds = 18 rows
+```
 
-Current E2-A artifacts:
+Optional same-backbone preservation-aware external row:
+
+```text
++ 6 tasks x 1 verified SD3 preservation-aware RF baseline x 2-3 seeds = 12-18 rows
+```
+
+Phase 2 expansion target:
+
+```text
+6 categories x 2 examples x 6 SD3 rows x 3 seeds = 216 rows
+rows: direct_target, FlowEdit, FlowAlign, SplitFlow, Fixed DeCE, DeCE-RF
+optional verified SD3 preserve-aware external baseline: +36 rows
+```
+
+Phase 3 expansion target:
+
+```text
+6 categories x 3 examples x 6 SD3 rows x 3 seeds = 324 rows
+optional verified SD3 preserve-aware external baseline: +54 rows
+```
+
+#### Claim Boundary
+
+Safe E2.2 conclusion:
+
+```text
+Under the same SD3 backbone, same source/target prompts, and fixed evaluation
+masks, DeCE-RF improves localized edit-preserve behavior over RF-native SD3
+editing baselines and fixed decoupled preservation controls.
+```
+
+If no verified external SD3 preservation-aware baseline is available, write:
+
+```text
+Preservation-aware RF methods whose public implementations are FLUX-bound are
+reported in E2.3 native implementation context; the same-backbone algorithmic
+claim is restricted to SD3-runnable baselines and internal preservation controls.
+```
+
+### E2.3 Native Preservation-Aware RF Comparison
+
+#### Question
+
+This layer asks a practical systems question:
+
+```text
+Can strong official/native RF editors, including preservation-aware FLUX methods,
+solve the localized edit-preserve tasks out of the box?
+```
+
+This is not the main algorithmic fairness table. It is a native implementation
+comparison with backbone and input caveats.
+
+#### Candidate Rows
+
+| Baseline slug | Paper-facing label | Native backbone | Preservation mechanism | Input condition | Current status |
+| --- | --- | --- | --- | --- | --- |
+| `rf_solver_edit` | RF-Solver-Edit / RF-Edit | FLUX.1-dev in current public route | RF solver / inversion accuracy + structural preservation | source image + target/edit prompt, method-native | repo/env present; strict run blocked by FLUX.1-dev access |
+| `reflex` | ReFlex | FLUX.1-dev | trajectory/attention or feature adaptation for structure/background preservation | source image + target prompt | repo/env present; help smoke passes; strict run blocked by FLUX.1-dev access |
+| `fireflow` | FireFlow | FLUX.1-dev | RF-flow editing/inversion route | source image + prompts | strict run blocked by FLUX.1-dev access |
+| `stable_flow` | stable-flow | FLUX.1-dev | flow-layer/feature editing route | source image + prompts | adapter pending |
+| `ot_rf_otip` | OT-RF / OTIP-style | SD3/FLUX/TBD after repo verification | optimal transport / inversion fidelity | TBD | registered; repo/env/adapter pending |
+| `dvrf` | DVRF / Delta Velocity RF | TBD | delta-velocity/path-aware RF control | TBD | registered; repo/env/adapter pending |
+| DeCE-RF-SD3 | `support_v3_controller_rmsgap` | SD3 | operation support + clean edit/preserve controller | source image + prompts + operation/relation tokens | complete; contextual anchor only |
+
+#### Matrix
+
+Minimum if one native baseline becomes runnable:
+
+```text
+1 native preservation-aware baseline x 6 strict tasks x 2 seeds = 12 outputs
+```
+
+Preferred compact native comparison:
+
+```text
+2 native preservation-aware baselines x 6 strict tasks x 2 seeds = 24 outputs
+```
+
+Stronger version if FLUX access and adapters are stable:
+
+```text
+2 native preservation-aware baselines x 6 strict tasks x 3 seeds = 36 outputs
+```
+
+Do not expand E2.3 to Phase 2 multi-example breadth until at least one native
+baseline completes the canonical strict Core-6 set. Native rows are expensive to
+set up and are not allowed to replace the same-backbone E2.2 evidence.
+
+#### Table Caption Requirement
+
+Any E2.3 table must say:
+
+```text
+Backbones differ across methods. This native implementation comparison evaluates
+whether off-the-shelf preservation-aware RF editors solve our localized
+edit-preserve tasks in practice; algorithm-level conclusions are drawn from the
+same-backbone SD3 comparison.
+```
+
+### E2.4 Support-Matched Diagnostic
+
+#### Question
+
+This diagnostic answers:
+
+```text
+Is DeCE-RF better only because it receives localization/support information?
+```
+
+Run this as a compact diagnostic, not as a headline external-baseline table.
+
+#### Design
+
+Give selected baselines the same binary edit support `M_edit` when possible, but
+not the full DeCE-RF geometry or controller internals.
+
+Allowed for support-matched diagnostic rows:
+
+```text
+M_edit or binary edit mask
+```
+
+Not allowed for baseline rows:
+
+```text
+M_core
+M_contact
+M_preserve
+adaptive feedback weights
+clean-estimate projection
+operation-conditioned preserve controller
+```
+
+Rows:
+
+| Diagnostic row | Support condition | Role |
+| --- | --- | --- |
+| Direct target + same edit mask | same binary `M_edit`; image/output blending if needed | tests whether target guidance plus localization is enough |
+| FlowEdit + same edit mask | same binary `M_edit`; only if wrapper is stable | tests RF-native baseline under matched locality |
+| Preserve-aware RF + same edit mask | same binary `M_edit`; only if method supports it | optional native/locality diagnostic |
+| Fixed DeCE | full operation support, no feedback | component reference |
+| DeCE-RF | operation support + feedback/projection | full method |
+
+If a baseline does not support masks, output blending may be used only as a
+clearly labeled diagnostic:
+
+```text
+output = M_edit * edited_output + (1 - M_edit) * source_image
+```
+
+Do not present post-hoc blending as a fair main baseline. It can create boundary
+artifacts and gives a different input/processing condition.
+
+#### Matrix
+
+Recommended compact subset:
+
+```text
+3 representative tasks x 1 case x 4-5 diagnostic rows x 2 seeds = 24-30 outputs
+```
+
+Recommended tasks:
+
+```text
+cat_crown
+tshirt_star
+backpack_remove_toy_charm
+```
+
+These cover attached accessory addition, surface decal, and exposed-object
+removal. If recolor fairness becomes reviewer-critical, add `red_chair_blue` as
+a fourth task.
+
+### E2.5 Optional Cross-Backbone Transfer Probe
+
+This is optional and should be attempted only after the SD3 story is stable.
+
+Clean factorial probe:
+
+```text
+3 tasks x 1 case x 2 methods x 2 backbones x 2 seeds = 24 outputs
+methods: direct target, DeCE-RF
+backbones: SD3, FLUX
+```
+
+If DeCE-RF-FLUX is not implemented, do not run this probe. Instead state:
+
+```text
+The current DeCE-RF implementation is SD3-specific. Cross-backbone transfer to
+FLUX requires a separate implementation and validation.
+```
+
+### E2 Metrics And Normalization
+
+All E2 metrics must be computed in image space or backbone-independent feature
+space. Do not use backbone-specific latent norms as primary cross-backbone
+metrics.
+
+Use fixed evaluation masks:
+
+```text
+M_eval_edit
+M_eval_preserve
+```
+
+Every method is evaluated with the same masks. DeCE-RF may use its own support
+for control, and baselines may use no support, but scoring uses fixed external
+evaluation masks.
+
+Metric families:
+
+| Family | Metrics | Notes |
+| --- | --- | --- |
+| Edit success | masked/local CLIP-T, directional CLIP, VQA/binary audit where available | report removal/recolor caveats |
+| Preserve fidelity | out-of-mask LPIPS, DINO distance, SSIM, L1/RMSE | primary preserve evidence |
+| Leakage/locality | outside-mask change energy, boundary leakage, preserve-region drift | shows whether edits leak |
+| Efficiency | NFE, runtime, peak memory, resolution | needed when comparing native systems |
+
+Add a backbone-normalized preservation score for any cross-backbone table:
+
+```text
+Excess Preserve Error(method, backbone)
+= E_pres(method, backbone) - E_pres(reconstruction, backbone)
+```
+
+Use the difference form by default because it has a simple interpretation:
+
+```text
+After subtracting the reconstruction floor of that backbone, how much additional
+preserve-region damage did the editing method introduce?
+```
+
+If ratio form is reported in supplement, define epsilon explicitly:
+
+```text
+Relative Preserve Drift = E_pres(method, backbone) / (E_pres(reconstruction, backbone) + epsilon)
+```
+
+### E2 Table Layout
+
+Use explicit columns for backbone and input condition in every E2 table.
+
+Main same-backbone table:
+
+```text
+Table 2a: Same-backbone SD3 algorithm comparison
+```
+
+Columns:
+
+| Column | Purpose |
+| --- | --- |
+| Method | paper-facing row name |
+| Backbone | SD3 for all Table 2a rows |
+| Input condition | prompts only, prompts + operation/relation, support-matched, etc. |
+| Support used for control | none, binary edit support, operation support, native support |
+| Edit success | local/masked edit score or audit |
+| Preserve fidelity | out-of-mask LPIPS/DINO/SSIM/L1 |
+| Excess preserve error | subtracts SD3 reconstruction floor |
+| Leakage/locality | outside-mask drift or boundary leakage |
+| NFE/runtime | efficiency context |
+
+Native implementation table:
+
+```text
+Table 2b: Native preservation-aware RF implementation comparison
+```
+
+Columns:
+
+| Column | Purpose |
+| --- | --- |
+| Method | native baseline or DeCE-RF contextual anchor |
+| Native backbone | SD3, FLUX.1-dev, FLUX Kontext, TBD |
+| Input condition | source/target prompts, image+instruction, operation labels, etc. |
+| Preservation mechanism | solver/inversion, feature injection, OT/fidelity, DeCE support/controller |
+| Runnable status | complete, blocked, pending adapter |
+| Edit / preserve / leakage metrics | only if strict generation completed |
+| Caveat | gated checkpoint, adapter gap, seed mismatch, interface mismatch |
+
+Support-matched diagnostic table:
+
+```text
+Table S-E2: Support-matched diagnostic
+```
+
+This table should be supplement or a compact subtable. It separates localization
+input from DeCE-RF's controller.
+
+### E2 Figure Layout
+
+Figure 4 should remain compact. Use two or three representative tasks and label
+backbones in method names.
+
+Possible columns:
+
+```text
+Source | FlowEdit-SD3 | preservation-aware native RF row if runnable | Fixed DeCE | DeCE-RF
+```
+
+If native rows are blocked, use:
+
+```text
+Source | FlowEdit-SD3 | FlowAlign-SD3 or SplitFlow-SD3 | Fixed DeCE | DeCE-RF
+```
+
+Caption requirement:
+
+```text
+Backbone is shown in each method label. Same-backbone SD3 rows support the
+algorithmic comparison; native-backbone rows, when included, are contextual.
+```
+
+### Current Artifact Mapping
+
+Current completed E2 evidence:
 
 ```text
 outputs/e2_rf_comparison/
-experiments/support_v3_2026-06-02/e2_reduced_rf_comparison_summary.csv
+experiments/support_v3_2026-06-02/e2_strict_rf_baseline_manifest.csv
+experiments/support_v3_2026-06-02/e2_reduced_rf_fixed_mask_metrics.csv
 experiments/support_v3_2026-06-02/e2_reduced_rf_comparison_summary.md
-experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.csv
 experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.md
 ```
 
-Safe E2-A conclusion:
+These artifacts belong to E2.2 same-backbone SD3 comparison. The old label
+`reduced_rf_comparison` should be interpreted as the completed strict SD3 RF
+comparison cache, not as a reduced or weaker experimental design.
+
+Current native-baseline state:
+
+```text
+RF-Solver-Edit / ReFlex / FireFlow / stable-flow: FLUX.1-dev access or adapter blocked
+OT-RF / OTIP and DVRF: registered planned entries, repo/env/adapter pending
+```
+
+Until one native method becomes runnable, E2.3 is a status/audit table rather
+than a quantitative claim.
+
+### E2 Wording Rules
+
+Allowed:
 
 ```text
 Under the same SD3 backbone and fixed evaluation masks, DeCE-RF improves the
-localized edit-preserve tradeoff over SD3 RF-native baselines.
-```
-
-Do not write this as evidence that DeCE-RF beats every RF method or every FLUX
-editor.
-
-### E2-B: Native-Backbone RF / FLUX Contextual Comparison
-
-This is a contextual comparison, not the main algorithmic control. It answers
-whether strong method-native RF / FLUX editors already solve the same localized
-edit-preserve setting in practice.
-
-Candidate rows:
-
-| Baseline slug | Paper-facing candidate | Native backbone | Type | Input interface | Current baseline status |
-| --- | --- | --- | --- | --- | --- |
-| `rf_solver_edit` | RF-Solver-Edit / RF-Edit | FLUX.1-dev | fidelity-aware RF edit | method-native image edit | registered; repo/env present; strict run currently blocked by FLUX.1-dev access |
-| `reflex` | ReFlex | FLUX.1-dev | RF/FLUX trajectory-attention edit | source image + prompt interface | registered; repo/env present; help smoke passes; strict run currently blocked by FLUX.1-dev access |
-| `stable_flow` | stable-flow | FLUX.1-dev | RF-flow editing | source/target prompt interface | registered; adapter pending |
-| `fireflow` | FireFlow | FLUX.1-dev | RF-flow editing | source/target prompt interface | registered; strict run blocked by FLUX.1-dev access |
-| `ot_rf_otip` | OT-RF / OTIP-style | TBD | transport/fidelity-aware RF candidate | TBD | registered; repo/env/adapter pending |
-| `dvrf` | DVRF / Delta Velocity RF | TBD | delta-velocity/path-aware RF candidate | TBD | registered; repo/env/adapter pending |
-
-Minimum acceptable E2-B if a native-backbone RF/FLUX baseline becomes runnable:
-
-```text
-1 native-backbone RF/FLUX baseline x 6 tasks x 3 seeds = 18 contextual outputs
-```
-
-Resource-saving fallback if compute is tight:
-
-```text
-1 native-backbone RF/FLUX baseline x 6 tasks x 2 seeds = 12 contextual outputs
-```
-
-Preferred stronger E2-B:
-
-```text
-2 native-backbone RF/FLUX baselines x 6 tasks x 3 seeds = 36 contextual outputs
-```
-
-Use the same strict Core-6 source images, prompts/instructions as closely as the
-method interface permits, fixed evaluation masks, metric code, and visual-audit
-rubric. Do not require same seed across SD3 and FLUX because the random seed is
-not a comparable control across different pipelines. Use the same number of
-samples per method and report mean +/- std.
-
-Current audit caveat: RF-Solver-Edit (`rf_solver_edit`), ReFlex (`reflex`),
-FireFlow (`fireflow`), and stable-flow (`stable_flow`) are FLUX.1-dev based rows
-whose strict runs are blocked by gated checkpoint access or adapter gaps.
-OT-RF / OTIP (`ot_rf_otip`) and DVRF (`dvrf`) are registered as planned E2-B
-candidates but still need exact repo verification, environment creation, smoke
-testing, and Core-6 adapters. If no native-backbone baseline becomes runnable,
-report the blocker explicitly in the audit table instead of claiming superiority
-over unrunnable methods.
-
-Safe E2-B conclusion:
-
-```text
-Native FLUX/RF editors provide strong contextual baselines, but because they use
-different backbones and often different interfaces, we treat them as contextual
-comparisons rather than direct algorithmic controls.
-```
-
-### E2-C: Optional Cross-Backbone Transfer Or Support-Matched Probe
-
-The strongest optional extension is to port DeCE-RF to FLUX and report relative
-improvement over same-backbone controls:
-
-```text
-SD3:  Direct target / FlowEdit / DeCE-RF
-FLUX: Direct target / FlowEdit or RF-Edit / DeCE-RF-FLUX
-```
-
-If this is not feasible, keep the limitation explicit:
-
-```text
-The current DeCE-RF implementation is SD3-specific; FLUX transfer requires a
-separate implementation and validation.
-```
-
-A smaller optional fairness probe can test whether baselines benefit from the
-same locality information:
-
-| Method | Support condition | Role |
-| --- | --- | --- |
-| Direct target + same M_edit | fixed DeCE/support mask | checks whether target guidance alone benefits from the same locality |
-| FlowEdit + same M_edit | fixed DeCE/support mask if implementable | checks RF-native baseline under matched locality |
-| Native RF/FLUX baseline + same M_edit | fixed DeCE/support mask if implementable | checks whether native editors still lack edit/preserve decomposition |
-| Fixed DeCE | operation support, no feedback | component reference |
-| DeCE-RF | operation support + feedback | full method |
-
-This is optional. It should not replace E2-A or E2-B.
-
-### Table Layout
-
-Use separated table labels:
-
-```text
-Table 2a: SD3-matched RF comparison
-Table 2b: Native-backbone RF / FLUX contextual comparison
-```
-
-Recommended columns for Table 2a:
-
-| Column | Purpose |
-| --- | --- |
-| Method | baseline or proposed method |
-| Backbone | fixed to SD3 |
-| Type | RF target guidance / RF-native editing / localized RF controller |
-| Extra support? | no, native, same fixed support, or operation support |
-| Edit success | masked/local CLIP delta or visual audit success |
-| Preserve fidelity | outside-mask LPIPS/SSIM/DINO/source where available |
-| Leakage/locality | outside-mask L1 or drift energy |
-
-Recommended columns for Table 2b:
-
-| Column | Purpose |
-| --- | --- |
-| Method | native-backbone baseline or DeCE-RF context row |
-| Native backbone | SD3, FLUX.1-dev, FLUX Kontext, or TBD |
-| Input interface | source/target prompts, image+instruction, method-native edit prompt |
-| Extra support? | no, operation support, or method-native |
-| Runnable status | complete, blocked, pending adapter |
-| Caveat | gated checkpoint, API/native interface, or adapter limitation |
-
-A minimal main-paper table can aggregate over tasks and seeds, with per-task
-breakdowns in supplement. Do not collapse edit success and preservation into a
-single composite score.
-
-### Updated Matrix Options
-
-Current completed E2-A:
-
-```text
-6 tasks x 4 SD3 methods x 3 seeds = 72 outputs
-```
-
-Minimum upgraded E2:
-
-```text
-E2-A completed 72 SD3-matched outputs
-+ E2-B one native-backbone RF/FLUX baseline x 6 tasks x 3 seeds = 18 contextual outputs
-= 90 E2 outputs total
-```
-
-Stronger upgraded E2:
-
-```text
-E2-A completed 72 SD3-matched outputs
-+ E2-B two native-backbone RF/FLUX baselines x 6 tasks x 3 seeds = 36 contextual outputs
-= 108 E2 outputs total
-```
-
-If E2-C is added, keep it compact and clearly mark it as optional transfer or
-fairness evidence rather than a headline baseline table.
-
-### Wording Rules
-
-Use these safe formulations:
-
-```text
-Backbone-matched SD3 results support the algorithmic contribution; native-backbone
-FLUX/RF results contextualize DeCE-RF against strong external editors.
+localized edit-preserve tradeoff over RF-native SD3 baselines.
 ```
 
 ```text
-Under the same SD3 backbone and fixed evaluation masks, DeCE-RF improves
-localized edit-preserve control over RF-native baselines.
+Native preservation-aware RF editors are reported as implementation-context
+baselines because their public routes use different backbones or interfaces.
 ```
 
 ```text
-Native FLUX-based editors are strong contextual baselines and may achieve higher
-absolute perceptual quality due to backbone and interface differences; we do not
-treat those rows as pure algorithmic controls.
+Excess preserve error normalizes preserve-region damage by each backbone's
+reconstruction floor.
 ```
 
-Avoid these unsafe formulations:
+Avoid:
 
 ```text
 DeCE-RF beats FLUX.
-DeCE-RF beats all RF editing methods.
-SD3-DeCE is directly superior to FLUX-based RF editors.
+DeCE-RF beats all RF editors.
+SD3-DeCE is directly superior to ReFlex-FLUX or RF-Edit-FLUX as an algorithm.
+Support-matched blending is a fair main baseline.
 ```
 
 ## Experiment E3: Support Geometry Ablation
@@ -725,8 +1002,8 @@ for more:
 | `h_edit_r_p2p` | H-Edit / P2P-style | diffusion bridge / Prompt-to-Prompt-style editing | source image + source/target prompts, no DeCE support mask | representative attention/path editing comparator |
 
 Do not add MasaCtrl, ZONE, Pix2Pix-Zero, Prompt-to-Prompt, LEDITS++, or
-same-support inpainting to the main plan unless time remains after E2-B is
-settled. Those methods can stay in the audit registry as transparency rows.
+same-support inpainting to the main E2 plan. Add them only after the layered RF
+fairness evidence is stable, and keep them as supplement/transparency rows.
 
 ### Supplement Matrix
 
@@ -771,8 +1048,8 @@ the same information.
 ## Phased Experiment Execution Plan
 
 Run the experiments as a three-stage decision funnel. Do not start with the
-900-output plan. First test whether the method has enough signal to justify the
-larger runs.
+full Phase 2/3 cache. First test whether the method has enough signal to justify
+the larger runs, then add fairness controls, then expand breadth.
 
 ### Phase 1: Minimum Sanity Check
 
@@ -782,74 +1059,64 @@ days on full evidence generation.
 | Experiment | Matrix | Outputs |
 | --- | --- | ---: |
 | E1 main internal benchmark | 6 categories x 1 example x 4 methods x 3 seeds | 72 |
-| E2-A SD3-matched compact baselines | 6 categories x 1 example x 3 SD3 RF baselines x 2 seeds | 36 |
+| E2.2 same-backbone SD3 RF cache | completed strict FlowEdit/FlowAlign/SplitFlow + DeCE-RF rows; reuse, do not rerun | 72 analyzed rows |
 | E4 controller variants | 6 categories x 1 example x 5 variants x 2 seeds | 60 |
 
 Total:
 
 ```text
-about 168 output images, rounded to about 170
+about 204 analyzed/generated rows, with E2.2 mostly reused from completed cache
 ```
 
-Runtime estimate:
+If Phase 1 is being rerun on a new server, do not rerun all E2.2 baselines by
+default. First verify the current environment with DeCE-RF migration checks and
+reuse the completed E2.2 SD3 artifacts unless prompts, image normalization, or
+metric code changed.
 
-```text
-170 outputs x 2 min/output = 340 min = about 5.7 hours pure generation
-half-day wall-clock target with queueing, metrics, and visual checks
-```
+Phase 1 decision gate:
 
-Phase 1 intentionally omits full E3 and E5. Support/failure evidence is not
-worth expanding until the main effect, RF-baseline comparison, and controller
-signal are plausible.
-
-Phase 1 Go criteria:
-
-| Gate | Pass signal |
+| Question | Go signal |
 | --- | --- |
-| E1 edit signal | DeCE-RF has clear visual edit success on at least 4/6 canonical tasks |
-| E1 preservation | DeCE-RF improves outside-mask drift or visual preservation over direct target on most tasks |
-| E2 RF comparison | at least one external RF baseline is runnable under documented conditions, or the table is explicitly framed as a baseline audit/reduced comparison |
-| E4 controller | full DeCE-RF shows a plausible Pareto or trajectory diagnostic benefit beyond fixed/controller variants |
-| artifacts | each kept run has result image, stats, metadata, and command record |
-
-No-Go criteria:
-
-```text
-DeCE-RF fails the requested edit on 3+ of 6 tasks;
-direct target is consistently better with no preservation penalty;
-RF baselines already solve locality under the same inputs;
-controller variants show no interpretable benefit and no stable diagnostics.
-```
-
-If Phase 1 is No-Go, stop expansion and revise method/support/target formation
-instead of generating more examples.
+| E1 main effect | DeCE-RF remains visually usable on all strict Core-6 tasks |
+| E2.2 SD3 comparison | completed SD3 RF rows remain valid under current fixed masks/metrics |
+| E4 controller | fixed-vs-feedback evidence is at least plausible enough to justify Pareto/stress runs |
+| Engineering | batch runner and environment produce deterministic artifacts with command/stats/metadata files |
 
 ### Phase 2: Recommended WACV Working Set
 
-Purpose: turn the sanity signal into a reviewer-defensible evidence base. This
-is the preferred target before writing final experiment results.
+Purpose: turn the sanity signal into a reviewer-defensible evidence base while
+making the E2 fairness structure explicit. Phase 2 should not merely add more
+baseline names; it should add the missing calibration, preservation-aware, and
+support-matched controls that make the comparison hard to attack.
 
 | Experiment | Matrix | Outputs |
 | --- | --- | ---: |
-| E1 main benchmark | 6 categories x 3 examples x 4 methods x 3 seeds | 216 |
-| E2-A SD3-matched RF expansion | 6 categories x 2 examples x 3 completed SD3 RF baselines x 3 seeds | 108 |
-| E2-B native-backbone contextual rows | 6 categories x 2 examples x 1-2 runnable contextual baselines x 3 seeds | 36-72 |
-| E3 support ablation | 6 categories x 2 examples x 5 support variants x 2 seeds | 120 |
+| E1 main benchmark | 6 categories x 3 examples x 4 internal methods x 3 seeds | 216 |
+| E2.1 backbone calibration | 6 canonical tasks x 2 backbones x 2 base methods x 2 seeds | 48 |
+| E2.2 same-backbone SD3 algorithm comparison | 6 categories x 2 examples x 6 SD3 rows x 3 seeds | 216 |
+| E2.2 optional verified SD3 preserve-aware external row | 6 categories x 2 examples x 1 row x 3 seeds | +36 |
+| E2.3 native preservation-aware RF comparison | 6 canonical tasks x 1-2 native rows x 2 seeds | 12-24 |
+| E2.4 support-matched diagnostic | 3 representative tasks x 4-5 rows x 2 seeds | 24-30 |
+| E3 support geometry ablation | 6 categories x 2 examples x 5 support variants x 2 seeds | 120 |
 | E4 controller ablation/stress | 6 categories x 2 examples x 5 controller variants x 2 seeds | 120 |
 | E5 extension/failure examples | selected probes | 30 |
 
-Total:
+Phase 2 total target:
 
 ```text
-about 630-666 output images, depending on whether one or two E2-B contextual
-baselines become runnable
+about 786-804 analyzed/generated rows without optional SD3 preserve-aware external row
+about 822-840 rows if one verified SD3 preserve-aware external row is added
 ```
+
+If FLUX access remains blocked, E2.1 FLUX rows and E2.3 native rows become
+status/audit rows rather than generated outputs. In that case, do not replace
+them with unrelated non-RF baselines; keep the fairness limitation explicit.
 
 Runtime estimate:
 
 ```text
-630-666 outputs x 2 min/output = about 21-22 hours pure generation
-2-3 days realistic wall-clock with metrics, failed reruns, grids, and audits
+~800 outputs x 2 min/output = about 26-27 hours pure generation
+3-4 days realistic wall-clock with metrics, failed reruns, grids, and audits
 ```
 
 Phase 2 Go criteria:
@@ -857,7 +1124,10 @@ Phase 2 Go criteria:
 | Gate | Pass signal |
 | --- | --- |
 | E1 breadth | the positive pattern remains across multiple examples per category |
-| E2 fairness | RF baselines are run or explicitly audited with backbone/input caveats |
+| E2.1 calibration | reconstruction/direct-target floors are measured or blocked status is recorded for each backbone |
+| E2.2 same-backbone | SD3 comparison includes RF-native rows plus a preservation-control row under fixed masks |
+| E2.3 native preservation-aware | at least one native RF row is complete, or blockers are documented as Table 2b status rows |
+| E2.4 support diagnostic | support-matched rows show whether localization alone explains the gain |
 | E3 support | frozen support variants explain edit/preserve outcomes without per-case tuning |
 | E4 Pareto | DeCE-RF improves or stabilizes the edit-preserve frontier |
 | E5 boundary | failures can be categorized as scope limits rather than unexplained collapse |
@@ -867,26 +1137,33 @@ This is the target execution budget for the first serious WACV draft.
 ### Phase 3: WACV Robustness Completion
 
 Purpose: only after Phase 1 and Phase 2 look good, expand to a stronger
-WACV-ready robustness cache.
+WACV-ready robustness cache. Phase 3 should increase breadth; it should not
+change the E2 logic or turn cross-backbone rows into algorithmic evidence.
 
 | Experiment | Matrix | Outputs |
 | --- | --- | ---: |
-| E1 main benchmark | 6 categories x 5 examples x 4 methods x 3 seeds | 360 |
-| E2-A SD3-matched RF expansion | 6 categories x 3 examples x 3 completed SD3 RF baselines x 3 seeds | 162 |
-| E2-B native-backbone contextual rows | 6 categories x 3 examples x 1-2 runnable contextual baselines x 3 seeds | 54-108 |
+| E1 main benchmark | 6 categories x 5 examples x 4 internal methods x 3 seeds | 360 |
+| E2.1 backbone calibration | 6 canonical tasks x 2 backbones x 2 base methods x 3 seeds | 72 |
+| E2.2 same-backbone SD3 algorithm comparison | 6 categories x 3 examples x 6 SD3 rows x 3 seeds | 324 |
+| E2.2 optional verified SD3 preserve-aware external row | 6 categories x 3 examples x 1 row x 3 seeds | +54 |
+| E2.3 native preservation-aware RF comparison | 6 categories x 2 examples x 2-3 native rows x 2 seeds | 48-72 |
+| E2.4 support-matched diagnostic | 3 categories x 2 examples x 4-5 rows x 2 seeds | 48-60 |
 | E3 support ablation | 6 categories x 3 examples x 5 support variants x 2 seeds | 180 |
 | E4 controller ablation/stress | 6 categories x 3 examples x 5 controller variants x 2 seeds | 180 |
 | E5 extension/failure examples | selected probes | 30-50 |
 
-Total:
+Phase 3 total target:
 
 ```text
-about 966-1040 output images if E2-B generation runs; about 912-932 without E2-B generation
+about 1242-1298 rows without optional SD3 preserve-aware external row
+about 1296-1352 rows if one verified SD3 preserve-aware external row is added
 ```
 
-Use Phase 3 to fill supplement tables, full seed grids, support-mask audits,
-and additional failure taxonomy examples. Do not run Phase 3 merely because it
-is listed here; run it only if Phase 2 supports the paper claim.
+Use Phase 3 to complete supplement grids, full per-task tables, robustness
+audits, support-matched diagnostics, and any native E2.3 contextual rows that
+became runnable after Phase 2. Do not run Phase 3 merely because it is listed
+here; run it only if Phase 2 supports the paper claim and the remaining risk is
+sample breadth rather than method correctness.
 
 ## Main-Paper Figure Budget
 
@@ -899,9 +1176,9 @@ an algorithms paper.
 | Figure 1 | teaser: 2 examples, Source/Target/Direct/Generic/DeCE-RF | state the problem and result |
 | Figure 2 | method overview with clean-estimate decomposition, support, feedback | explain method |
 | Figure 3 | E1 Core-6 qualitative grid | show task diversity |
-| Figure 4 | E2-A SD3-matched qualitative comparison | Table 2a visual companion; E2-B contextual rows only if clearly separated |
+| Figure 4 | E2 fairness comparison: same-backbone SD3 rows, plus one native row only if clearly labeled | visualize RF alternatives without hiding backbone differences |
 | Figure 5 | E4 Pareto + timestep diagnostics | prove feedback behavior |
-| Figure 6 | E5 extension + failure cases, optional if space permits | mark scope boundary |
+| Figure 6 | E5 extension + failure cases, optional | mark scope boundary |
 
 Do not add more main-paper grids unless one of these six figures fails to answer
 its reviewer question.
@@ -913,7 +1190,7 @@ Approximate main-paper image-cell budget:
 | Figure 1 teaser | about 10 |
 | Figure 2 method overview | 0 result cells |
 | Figure 3 E1 qualitative grid | about 24-30 |
-| Figure 4 RF baseline comparison | about 15 |
+| Figure 4 E2 fairness comparison | about 12-18 |
 | Figure 5 Pareto/diagnostics | 0 result cells |
 | Figure 6 boundary/extension | about 12-18 |
 
@@ -925,19 +1202,37 @@ complete: 60-75 result image cells
 ```
 
 Supplement can contain 150-300 image cells: full Core-6 grids, all seeds,
-support masks, RF baseline examples, Pareto sweeps, and failure taxonomy. The
-main paper must still be self-contained without the supplement.
+support masks, RF baseline examples, calibration rows, support-matched
+diagnostics, Pareto sweeps, and failure taxonomy. The main paper must still be
+self-contained without the supplement.
 
 ## Main-Paper Table Budget
 
-Use three quantitative tables plus one compact contextual audit table by default:
+Use one main E2 algorithmic table plus one compact native/status table by
+default. If space is tight, the native/status table can be a subtable within
+Table 2, but the rows must remain visually separated.
 
 | Table | Content | Job |
 | --- | --- | --- |
 | Table 1 | E1 main edit/preserve/leakage metrics | headline quantitative evidence |
-| Table 2a | E2-A SD3-matched RF baseline comparison | answer matched-backbone alternatives question |
-| Table 2b | E2-B native-backbone contextual audit/status | disclose cross-backbone context without turning it into the main claim |
+| Table 2a | E2.2 same-backbone SD3 algorithm comparison | primary RF algorithmic evidence |
+| Table 2b | E2.1/E2.3 calibration and native preservation-aware status/metrics | disclose backbone floors and cross-backbone context |
 | Table 3 | E3+E4 component ablation | support geometry and controller evidence |
+
+Supplement tables:
+
+| Table | Content | Job |
+| --- | --- | --- |
+| Table S-E2-cal | full E2.1 backbone calibration | reconstruction/direct-target floors, NFE, runtime, memory |
+| Table S-E2-native | full E2.3 native preservation-aware RF comparison | native method status, metrics if complete, blockers if not |
+| Table S-E2-support | E2.4 support-matched diagnostic | separates localization input from DeCE-RF controller |
+
+Required E2 columns:
+
+```text
+method | backbone | input condition | support used for control | edit success |
+preserve fidelity | excess preserve error | leakage/locality | NFE/runtime | caveat
+```
 
 If space allows, split Table 3 into separate support and controller tables. If
 space is tight, move detailed per-task rows and full ablation grids to the
@@ -950,7 +1245,7 @@ supplement.
 Run Phase 1 in this order:
 
 ```text
-E1 internal main effect -> E2 compact RF baselines -> E4 controller variants
+E1 internal main effect -> reuse completed E2.2 SD3 cache -> E4 controller variants
 -> fixed-mask metrics -> quick visual audit -> Go/No-Go decision
 ```
 
@@ -967,45 +1262,31 @@ SKIP_EXISTING=1 \
 bash scripts/run_pretty_matrix.sh
 ```
 
-`cat_crown` should be run as a T1 teaser/supplement example, not as a seventh
-canonical E1 row unless the budget explicitly allows an expanded T1 category.
-If `bowl_apple_inside` or `pillow_vertical_fabric_strip` is not implemented in time,
-label the run as incomplete Core-6 rather than silently replacing T2/T5 with a
-different operation.
-
-Legacy old-category runs live under `paper/archive_old_core6_20260602/` and
-should not appear in active reproduction commands.
-
 Expected output count:
 
 ```text
 6 task instances x 4 methods x 3 seeds = 72
-
-Optional expanded T1 teaser/supplement run:
-
-7 task instances x 4 methods x 3 seeds = 84
 ```
 
-#### Phase 1 E2-A: Completed SD3-Matched RF Baselines
+Legacy old-category runs live under `paper/archive_old_core6_20260602/` and
+should not appear in active reproduction commands.
 
-Status: the revised strict E2-A cache is complete. Do not rerun this block just
-because the Phase 1 run order still lists it; reuse the validated artifacts
-unless prompts, image normalization, or metric code change.
+#### Phase 1 E2.2: Reuse Completed Same-Backbone SD3 Cache
 
-Completed E2-A rows:
+Status: the strict same-backbone SD3 RF cache is complete. Do not rerun this
+block unless prompts, image normalization, or metric code change.
+
+Completed rows:
 
 ```text
-FlowEdit
-FlowAlign
-SplitFlow
-DeCE-RF
+FlowEdit-SD3
+FlowAlign-SD3
+SplitFlow-SD3
+DeCE-RF-SD3
 ```
 
-Completed matrix:
-
-```text
-6 strict Core-6 tasks x 4 SD3 methods x seeds 10/11/12 = 72 outputs
-```
+Join these with E1 `direct_target` and, when needed, `support_v3_fixed` for the
+same-backbone preservation-control readout.
 
 Artifacts:
 
@@ -1016,13 +1297,6 @@ experiments/support_v3_2026-06-02/e2_reduced_rf_fixed_mask_metrics.csv
 experiments/support_v3_2026-06-02/e2_reduced_rf_comparison_summary.md
 experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.md
 ```
-
-Direct target guidance is reused from E1 as the simplest internal RF control,
-but it is not counted as one of the three external SD3 RF baseline rows.
-
-E2-B native-backbone methods remain separate contextual rows. RF-Solver-Edit,
-ReFlex, FireFlow, stable-flow, OT-RF/OTIP, and DVRF must not be moved into
-E2-A unless they are ported to a matched SD3 protocol.
 
 #### Phase 1 E4: Controller Variants
 
@@ -1043,9 +1317,9 @@ Expected output count:
 ```
 
 If these five variants are too redundant after inspection, keep
-`support_v3_fixed`, `support_v3_controller_rmsgap`, and the two most
-diagnostic controller alternatives, then reserve full edit-strength/support
-perturbation sweeps for Phase 2.
+`support_v3_fixed`, `support_v3_controller_rmsgap`, and the two most diagnostic
+controller alternatives, then reserve full edit-strength/support perturbation
+sweeps for Phase 2.
 
 #### Phase 1 Evaluation
 
@@ -1056,8 +1330,8 @@ python scripts/evaluate_paper_metrics.py
 python scripts/make_paper_grids.py
 ```
 
-Use `SKIP_EXISTING=1` when reusing completed runs, but record that choice in
-the experiment log. Phase 1 is a Go/No-Go gate, not final paper evidence.
+Use `SKIP_EXISTING=1` when reusing completed runs, but record that choice in the
+experiment log. Phase 1 is a Go/No-Go gate, not final paper evidence.
 
 ### Phase 2 Run Order: Recommended WACV Working Set
 
@@ -1071,7 +1345,7 @@ Expand each of the six categories to three source examples:
 6 categories x 3 examples x 4 methods x 3 seeds = 216 outputs
 ```
 
-Keep the same four methods:
+Keep the same four internal methods:
 
 ```text
 base_only
@@ -1080,44 +1354,97 @@ adaptive_full_generic_support
 support_v3_controller_rmsgap
 ```
 
-#### Phase 2 E2 Expansion: SD3-Matched Plus Native-Backbone Context
+#### Phase 2 E2.1 Backbone Calibration
 
-Keep E2 split into two non-averaged blocks.
-
-E2-A expands only the already validated SD3-matched baseline set to two source
-examples per category:
-
-```text
-6 categories x 2 examples x 3 SD3 RF baselines x 3 seeds = 108 outputs
-```
-
-E2-A methods:
+Run only after the target backbone adapter is validated. SD3 calibration rows
+can reuse E1 `base_only` and `direct_target`; FLUX rows are new only if FLUX
+access is available.
 
 ```text
-FlowEdit
-FlowAlign
-SplitFlow
+6 canonical tasks x 2 backbones x 2 base methods x 2 seeds = 48 outputs
 ```
 
-DeCE-RF rows come from the matching E1 expansion and are joined during E2-A
-analysis. Do not add new SD3 methods unless a reviewer-critical gap remains.
+If FLUX is blocked, write the blocker into Table 2b and proceed with same-
+backbone SD3 E2.2. Do not replace FLUX calibration with unrelated diffusion
+baselines.
 
-E2-B is contextual and should run only after a native-backbone method is truly
-runnable under the strict Core-6 interface:
+#### Phase 2 E2.2 Same-Backbone SD3 Expansion
+
+Expand the validated SD3 RF comparison to two source examples per category:
 
 ```text
-1-2 native-backbone contextual baselines x 6 categories x 2 examples x 3 seeds
-= 36-72 outputs
+6 categories x 2 examples x 6 SD3 rows x 3 seeds = 216 rows
 ```
 
-E2-B candidates:
+Rows:
 
 ```text
-rf_solver_edit, reflex, fireflow, stable_flow, ot_rf_otip, dvrf
+direct_target
+FlowEdit-SD3
+FlowAlign-SD3
+SplitFlow-SD3
+Fixed DeCE-SD3
+DeCE-RF-SD3
 ```
 
-If E2-B remains blocked by FLUX access or adapter gaps, keep it as Table 2b
-status/audit evidence instead of adding weak non-RF baselines to E2.
+Optional addition only if real same-backbone support exists:
+
+```text
+OT-RF/OTIP-SD3 or RF-Edit-SD3: +36 rows
+```
+
+Do not move `rf_solver_edit`, `reflex`, `fireflow`, or `stable_flow` into this
+layer unless they are genuinely ported to the matched SD3 protocol.
+
+#### Phase 2 E2.3 Native Preservation-Aware RF Rows
+
+Run after a native method passes strict Core-6 smoke and access checks:
+
+```text
+6 canonical tasks x 1-2 native rows x 2 seeds = 12-24 outputs
+```
+
+Candidate rows:
+
+```text
+rf_solver_edit
+reflex
+fireflow
+stable_flow
+ot_rf_otip
+dvrf
+```
+
+If all remain blocked, Table 2b should be a status/audit table with exact
+failure reasons.
+
+#### Phase 2 E2.4 Support-Matched Diagnostic
+
+Run a compact diagnostic:
+
+```text
+3 representative tasks x 4-5 rows x 2 seeds = 24-30 outputs
+```
+
+Recommended tasks:
+
+```text
+cat_crown
+tshirt_star
+backpack_remove_toy_charm
+```
+
+Rows:
+
+```text
+direct_target + same M_edit diagnostic
+FlowEdit + same M_edit diagnostic if wrapper is stable
+Fixed DeCE
+DeCE-RF
+optional native preserve-aware + same M_edit if method supports it
+```
+
+Keep output blending clearly labeled as a diagnostic, not a fair main baseline.
 
 #### Phase 2 E3 Support Ablation
 
@@ -1149,7 +1476,8 @@ Run controller variants on two examples per category:
 ```
 
 Then run a targeted stress sweep on the most diagnostic subset. Use the legacy
-stress script when applicable; restore it to active `scripts/` only if the sweep becomes paper-critical:
+stress script when applicable; restore it to active `scripts/` only if the sweep
+becomes paper-critical:
 
 ```bash
 TASKS="cat_crown bowl_apple_inside tshirt_star" \
@@ -1182,23 +1510,25 @@ Do not aggregate extension routes into the base DeCE-RF mean.
 Only run Phase 3 if Phase 2 supports the paper claim and the remaining risk is
 sample breadth rather than method correctness.
 
-Phase 3 expands the same split design rather than introducing new baseline
+Phase 3 expands the same layered E2 design rather than introducing new baseline
 families:
 
 ```text
 E1: 6 categories x 5 examples x 4 methods x 3 seeds = 360
-E2-A: 6 categories x 3 examples x 3 SD3 RF baselines x 3 seeds = 162
-E2-B: 6 categories x 3 examples x 1-2 runnable contextual baselines x 3 seeds = 54-108
+E2.1: 6 canonical tasks x 2 backbones x 2 base methods x 3 seeds = 72
+E2.2: 6 categories x 3 examples x 6 SD3 rows x 3 seeds = 324
+E2.2 optional SD3 preserve-aware external row = +54
+E2.3: 6 categories x 2 examples x 2-3 native rows x 2 seeds = 48-72
+E2.4: 3 categories x 2 examples x 4-5 rows x 2 seeds = 48-60
 E3: 6 categories x 3 examples x 5 support variants x 2 seeds = 180
 E4: 6 categories x 3 examples x 5 controller variants x 2 seeds = 180
 E5: 30-50 selected outputs
-total: about 966-1040 outputs if E2-B runs; about 912-932 without E2-B generation
 ```
 
 Use Phase 3 to complete supplement grids, full per-task tables, robustness
-audits, and any E2-B contextual rows that became runnable after Phase 2. It
-should not change the core method story or turn non-RF supplement baselines into
-E2 evidence.
+audits, and any native E2.3 contextual rows that became runnable after Phase 2.
+It should not change the core method story or turn non-RF supplement baselines
+into E2 evidence.
 
 ### Fixed-Control Cache Note
 
@@ -1215,7 +1545,7 @@ This supports E4, not Table 1.
 
 Run only the two selected supplement baselines after the RF evidence is stable:
 `instruct_pix2pix` and `h_edit_r_p2p`. They are not part of Phase 1, not part of
-E2-A/E2-B, and not evidence for the RF-specific claim. Use them as a supplement
+E2.1-E2.4, and not evidence for the RF-specific claim. Use them as a supplement
 positioning table with the same Core-6 sources, prompts, fixed masks, and visual
 audit rubric.
 

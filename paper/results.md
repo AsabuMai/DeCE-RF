@@ -75,7 +75,7 @@ Fixed evaluation masks:
 experiments/support_v3_2026-06-02/eval_masks/
 ```
 
-E2-A SD3-matched RF comparison:
+E2.2 same-backbone SD3 RF comparison:
 
 ```text
 experiments/support_v3_2026-06-02/e2_reduced_rf_fixed_mask_metrics.csv
@@ -122,50 +122,91 @@ over-preserves and misses the intended edit.
 
 ## E2 Readout
 
-E2 should now be treated as a separated backbone-matched and native-backbone
-RF comparison: E2-A is the SD3-matched algorithmic comparison, while E2-B is a
-native-backbone RF / FLUX contextual comparison.
+E2 is now a backbone-controlled and preservation-aware fairness experiment, not
+a single RF-baseline leaderboard.
 
-Completed E2-A evidence:
+### Completed E2.2 Same-Backbone SD3 Evidence
+
+Completed strict SD3 rows:
 
 ```text
-Native / target-mode RF baselines: FlowEdit, FlowAlign, SplitFlow
-Tasks: strict Core-6
-Seeds: 10, 11, 12
-Status: complete SD3-matched RF comparison
+FlowEdit-SD3
+FlowAlign-SD3
+SplitFlow-SD3
+DeCE-RF-SD3
+```
+
+Joined with E1 rows:
+
+```text
+direct_target-SD3
+base_only-SD3, for calibration/reconstruction floor
+```
+
+Artifacts:
+
+```text
+experiments/support_v3_2026-06-02/e2_reduced_rf_fixed_mask_metrics.csv
+experiments/support_v3_2026-06-02/e2_reduced_rf_fixed_mask_metrics.json
+experiments/support_v3_2026-06-02/e2_reduced_rf_comparison_summary.csv
+experiments/support_v3_2026-06-02/e2_reduced_rf_comparison_summary.md
+experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.csv
+experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.md
 ```
 
 FlowEdit, FlowAlign, and SplitFlow are runnable under the revised strict
-target-mode protocol. DeCE-RF has lower outside-mask change and stronger
-source-preservation metrics under the fixed task masks, but this result should
-be written narrowly as E2-A rather than as the full RF-baseline answer.
+same-backbone SD3 protocol. The current readout supports only the narrow claim
+that DeCE-RF improves localized edit-preserve behavior over these SD3 RF-native
+rows under fixed evaluation masks. It is not a claim over all RF or FLUX editors.
 
-Pending E2-B contextual upgrade:
+### Needed E2 Upgrades
+
+E2.1 backbone calibration:
 
 ```text
-Native-backbone contextual candidates:
-rf_solver_edit = RF-Solver-Edit / RF-Edit, FLUX.1-dev
-reflex = ReFlex, FLUX.1-dev
-stable_flow = stable-flow, FLUX.1-dev
-fireflow = FireFlow, FLUX.1-dev
-ot_rf_otip = OT-RF / OTIP-style, backbone TBD
-dvrf = DVRF / Delta Velocity RF, backbone TBD
+SD3 reconstruction/direct-target floors: reuse E1 base_only/direct_target.
+FLUX reconstruction/direct-target floors: run only after FLUX access and adapters are valid.
 ```
 
-At least one native-backbone RF / FLUX baseline should become runnable before
-making the stronger contextual statement that existing RF editors do not close
-the localized edit-preserve gap. The main algorithmic claim remains SD3-matched.
-
-Minimum E2-B contextual target:
+E2.2 preservation-control upgrade:
 
 ```text
-1 native-backbone RF / FLUX baseline x 6 tasks x 3 seeds = 18 contextual outputs
+Join strict Fixed DeCE rows as an SD3 preservation-control row.
+Attempt OT-RF/OTIP-SD3 or RF-Edit-SD3 only if a real SD3 adapter is verified.
 ```
 
-Resource-saving fallback:
+E2.3 native preservation-aware RF context:
 
 ```text
-1 native-backbone RF / FLUX baseline x 6 tasks x 2 seeds = 12 contextual outputs
+rf_solver_edit = RF-Solver-Edit / RF-Edit, FLUX.1-dev route currently access-blocked
+reflex = ReFlex, FLUX.1-dev route currently access-blocked
+stable_flow = stable-flow, adapter pending
+fireflow = FireFlow, FLUX.1-dev route currently access-blocked
+ot_rf_otip = OT-RF / OTIP-style, repo/backbone/adapter pending
+dvrf = DVRF / Delta Velocity RF, repo/backbone/adapter pending
+```
+
+E2.4 support-matched diagnostic:
+
+```text
+Run compact rows for direct_target + same M_edit, FlowEdit + same M_edit if stable,
+Fixed DeCE, and DeCE-RF on cat_crown, tshirt_star, and backpack_remove_toy_charm.
+```
+
+### Safe Wording
+
+Use:
+
+```text
+Under the same SD3 backbone and fixed evaluation masks, DeCE-RF improves the
+localized edit-preserve tradeoff over completed SD3 RF-native baselines.
+```
+
+Use for native rows:
+
+```text
+Native preservation-aware RF editors are reported as implementation-context
+baselines because their public routes use different backbones or interfaces.
 ```
 
 Do not write:
@@ -173,24 +214,8 @@ Do not write:
 ```text
 DeCE-RF beats all RF baselines.
 DeCE-RF beats FLUX.
+SD3-DeCE is directly superior to ReFlex-FLUX or RF-Edit-FLUX as an algorithm.
 ```
-
-Use this safer wording:
-
-```text
-E2-A shows, under a matched SD3 backbone, whether RF-native target-mode editing
-baselines solve localized edit-preserve control. E2-B is needed to contextualize
-DeCE-RF against native-backbone RF / FLUX editors without treating those rows as
-pure algorithmic controls.
-```
-
-RF-Solver-Edit (`rf_solver_edit`), ReFlex (`reflex`), FireFlow (`fireflow`),
-and stable-flow (`stable_flow`) are native-backbone FLUX rows currently blocked
-by gated FLUX.1-dev access or adapter gaps. OT-RF / OTIP (`ot_rf_otip`) and DVRF
-(`dvrf`) are registered planned E2-B candidates that still need repo
-verification, environment creation, smoke tests, and Core-6 adapters. If those
-blockers remain, report them explicitly in the E2 audit rather than silently
-omitting the baselines.
 
 ## Component Evidence
 
@@ -230,8 +255,8 @@ large standalone gains from feedback control without stress/Pareto evidence
 4. Report `laptop_remove_sticker` as a high-confidence completion-prior
    extension probe and `whiteboard_probe_red_star_sticker` as a non-glyph
    replacement probe, not as base DeCE-RF rows.
-5. Upgrade E2 with one native-backbone RF / FLUX contextual baseline before
-   claiming that existing strong RF editors cannot replace DeCE-RF in practice;
-   keep the main algorithmic claim tied to SD3-matched E2-A.
+5. Upgrade E2 with calibration, one native preservation-aware RF status/metric row if runnable,
+   and a compact support-matched diagnostic before claiming that existing strong RF editors
+   cannot replace DeCE-RF in practice; keep the main algorithmic claim tied to E2.2 same-backbone SD3 evidence.
 6. Strengthen E4 with controller stress/Pareto evidence if feedback control
    becomes reviewer-critical.

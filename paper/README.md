@@ -33,11 +33,13 @@ pillow_vertical_fabric_strip
 backpack_remove_toy_charm
 ```
 
-The active E2 split is:
+The active E2 design is a layered fairness experiment:
 
 ```text
-E2-A: SD3-matched RF comparison against FlowEdit, FlowAlign, and SplitFlow.
-E2-B: native-backbone RF / FLUX contextual rows, reported separately.
+E2.1: backbone calibration for reconstruction/direct-target floors.
+E2.2: same-backbone SD3 algorithm comparison against RF-native and preservation-control rows.
+E2.3: native preservation-aware RF / FLUX implementation comparison, reported separately.
+E2.4: support-matched diagnostic to separate localization input from controller design.
 Non-RF supplement: InstructPix2Pix and H-Edit / P2P-style only for positioning.
 ```
 

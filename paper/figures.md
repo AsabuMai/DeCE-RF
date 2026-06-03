@@ -24,7 +24,7 @@ Use only complete runs with `result.png`, `stats.json`, `metadata.json`, and
 | Figure 1 | teaser: two examples, Source/Target/Direct/Generic/DeCE-RF | 10 | motivation |
 | Figure 2 | method overview | 0 | explain the algorithm |
 | Figure 3 | E1 Core-6 qualitative grid | 24-30 | main effect |
-| Figure 4 | E2-A SD3-matched RF baseline qualitative comparison | 15 | matched RF alternatives |
+| Figure 4 | E2 fairness comparison with backbone labels | 12-18 | matched RF alternatives plus optional native context |
 | Figure 5 | E4 Pareto + timestep diagnostics | 0 | controller evidence |
 | Figure 6 | E5 extension/failure cases, optional | 12-18 | scope boundary |
 
@@ -88,13 +88,13 @@ Do not include `support_v3_fixed` in this main qualitative grid unless the
 layout still fits. Fixed DeCE belongs mainly in the controller ablation figure
 and table.
 
-## E2-A SD3-Matched RF Baseline Figure
+## E2 Fairness Figure
 
-Status: SD3-matched target-mode RF comparison is complete for FlowEdit,
-FlowAlign, and SplitFlow. Do not present it as a complete comparison against
-every RF or FLUX baseline; FireFlow, RF-Solver-Edit, ReFlex, and stable-flow are
-native-backbone contextual rows blocked by FLUX.1-dev checkpoint access or
-missing strict adapter output.
+Status: the strict same-backbone SD3 target-mode RF comparison is complete for
+FlowEdit, FlowAlign, and SplitFlow. The redesigned E2 now treats this as E2.2,
+not as the whole baseline story. E2.1 calibration, E2.3 native preservation-aware
+RF rows, and E2.4 support-matched diagnostics are added to address backbone and
+input-condition fairness.
 
 Current E2 audit artifacts:
 
@@ -104,41 +104,43 @@ experiments/support_v3_2026-06-02/e2_baseline_runnable_validation.csv
 experiments/support_v3_2026-06-02/e2_baseline_audit.md
 ```
 
-As of the 2026-06-03 audit, 14 external repositories are downloaded and 2
-additional E2-B candidates are registered as planned entries. FlowEdit,
-FlowAlign, and SplitFlow have revised strict target-mode outputs for 6 tasks x
-seeds 10/11/12 and are available as the SD3-matched E2-A comparison. RF-Solver-
-Edit (`rf_solver_edit`), ReFlex (`reflex`), FireFlow (`fireflow`), and
-stable-flow (`stable_flow`) are native-backbone FLUX contextual rows blocked by
-gated FLUX.1-dev access or adapter gaps; OT-RF / OTIP (`ot_rf_otip`) and DVRF
-(`dvrf`) are planned contextual candidates that still need repo/env/adapter
-validation.
-
-Current SD3-matched figure grids:
+Current same-backbone SD3 artifacts:
 
 ```text
+experiments/support_v3_2026-06-02/e2_strict_rf_baseline_manifest.csv
+experiments/support_v3_2026-06-02/e2_reduced_rf_fixed_mask_metrics.csv
+experiments/support_v3_2026-06-02/e2_reduced_rf_comparison_summary.md
+experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.md
 experiments/support_v3_2026-06-02/visual_audit/e2_flowedit_seed10_grid.png
 experiments/support_v3_2026-06-02/visual_audit/e2_flowedit_seed11_grid.png
 experiments/support_v3_2026-06-02/visual_audit/e2_flowedit_seed12_grid.png
 ```
 
-Figure 4 can now be a compact SD3-matched E2-A comparison:
+Figure 4 should be compact and must show the backbone in every method label.
+Preferred columns if no native row is runnable:
 
 ```text
-Source | FlowEdit | FlowAlign | SplitFlow | DeCE-RF
+Source | FlowEdit-SD3 | FlowAlign-SD3 or SplitFlow-SD3 | Fixed DeCE-SD3 | DeCE-RF-SD3
 ```
 
-Use three to six strict rows depending on space. Label it explicitly as a
-SD3-matched target-mode RF comparison, not as a broad RF/FLUX victory claim.
-
-Use two or three representative strict examples:
+Preferred columns if one native preservation-aware row is runnable:
 
 ```text
-Source | external target-mode RF baseline | Direct target | DeCE-RF
+Source | FlowEdit-SD3 | Fixed DeCE-SD3 | Native RF row with backbone label | DeCE-RF-SD3
 ```
 
-This figure should be compact because the main E2 evidence is the SD3-matched
-Table 2a plus the native-backbone contextual audit/status table.
+Use two or three representative strict examples. Do not crowd Figure 4 with all
+baselines. The main quantitative E2 evidence is Table 2a; Figure 4 should make
+the locality/preservation difference legible.
+
+Caption requirement:
+
+```text
+Backbone is shown in each method label. Same-backbone SD3 rows support the
+algorithmic comparison; native-backbone rows, when included, are contextual.
+```
+
+Do not present this figure as a broad RF/FLUX victory claim.
 
 ## Extension Probe Figure
 
