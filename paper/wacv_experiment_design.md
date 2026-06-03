@@ -661,34 +661,65 @@ over-preservation
 preserve-region drift
 ```
 
-## Non-RF External Baselines
+## Non-RF Supplement Baselines
 
-Non-RF baselines should be used to position the paper, not to become the main
-technical contest.
+Non-RF baselines are supplement-only. They should position the paper against
+recognizable image-editing families, but they must not become the main technical
+contest or support the claim that DeCE-RF beats RF baselines.
 
-### Main Non-RF Baselines
+### Selected Supplement Baselines
 
-Run two if time allows:
+Use exactly two non-RF supplement baselines unless a reviewer specifically asks
+for more:
 
-| Baseline | Input condition | Use |
-| --- | --- | --- |
-| Same-support inpainting / masked img2img | receives DeCE support or fixed eval mask | locality upper-bound style baseline |
-| InstructPix2Pix or equivalent instruction editor | text/instruction only | standard instruction baseline |
+| Baseline slug | Paper-facing label | Model family / role | Input condition | Use |
+| --- | --- | --- | --- | --- |
+| `instruct_pix2pix` | InstructPix2Pix | instruction-guided diffusion editing | source image + instruction/text prompt, no DeCE support mask | representative text-instruction editor |
+| `h_edit_r_p2p` | H-Edit / P2P-style | diffusion bridge / Prompt-to-Prompt-style editing | source image + source/target prompts, no DeCE support mask | representative attention/path editing comparator |
 
-Add `DiffEdit` or `ZONE` only if setup is stable. If only one extra can be run,
-choose `DiffEdit`; if two, choose `DiffEdit` and `ZONE`.
+Do not add MasaCtrl, ZONE, Pix2Pix-Zero, Prompt-to-Prompt, LEDITS++, or
+same-support inpainting to the main plan unless time remains after E2-B is
+settled. Those methods can stay in the audit registry as transparency rows.
+
+### Supplement Matrix
+
+Minimum supplement run:
+
+```text
+2 non-RF supplement baselines x 6 Core-6 tasks x 2 seeds = 24 outputs
+seeds: 10, 11
+```
+
+Preferred if setup is stable:
+
+```text
+2 non-RF supplement baselines x 6 Core-6 tasks x 3 seeds = 36 outputs
+seeds: 10, 11, 12
+```
+
+Use the same source images, prompts, max image size, fixed evaluation masks, and
+visual-audit rubric as E1/E2. Do not give these baselines DeCE operation support
+or hand-tuned masks. If a method cannot express a source/target prompt pair
+cleanly, record the exact instruction/prompt translation in its command file and
+metadata.
 
 ### Fairness Table
 
-Every external baseline table needs these columns:
+Every supplement baseline table needs these columns:
 
 ```text
 method | model family/backbone | user input | mask source | seeds | runnable status | caveat
 ```
 
-This avoids the unfair comparison trap where a manual-mask method, a text-only
-method, and an operation-conditioned method are averaged as if they used the
-same information.
+The supplement table should be labeled:
+
+```text
+Non-RF supplement baselines, not matched RF baselines.
+```
+
+This avoids the unfair comparison trap where a text-only editor, a P2P-style
+method, and an operation-conditioned RF controller are averaged as if they used
+the same information.
 
 ## Phased Experiment Execution Plan
 
@@ -1099,13 +1130,13 @@ bash scripts/run_pretty_matrix.sh
 
 This supports E4, not Table 1.
 
-### Non-RF Baselines
+### Non-RF Supplement Baselines
 
-Run same-support inpainting first because the repository already has
-`scripts/same_support_inpaint_baseline.py`. Then run one instruction baseline.
-
-Non-RF baselines are not part of Phase 1. Add them after Phase 2 if the RF
-comparison and main internal evidence are stable.
+Run only the two selected supplement baselines after the RF evidence is stable:
+`instruct_pix2pix` and `h_edit_r_p2p`. They are not part of Phase 1, not part of
+E2-A/E2-B, and not evidence for the RF-specific claim. Use them as a supplement
+positioning table with the same Core-6 sources, prompts, fixed masks, and visual
+audit rubric.
 
 ### Visual Audit
 
