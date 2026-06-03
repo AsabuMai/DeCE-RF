@@ -1,0 +1,17 @@
+baseline,repo_name,family,download_status,repo_path,commit_or_note
+fireflow,FireFlow,rf_flow,ok,/workspace/baselines/src/FireFlow,20ab81fb084c06a089bb8cf86726a28036c88d5b
+flowalign,FlowAlign,rf_flow,ok,/workspace/baselines/src/FlowAlign,d4e5b4f0d824014e87b9c2c757d7693d80fa7864
+flowedit,FlowEdit,rf_flow,ok,/workspace/baselines/src/FlowEdit,85594626161caca9dafa68592c1ffa21db87a806
+masactrl,MasaCtrl,diffusion_attention_control,ok,/workspace/baselines/src/MasaCtrl,d0ba16bb7c12125b509e374b000ee61065bb8149
+rf_solver_edit,RF-Solver-Edit,rf_solver,ok,/workspace/baselines/src/RF-Solver-Edit,7ac380143379b656eca5398157f41f97ef1ef2f9
+reflex,ReFlex,rf_rectified_flow,ok,/workspace/baselines/src/ReFlex,ed121347cc228a2b6882c23bd654eb3771a51ba7
+splitflow,SplitFlow,rf_flow,ok,/workspace/baselines/src/SplitFlow,c9ae45d2a6e386d6d00b91f19ec30dac9a20e786
+zone,ZONE,diffusion_inversion_attention,ok,/workspace/baselines/src/ZONE,97885847c38a5e5828a9f2e7fc9fb09ee7d1698d
+h_edit_r_p2p,h-edit,diffusion_bridge_p2p,ok,/workspace/baselines/src/h-edit,ed87727f579045d2b186944f3a728ad8eb8cc3d7
+instruct_pix2pix,instruct-pix2pix,diffusion_instruction_editing,ok,/workspace/baselines/src/instruct-pix2pix,0dffd1eeb02611c35088462d1df88714ce2b52f4
+ledits_pp,ledits_pp,diffusion_editing,ok,/workspace/baselines/src/ledits_pp,c2ccffb9d65d39da6f696676d85d09b62fdc8bd5
+pix2pix_zero,pix2pix-zero,diffusion_inversion_direction,ok,/workspace/baselines/src/pix2pix-zero,16e5c1dd4b51731d3d66b2b85c8d6c842639e4cf
+prompt_to_prompt,prompt-to-prompt,diffusion_attention_control,ok,/workspace/baselines/src/prompt-to-prompt,9c472e44aa1b607da59fea94820f7be9480ec545
+stable_flow,stable-flow,rf_flow,ok,/workspace/baselines/src/stable-flow,c99ac0eba297e7884bf2118be79734b63543ee45
+ot_rf_otip,OT-RF / OTIP,rf_preservation_aware_transport,planned_not_downloaded,/workspace/baselines/src/OT-RF-or-OT-Inversion,candidate public code: https://github.com/marianlupascu/OT-Inversion or OT-RF; verify exact repo before running
+dvrf,DeltaVelocityRectifiedFlow,rf_preservation_aware_delta_velocity,planned_not_downloaded,/workspace/baselines/src/DeltaVelocityRectifiedFlow,candidate public code: https://github.com/gaspardbd/DeltaVelocityRectifiedFlow; verify before running

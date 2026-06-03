@@ -1,0 +1,7 @@
+method,runnable,complete_rows,failed_rows,model_family,seed_matched,notes
+flowedit,yes,12,0,SD3,yes,Official FlowEdit SD3 runner; source resized/cropped to 512-compatible input.
+splitflow,yes,12,0,SD3 + Mistral-7B prompt decomposition,yes,"Official SplitFlow defaults; T_steps=50, n_max=33, tar guidance=13.5."
+fireflow,yes,12,0,FLUX-dev,yes,"Official FireFlow fast-editing recipe; qualitative FLUX baseline, not SD3-matched."
+rf_solver_edit,yes,12,0,FLUX-dev,no,Official RF-Solver-Edit image script does not expose seed control.
+reflex,no,0,12,FLUX-dev,not run,Failed under available 24GB GPU/code constraints; see failure metadata.
+steerflow,no,0,12,unknown / unavailable,not run,No public runnable code or local repository found as of 2026-05-10.

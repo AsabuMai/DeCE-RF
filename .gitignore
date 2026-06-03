@@ -1,0 +1,57 @@
+__pycache__/
+*.py[cod]
+
+.DS_Store
+
+.venv/
+venv/
+env/
+.uv-cache/
+.uv-python/
+.hf-cache/
+
+results/
+outputs/
+archive/
+workshop_materials/
+h_edit_compare/results_*/
+
+*.log
+*.exit
+
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Local runtime/cache directories
+.pip-cache/
+.cache/
+.huggingface/
+
+# External baseline clones and environments
+_baselines/
+
+# Generated experiment products and scratch backups
+logs/
+_cleanup_backup_*/
+_pillow_goal/
+_pillow_strip_goal/
+runpod_recolor_review/
+
+# Large/generated media sheets
+phase2_*_sheet*.jpg
+phase2_*_preview.jpg
+
+# Generated images/media; add explicitly later or use Git LFS if needed
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.pdf
+
+# Binary office/report artifacts
+*.docx
+*.pptx
+*.xlsx

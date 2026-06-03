@@ -1,0 +1,73 @@
+{
+  "anchor_box_xyxy": [
+    146,
+    60,
+    380,
+    268
+  ],
+  "anchor_mask_area_ratio": 0.20607793898809523,
+  "anchor_output": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/mug_heart/adaptive_full_support_v3/seed_10/masks/semantic_anchor.png",
+  "blur": 0,
+  "box_threshold": 0.25,
+  "boxes_xyxy": [
+    [
+      144.87945556640625,
+      58.19638442993164,
+      380.4063720703125,
+      269.0758972167969
+    ]
+  ],
+  "dilate": 0,
+  "eyes_anchor_area_ratio": 0.20607793898809523,
+  "eyes_anchor_area_threshold": 0.16,
+  "eyes_anchor_box_area_ratio": 0.28292410714285715,
+  "eyes_anchor_box_area_threshold": 0.34,
+  "eyes_anchor_fallback_used": false,
+  "eyes_anchor_max_area_ratio": 0.16,
+  "eyes_anchor_max_box_area_ratio": 0.34,
+  "grounding_model": "IDEA-Research/grounding-dino-base",
+  "image": "/home/Wu_25R8111/rf_h_edit_project/data/pretty_free_candidates/pexels_white_mug_6312107.jpg",
+  "labels": [
+    "mug"
+  ],
+  "mask_area_ratio": 0.20607793898809523,
+  "mask_mode": "sam_box_intersect",
+  "max_box_area_ratio": 0.25,
+  "num_boxes": 1,
+  "output": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/mug_heart/adaptive_full_support_v3/seed_10/masks/semantic_support.png",
+  "phrase": "mug",
+  "sam_model": "facebook/sam-vit-base",
+  "scores": [
+    0.8663376569747925
+  ],
+  "semantic_edit_words": [
+    "same",
+    "heart",
+    "printed",
+    "front",
+    "same"
+  ],
+  "semantic_phrase_after_quality_gate": "mug",
+  "semantic_phrase_explicit": "mug",
+  "semantic_phrase_inferred": "mug",
+  "source_prompt": "A minimalist photo of a plain white ceramic mug on a grey background.",
+  "support_band_ratio": 0.55,
+  "support_box_xyxy": [
+    146,
+    60,
+    380,
+    268
+  ],
+  "support_expand_x": 0.0,
+  "support_expand_y": 0.0,
+  "support_overlap_ratio": 0.2,
+  "support_plan_params": {},
+  "support_plan_rule": null,
+  "support_relation": "inside",
+  "support_relation_after_quality_gate": "inside",
+  "support_relation_inferred": "inside",
+  "support_relation_requested": "inside",
+  "support_threshold": 0.2,
+  "target_prompt": "A minimalist photo of the same white ceramic mug with a small red heart printed on the front, on the same grey background.",
+  "text_threshold": 0.2
+}

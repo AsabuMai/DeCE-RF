@@ -1,0 +1,4 @@
+method,n,clip_improved_cases,outside_not_worse_eps001_cases,outside_not_worse_cases,ssim_not_worse_eps002_cases,loose_success_cases,strict_success_cases,mean_delta_clip,mean_delta_outside_l1,mean_delta_inside_l1,mean_delta_ssim
+support_v3_controller_rmsgap,9,9,9,6,9,9,6,0.0036006238725450304,4.891875303453869e-05,-0.010559364325470395,0.0017423340302956053
+support_v3_controller_progress,9,3,6,0,2,3,0,-0.002875632709927029,0.0004313926522930463,0.013297630680931939,-0.008170883957072427
+support_v3_controller_hybrid,3,3,3,2,3,3,2,0.004212081432342529,5.438380564252535e-05,-0.010301041106383005,0.0012119168322406448

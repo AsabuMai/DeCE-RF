@@ -1,0 +1,94 @@
+{
+  "anchor_box_xyxy": [
+    200,
+    44,
+    305,
+    172
+  ],
+  "anchor_mask_area_ratio": 0.05937267485119048,
+  "anchor_output": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/cat_crown/adaptive_full_support_v3/seed_10/masks/semantic_anchor.png",
+  "blur": 0,
+  "box_threshold": 0.25,
+  "boxes_xyxy": [
+    [
+      198.9840545654297,
+      40.791282653808594,
+      304.8394775390625,
+      171.7946319580078
+    ]
+  ],
+  "dilate": 0,
+  "eyes_anchor_area_ratio": 0.05937267485119048,
+  "eyes_anchor_area_threshold": 0.16,
+  "eyes_anchor_box_area_ratio": 0.078125,
+  "eyes_anchor_box_area_threshold": 0.34,
+  "eyes_anchor_fallback_used": false,
+  "eyes_anchor_max_area_ratio": 0.16,
+  "eyes_anchor_max_box_area_ratio": 0.34,
+  "grounding_model": "IDEA-Research/grounding-dino-base",
+  "image": "/home/Wu_25R8111/rf_h_edit_project/data/paper_images/cat_sitting_in_grass.jpg",
+  "labels": [
+    "cat"
+  ],
+  "mask_area_ratio": 0.05937267485119048,
+  "mask_mode": "sam_box_intersect",
+  "max_box_area_ratio": 0.25,
+  "num_boxes": 1,
+  "output": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/cat_crown/adaptive_full_support_v3/seed_10/masks/semantic_support.png",
+  "phrase": "cat",
+  "sam_model": "facebook/sam-vit-base",
+  "scores": [
+    0.4948451519012451
+  ],
+  "semantic_edit_words": [
+    "same",
+    "same",
+    "golden",
+    "crown",
+    "its",
+    "head"
+  ],
+  "semantic_phrase_after_quality_gate": "cat",
+  "semantic_phrase_explicit": "cat",
+  "semantic_phrase_inferred": "cat",
+  "source_prompt": "A photo of a cat sitting in grass.",
+  "support_band_ratio": 0.55,
+  "support_box_xyxy": [
+    200,
+    44,
+    305,
+    172
+  ],
+  "support_expand_x": 0.0,
+  "support_expand_y": 0.0,
+  "support_overlap_ratio": 0.2,
+  "support_plan_params": {
+    "band_ratio": 0.42,
+    "expand_x": 0.05,
+    "overlap_ratio": 0.06
+  },
+  "support_plan_rule": {
+    "anchor": "head",
+    "keywords": [
+      "cap",
+      "crown",
+      "halo",
+      "hat",
+      "helmet",
+      "tiara"
+    ],
+    "params": {
+      "band_ratio": 0.42,
+      "expand_x": 0.05,
+      "overlap_ratio": 0.06
+    },
+    "relation": "top_center"
+  },
+  "support_relation": "inside",
+  "support_relation_after_quality_gate": "inside",
+  "support_relation_inferred": "inside",
+  "support_relation_requested": "inside",
+  "support_threshold": 0.2,
+  "target_prompt": "A photo of the same cat sitting in the same grass, wearing a small golden crown on its head.",
+  "text_threshold": 0.2
+}

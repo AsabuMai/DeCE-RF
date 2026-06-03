@@ -1,0 +1,452 @@
+[
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_blank",
+    "label": "blank",
+    "target_phrase": "blank whiteboard surface",
+    "operation": "remove_object",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blank/support_v3_controller_rmsgap/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_blank",
+    "label": "blank",
+    "target_phrase": "blank whiteboard surface",
+    "operation": "remove_object",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blank/support_v3_controller_rmsgap_replace_editor_v0/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_blank",
+    "label": "blank",
+    "target_phrase": "blank whiteboard surface",
+    "operation": "remove_object",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blank/support_v3_controller_rmsgap_replace_editor_v1/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_blue_letter_t",
+    "label": "blue letter T",
+    "target_phrase": "blue magnetic plastic letter T",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_letter_t/support_v3_controller_rmsgap/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_blue_letter_t",
+    "label": "blue letter T",
+    "target_phrase": "blue magnetic plastic letter T",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_letter_t/support_v3_controller_rmsgap_replace_editor_v0/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_blue_letter_t",
+    "label": "blue letter T",
+    "target_phrase": "blue magnetic plastic letter T",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_letter_t/support_v3_controller_rmsgap_replace_editor_v1/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_red_letter_a",
+    "label": "red letter A",
+    "target_phrase": "red magnetic plastic letter A",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_letter_a/support_v3_controller_rmsgap/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_red_letter_a",
+    "label": "red letter A",
+    "target_phrase": "red magnetic plastic letter A",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_letter_a/support_v3_controller_rmsgap_replace_editor_v0/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_red_letter_a",
+    "label": "red letter A",
+    "target_phrase": "red magnetic plastic letter A",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_letter_a/support_v3_controller_rmsgap_replace_editor_v1/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_blue_round_magnet",
+    "label": "blue round magnet",
+    "target_phrase": "blue round magnet",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_round_magnet/support_v3_controller_rmsgap/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_blue_round_magnet",
+    "label": "blue round magnet",
+    "target_phrase": "blue round magnet",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_round_magnet/support_v3_controller_rmsgap_replace_editor_v0/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_blue_round_magnet",
+    "label": "blue round magnet",
+    "target_phrase": "blue round magnet",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_round_magnet/support_v3_controller_rmsgap_replace_editor_v1/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_red_star_sticker",
+    "label": "red star sticker",
+    "target_phrase": "red star sticker",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_star_sticker/support_v3_controller_rmsgap/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_red_star_sticker",
+    "label": "red star sticker",
+    "target_phrase": "red star sticker",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_star_sticker/support_v3_controller_rmsgap_replace_editor_v0/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 10,
+    "variant": "whiteboard_probe_red_star_sticker",
+    "label": "red star sticker",
+    "target_phrase": "red star sticker",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_star_sticker/support_v3_controller_rmsgap_replace_editor_v1/seed_10",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_blank",
+    "label": "blank",
+    "target_phrase": "blank whiteboard surface",
+    "operation": "remove_object",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blank/support_v3_controller_rmsgap/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_blank",
+    "label": "blank",
+    "target_phrase": "blank whiteboard surface",
+    "operation": "remove_object",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blank/support_v3_controller_rmsgap_replace_editor_v0/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_blank",
+    "label": "blank",
+    "target_phrase": "blank whiteboard surface",
+    "operation": "remove_object",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blank/support_v3_controller_rmsgap_replace_editor_v1/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_blue_letter_t",
+    "label": "blue letter T",
+    "target_phrase": "blue magnetic plastic letter T",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_letter_t/support_v3_controller_rmsgap/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_blue_letter_t",
+    "label": "blue letter T",
+    "target_phrase": "blue magnetic plastic letter T",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_letter_t/support_v3_controller_rmsgap_replace_editor_v0/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_blue_letter_t",
+    "label": "blue letter T",
+    "target_phrase": "blue magnetic plastic letter T",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_letter_t/support_v3_controller_rmsgap_replace_editor_v1/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_red_letter_a",
+    "label": "red letter A",
+    "target_phrase": "red magnetic plastic letter A",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_letter_a/support_v3_controller_rmsgap/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_red_letter_a",
+    "label": "red letter A",
+    "target_phrase": "red magnetic plastic letter A",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_letter_a/support_v3_controller_rmsgap_replace_editor_v0/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_red_letter_a",
+    "label": "red letter A",
+    "target_phrase": "red magnetic plastic letter A",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_letter_a/support_v3_controller_rmsgap_replace_editor_v1/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_blue_round_magnet",
+    "label": "blue round magnet",
+    "target_phrase": "blue round magnet",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_round_magnet/support_v3_controller_rmsgap/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_blue_round_magnet",
+    "label": "blue round magnet",
+    "target_phrase": "blue round magnet",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_round_magnet/support_v3_controller_rmsgap_replace_editor_v0/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_blue_round_magnet",
+    "label": "blue round magnet",
+    "target_phrase": "blue round magnet",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_round_magnet/support_v3_controller_rmsgap_replace_editor_v1/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_red_star_sticker",
+    "label": "red star sticker",
+    "target_phrase": "red star sticker",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_star_sticker/support_v3_controller_rmsgap/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_red_star_sticker",
+    "label": "red star sticker",
+    "target_phrase": "red star sticker",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_star_sticker/support_v3_controller_rmsgap_replace_editor_v0/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 11,
+    "variant": "whiteboard_probe_red_star_sticker",
+    "label": "red star sticker",
+    "target_phrase": "red star sticker",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_star_sticker/support_v3_controller_rmsgap_replace_editor_v1/seed_11",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_11/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_blank",
+    "label": "blank",
+    "target_phrase": "blank whiteboard surface",
+    "operation": "remove_object",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blank/support_v3_controller_rmsgap/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_blank",
+    "label": "blank",
+    "target_phrase": "blank whiteboard surface",
+    "operation": "remove_object",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blank/support_v3_controller_rmsgap_replace_editor_v0/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_blank",
+    "label": "blank",
+    "target_phrase": "blank whiteboard surface",
+    "operation": "remove_object",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blank/support_v3_controller_rmsgap_replace_editor_v1/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_blue_letter_t",
+    "label": "blue letter T",
+    "target_phrase": "blue magnetic plastic letter T",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_letter_t/support_v3_controller_rmsgap/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_blue_letter_t",
+    "label": "blue letter T",
+    "target_phrase": "blue magnetic plastic letter T",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_letter_t/support_v3_controller_rmsgap_replace_editor_v0/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_blue_letter_t",
+    "label": "blue letter T",
+    "target_phrase": "blue magnetic plastic letter T",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_letter_t/support_v3_controller_rmsgap_replace_editor_v1/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_red_letter_a",
+    "label": "red letter A",
+    "target_phrase": "red magnetic plastic letter A",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_letter_a/support_v3_controller_rmsgap/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_red_letter_a",
+    "label": "red letter A",
+    "target_phrase": "red magnetic plastic letter A",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_letter_a/support_v3_controller_rmsgap_replace_editor_v0/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_red_letter_a",
+    "label": "red letter A",
+    "target_phrase": "red magnetic plastic letter A",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_letter_a/support_v3_controller_rmsgap_replace_editor_v1/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_blue_round_magnet",
+    "label": "blue round magnet",
+    "target_phrase": "blue round magnet",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_round_magnet/support_v3_controller_rmsgap/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_blue_round_magnet",
+    "label": "blue round magnet",
+    "target_phrase": "blue round magnet",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_round_magnet/support_v3_controller_rmsgap_replace_editor_v0/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_blue_round_magnet",
+    "label": "blue round magnet",
+    "target_phrase": "blue round magnet",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_blue_round_magnet/support_v3_controller_rmsgap_replace_editor_v1/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_red_star_sticker",
+    "label": "red star sticker",
+    "target_phrase": "red star sticker",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_star_sticker/support_v3_controller_rmsgap/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_red_star_sticker",
+    "label": "red star sticker",
+    "target_phrase": "red star sticker",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v0",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_star_sticker/support_v3_controller_rmsgap_replace_editor_v0/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  },
+  {
+    "seed": 12,
+    "variant": "whiteboard_probe_red_star_sticker",
+    "label": "red star sticker",
+    "target_phrase": "red star sticker",
+    "operation": "replace",
+    "method": "support_v3_controller_rmsgap_replace_editor_v1",
+    "output_dir": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_probe_red_star_sticker/support_v3_controller_rmsgap_replace_editor_v1/seed_12",
+    "support_mask": "/workspace/rf_h_edit/outputs/pretty_matrix/whiteboard_remove_yellow_letter/support_v3_controller_rmsgap/seed_12/masks/semantic_support.png"
+  }
+]

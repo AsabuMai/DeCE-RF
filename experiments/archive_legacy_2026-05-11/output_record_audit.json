@@ -1,0 +1,1153 @@
+[
+  {
+    "run": "bulldog_blue_attribute_auto_support_20260504",
+    "path": "outputs/bulldog_blue_attribute_auto_support_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bulldog statue on a marble surface.",
+    "target_prompt": "A blue bulldog statue on a marble surface.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_attribute_ode_20260504",
+    "path": "outputs/bus_blue_attribute_ode_20260504",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "metadata.json"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_blue_attribute_ode_20260504_retry",
+    "path": "outputs/bus_blue_attribute_ode_20260504_retry",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_app_20260504",
+    "path": "outputs/bus_blue_color_app_20260504",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "metadata.json"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_blue_color_app_20260504_retry",
+    "path": "outputs/bus_blue_color_app_20260504_retry",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_app_k012_20260504",
+    "path": "outputs/bus_blue_color_app_k012_20260504",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "metadata.json"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_blue_color_app_k012_20260504_retry",
+    "path": "outputs/bus_blue_color_app_k012_20260504_retry",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_app_signfix_20260504",
+    "path": "outputs/bus_blue_color_app_signfix_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_chroma065_detail080_smooth1_k035_20260507",
+    "path": "outputs/bus_blue_color_chroma065_detail080_smooth1_k035_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_chroma065_detailprotect080_k035_20260507",
+    "path": "outputs/bus_blue_color_chroma065_detailprotect080_k035_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_detailprotect080_k035_20260507",
+    "path": "outputs/bus_blue_color_detailprotect080_k035_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_lumagate025_k035_20260507",
+    "path": "outputs/bus_blue_color_lumagate025_k035_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_masked_k012_20260505",
+    "path": "outputs/bus_blue_color_masked_k012_20260505",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "metadata.json"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_blue_color_masked_k012_20260505_retry",
+    "path": "outputs/bus_blue_color_masked_k012_20260505_retry",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_masked_k035_20260505",
+    "path": "outputs/bus_blue_color_masked_k035_20260505",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_yuv_grad035_k035_20260506",
+    "path": "outputs/bus_blue_color_yuv_grad035_k035_20260506",
+    "missing": [
+      "command.txt"
+    ],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_yuv_grad070_k035_20260506",
+    "path": "outputs/bus_blue_color_yuv_grad070_k035_20260506",
+    "missing": [
+      "command.txt"
+    ],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_yuv_grad_k035_20260506",
+    "path": "outputs/bus_blue_color_yuv_grad_k035_20260506",
+    "missing": [
+      "command.txt"
+    ],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_color_yuv_k035_20260505",
+    "path": "outputs/bus_blue_color_yuv_k035_20260505",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_edit_ref_guidance_blue_ref_s070_20260507",
+    "path": "outputs/bus_blue_edit_ref_guidance_blue_ref_s070_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_edit_ref_guidance_blue_ref_s070_stable_20260507",
+    "path": "outputs/bus_blue_edit_ref_guidance_blue_ref_s070_stable_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_edit_ref_guidance_blue_ref_s090_stable2_20260507",
+    "path": "outputs/bus_blue_edit_ref_guidance_blue_ref_s090_stable2_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_edit_ref_guidance_blue_ref_s115_stable3_20260507",
+    "path": "outputs/bus_blue_edit_ref_guidance_blue_ref_s115_stable3_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_edit_ref_guidance_s025_20260507",
+    "path": "outputs/bus_blue_edit_ref_guidance_s025_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_edit_ref_guidance_s070_20260507",
+    "path": "outputs/bus_blue_edit_ref_guidance_s070_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_prompt_body_only_s115_stable3_20260507",
+    "path": "outputs/bus_blue_prompt_body_only_s115_stable3_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow vintage minibus parked in a driveway, with white roof, clear windows, black tires, chrome trim, headlights, license plate, and unchanged background.",
+    "target_prompt": "A photo of the same vintage minibus parked in the same driveway, only the painted yellow body panels are changed to clean blue paint; white roof, windows, black tires, chrome trim, headlights, license plate, shadows, reflections, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_sam_color_mask_chroma065_smooth1_20260507",
+    "path": "outputs/bus_blue_sam_color_mask_chroma065_smooth1_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_sam_color_minus_parts_chroma065_smooth1_20260507",
+    "path": "outputs/bus_blue_sam_color_minus_parts_chroma065_smooth1_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_surface_ref_chromadir_mag060_s115_fix_20260507",
+    "path": "outputs/bus_blue_surface_ref_chromadir_mag060_s115_fix_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow vintage minibus parked in a driveway, with white roof, clear windows, black tires, chrome trim, headlights, license plate, and unchanged background.",
+    "target_prompt": "A photo of the same vintage minibus parked in the same driveway, only the masked surface is changed to clean blue material; roof, windows, tires, chrome, headlights, license plate, shadows, reflections, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_surface_ref_chromadir_s115_fix_20260507",
+    "path": "outputs/bus_blue_surface_ref_chromadir_s115_fix_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow vintage minibus parked in a driveway, with white roof, clear windows, black tires, chrome trim, headlights, license plate, and unchanged background.",
+    "target_prompt": "A photo of the same vintage minibus parked in the same driveway, only the masked surface is changed to clean blue material; roof, windows, tires, chrome, headlights, license plate, shadows, reflections, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_surface_ref_hsv_source_structure_s115_20260507",
+    "path": "outputs/bus_blue_surface_ref_hsv_source_structure_s115_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow vintage minibus parked in a driveway, with white roof, clear windows, black tires, chrome trim, headlights, license plate, and unchanged background.",
+    "target_prompt": "A photo of the same vintage minibus parked in the same driveway, only the masked surface is changed to clean blue material; roof, windows, tires, chrome, headlights, license plate, shadows, reflections, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_surface_ref_hsv_target_chromadir_s115_20260507",
+    "path": "outputs/bus_blue_surface_ref_hsv_target_chromadir_s115_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow vintage minibus parked in a driveway, with white roof, clear windows, black tires, chrome trim, headlights, license plate, and unchanged background.",
+    "target_prompt": "A photo of the same vintage minibus parked in the same driveway, only the masked surface is changed to clean blue material; roof, windows, tires, chrome, headlights, license plate, shadows, reflections, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_surface_ref_hsv_target_yuv_s115_20260507",
+    "path": "outputs/bus_blue_surface_ref_hsv_target_yuv_s115_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow vintage minibus parked in a driveway, with white roof, clear windows, black tires, chrome trim, headlights, license plate, and unchanged background.",
+    "target_prompt": "A photo of the same vintage minibus parked in the same driveway, only the masked surface is changed to clean blue material; roof, windows, tires, chrome, headlights, license plate, shadows, reflections, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_surface_ref_source_structure_s115_20260507",
+    "path": "outputs/bus_blue_surface_ref_source_structure_s115_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a yellow vintage minibus parked in a driveway, with white roof, clear windows, black tires, chrome trim, headlights, license plate, and unchanged background.",
+    "target_prompt": "A photo of the same vintage minibus parked in the same driveway, only the masked surface is changed to clean blue material; roof, windows, tires, chrome, headlights, license plate, shadows, reflections, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_vehicle_paint_auto_v2_chroma065_smooth1_20260507",
+    "path": "outputs/bus_blue_vehicle_paint_auto_v2_chroma065_smooth1_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_vehicle_paint_auto_v2_recolor_refine_20260507",
+    "path": "outputs/bus_blue_vehicle_paint_auto_v2_recolor_refine_20260507",
+    "missing": [
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_blue_vehicle_paint_detail_exclude_chroma065_smooth1_20260507",
+    "path": "outputs/bus_blue_vehicle_paint_detail_exclude_chroma065_smooth1_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": 10
+  },
+  {
+    "run": "bus_blue_vehicle_paint_ode_recolor_refine_soft_20260507",
+    "path": "outputs/bus_blue_vehicle_paint_ode_recolor_refine_soft_20260507",
+    "missing": [
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_blue_vehicle_paint_pixel_recolor_20260507",
+    "path": "outputs/bus_blue_vehicle_paint_pixel_recolor_20260507",
+    "missing": [
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_sam_body_mask_20260507",
+    "path": "outputs/bus_sam_body_mask_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": "A yellow bus parked in a driveway.",
+    "target_prompt": "A blue bus parked in a driveway.",
+    "seed": null
+  },
+  {
+    "run": "bus_sam_yellow_paint_mask_20260507",
+    "path": "outputs/bus_sam_yellow_paint_mask_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_sam_yellow_paint_mask_minus_parts_20260507",
+    "path": "outputs/bus_sam_yellow_paint_mask_minus_parts_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_surface_recolor_reference_blue_20260507",
+    "path": "outputs/bus_surface_recolor_reference_blue_20260507",
+    "missing": [
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_surface_recolor_reference_blue_hsv_20260507",
+    "path": "outputs/bus_surface_recolor_reference_blue_hsv_20260507",
+    "missing": [
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_surface_recolor_reference_blue_hsv_target_20260507",
+    "path": "outputs/bus_surface_recolor_reference_blue_hsv_target_20260507",
+    "missing": [
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_surface_recolor_reference_blue_yuv_20260507",
+    "path": "outputs/bus_surface_recolor_reference_blue_yuv_20260507",
+    "missing": [
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_vehicle_paint_mask_auto_20260507",
+    "path": "outputs/bus_vehicle_paint_mask_auto_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_vehicle_paint_mask_auto_alias_20260507",
+    "path": "outputs/bus_vehicle_paint_mask_auto_alias_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_vehicle_paint_mask_auto_v2_20260507",
+    "path": "outputs/bus_vehicle_paint_mask_auto_v2_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_vehicle_paint_mask_detail_exclude_20260507",
+    "path": "outputs/bus_vehicle_paint_mask_detail_exclude_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_yellow_paint_mask_20260507",
+    "path": "outputs/bus_yellow_paint_mask_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_yellow_paint_mask_box_20260507",
+    "path": "outputs/bus_yellow_paint_mask_box_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_yellow_paint_mask_box_hard_20260507",
+    "path": "outputs/bus_yellow_paint_mask_box_hard_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "bus_yellow_paint_mask_box_hsv_20260507",
+    "path": "outputs/bus_yellow_paint_mask_box_hsv_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "cat_crown_auto_support_20260504",
+    "path": "outputs/cat_crown_auto_support_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A cat sitting in grass.",
+    "target_prompt": "A cat wearing a small golden crown sitting in grass.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown_relation_above_20260504",
+    "path": "outputs/cat_crown_relation_above_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A cat sitting in grass.",
+    "target_prompt": "A cat wearing a small golden crown sitting in grass.",
+    "seed": 10
+  },
+  {
+    "run": "cat_crown_semantic_velocity_20260504",
+    "path": "outputs/cat_crown_semantic_velocity_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A cat sitting in grass.",
+    "target_prompt": "A cat wearing a small golden crown sitting in grass.",
+    "seed": 10
+  },
+  {
+    "run": "corgi_crown_auto_support_20260504",
+    "path": "outputs/corgi_crown_auto_support_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A corgi standing outdoors.",
+    "target_prompt": "A corgi wearing a small golden crown standing outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "decoupling_core_20260504",
+    "path": "outputs/decoupling_core_20260504",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": null
+  },
+  {
+    "run": "dog_sunglasses_auto_support_20260504",
+    "path": "outputs/dog_sunglasses_auto_support_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A dog sitting outdoors.",
+    "target_prompt": "A dog wearing black sunglasses sitting outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "local_edit_attention_velocity_20260504",
+    "path": "outputs/local_edit_attention_velocity_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "local_edit_attention_velocity_contentwords_20260504",
+    "path": "outputs/local_edit_attention_velocity_contentwords_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "local_edit_attention_velocity_multicomponent_20260504",
+    "path": "outputs/local_edit_attention_velocity_multicomponent_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "local_edit_attention_velocity_nobox_20260504",
+    "path": "outputs/local_edit_attention_velocity_nobox_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "local_edit_attention_velocity_unionbox_20260504",
+    "path": "outputs/local_edit_attention_velocity_unionbox_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "ode_decoupled_edit_20260504",
+    "path": "outputs/ode_decoupled_edit_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "ode_decoupled_edit_contsupport_20260504",
+    "path": "outputs/ode_decoupled_edit_contsupport_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "ode_decoupled_edit_fixedmask_20260504",
+    "path": "outputs/ode_decoupled_edit_fixedmask_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "ode_decoupled_edit_nearvelsupport_20260504",
+    "path": "outputs/ode_decoupled_edit_nearvelsupport_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "ode_decoupled_edit_softguard_20260504",
+    "path": "outputs/ode_decoupled_edit_softguard_20260504",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "metadata.json"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "ode_decoupled_edit_softguard_20260504_exitcheck",
+    "path": "outputs/ode_decoupled_edit_softguard_20260504_exitcheck",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "ode_decoupled_edit_softguard_20260504_gpu0",
+    "path": "outputs/ode_decoupled_edit_softguard_20260504_gpu0",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "metadata.json"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "ode_decoupled_edit_softguard_20260504_retry",
+    "path": "outputs/ode_decoupled_edit_softguard_20260504_retry",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "metadata.json"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "ode_decoupled_edit_tightsupport_20260504",
+    "path": "outputs/ode_decoupled_edit_tightsupport_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "panda_sunglasses_auto_box_support_20260504",
+    "path": "outputs/panda_sunglasses_auto_box_support_20260504",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "metadata.json"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "panda_sunglasses_auto_box_support_20260504_retry",
+    "path": "outputs/panda_sunglasses_auto_box_support_20260504_retry",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "metadata.json"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "panda_sunglasses_auto_box_support_ode_20260504",
+    "path": "outputs/panda_sunglasses_auto_box_support_ode_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "panda_sunglasses_auto_support_20260504",
+    "path": "outputs/panda_sunglasses_auto_support_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_profile_eye_auto_external_ode_20260507",
+    "path": "outputs/rabbit_profile_eye_auto_external_ode_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A rabbit sitting outdoors.",
+    "target_prompt": "A rabbit wearing black sunglasses sitting outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_profile_eye_auto_ode_20260507",
+    "path": "outputs/rabbit_profile_eye_auto_ode_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A rabbit sitting outdoors.",
+    "target_prompt": "A rabbit wearing black sunglasses sitting outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_profile_eye_finalmask_ode_20260507",
+    "path": "outputs/rabbit_profile_eye_finalmask_ode_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A rabbit sitting outdoors.",
+    "target_prompt": "A rabbit wearing black sunglasses sitting outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses_auto_support_20260504",
+    "path": "outputs/rabbit_sunglasses_auto_support_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A rabbit sitting outdoors.",
+    "target_prompt": "A rabbit wearing black sunglasses sitting outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses_auto_support_fallback_ode_20260506",
+    "path": "outputs/rabbit_sunglasses_auto_support_fallback_ode_20260506",
+    "missing": [
+      "command.txt"
+    ],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A rabbit sitting outdoors.",
+    "target_prompt": "A rabbit wearing black sunglasses sitting outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses_auto_support_fallback_tighter_ode_20260506",
+    "path": "outputs/rabbit_sunglasses_auto_support_fallback_tighter_ode_20260506",
+    "missing": [
+      "command.txt"
+    ],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A rabbit sitting outdoors.",
+    "target_prompt": "A rabbit wearing black sunglasses sitting outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses_head_upper_support_20260504",
+    "path": "outputs/rabbit_sunglasses_head_upper_support_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A rabbit sitting outdoors.",
+    "target_prompt": "A rabbit wearing black sunglasses sitting outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses_profile_mask_ode_20260506",
+    "path": "outputs/rabbit_sunglasses_profile_mask_ode_20260506",
+    "missing": [
+      "command.txt"
+    ],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A rabbit sitting outdoors.",
+    "target_prompt": "A rabbit wearing black sunglasses sitting outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "rabbit_sunglasses_structure_mask_ode_20260506",
+    "path": "outputs/rabbit_sunglasses_structure_mask_ode_20260506",
+    "missing": [
+      "command.txt"
+    ],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A rabbit sitting outdoors.",
+    "target_prompt": "A rabbit wearing black sunglasses sitting outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "semantic_velocity_ablation_20260504",
+    "path": "outputs/semantic_velocity_ablation_20260504",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": null
+  },
+  {
+    "run": "semantic_velocity_grounded_eyes_20260504",
+    "path": "outputs/semantic_velocity_grounded_eyes_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "semantic_velocity_probe_20260504",
+    "path": "outputs/semantic_velocity_probe_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "stop_blue_surface_ref_chromadir_keep3_s095_20260507",
+    "path": "outputs/stop_blue_surface_ref_chromadir_keep3_s095_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red octagonal traffic sign on a pole in a field, with white STOP letters and a blurred landscape background.",
+    "target_prompt": "A photo of the same octagonal traffic sign on the same pole in the same field, with a clean blue sign face and white STOP letters; the pole, border, lighting, shadows, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "stop_blue_surface_ref_chromadir_keep3_s095_fix_20260507",
+    "path": "outputs/stop_blue_surface_ref_chromadir_keep3_s095_fix_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red octagonal traffic sign on a pole in a field, with white STOP letters and a blurred landscape background.",
+    "target_prompt": "A photo of the same octagonal traffic sign on the same pole in the same field, with a clean blue sign face and white STOP letters; the pole, border, lighting, shadows, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "stop_blue_surface_ref_hsv_keep3_brightguard_s075_20260507",
+    "path": "outputs/stop_blue_surface_ref_hsv_keep3_brightguard_s075_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red octagonal traffic sign on a pole in a field, with white STOP letters and a blurred landscape background.",
+    "target_prompt": "A photo of the same octagonal traffic sign on the same pole in the same field, with a clean blue sign face and white STOP letters; the pole, border, lighting, shadows, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "stop_blue_surface_ref_hsv_keep3_darkguard_s090_20260507",
+    "path": "outputs/stop_blue_surface_ref_hsv_keep3_darkguard_s090_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red octagonal traffic sign on a pole in a field, with white STOP letters and a blurred landscape background.",
+    "target_prompt": "A photo of the same octagonal traffic sign on the same pole in the same field, with a clean blue sign face and white STOP letters; the pole, border, lighting, shadows, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "stop_blue_surface_ref_hsv_keep3_lowfreq_s090_20260507",
+    "path": "outputs/stop_blue_surface_ref_hsv_keep3_lowfreq_s090_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red octagonal traffic sign on a pole in a field, with white STOP letters and a blurred landscape background.",
+    "target_prompt": "A photo of the same octagonal traffic sign on the same pole in the same field, with a clean blue sign face and white STOP letters; the pole, border, lighting, shadows, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "stop_blue_surface_ref_hsv_keep3_prompt_octagonal_s090_20260507",
+    "path": "outputs/stop_blue_surface_ref_hsv_keep3_prompt_octagonal_s090_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red octagonal traffic sign on a pole in a field, with white STOP letters and a blurred landscape background.",
+    "target_prompt": "A photo of the same octagonal traffic sign on the same pole in the same field, with a clean blue sign face and white STOP letters; the pole, border, lighting, shadows, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "stop_blue_surface_ref_hsv_keep3_s090_20260507",
+    "path": "outputs/stop_blue_surface_ref_hsv_keep3_s090_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red stop sign on a pole in a field, with white STOP letters and a blurred landscape background.",
+    "target_prompt": "A photo of the same stop sign on the same pole in the same field, only the red sign face surface is changed to blue; the white STOP letters, pole, border, lighting, shadows, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "stop_blue_surface_ref_hsv_source_structure_s090_20260507",
+    "path": "outputs/stop_blue_surface_ref_hsv_source_structure_s090_20260507",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A photo of a red stop sign on a pole in a field, with white STOP letters and a blurred landscape background.",
+    "target_prompt": "A photo of the same stop sign on the same pole in the same field, only the red sign face surface is changed to blue; the white STOP letters, pole, border, lighting, shadows, and background stay unchanged.",
+    "seed": 10
+  },
+  {
+    "run": "stop_red_surface_mask_20260507",
+    "path": "outputs/stop_red_surface_mask_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "stop_red_surface_mask_fillholes_20260507",
+    "path": "outputs/stop_red_surface_mask_fillholes_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "stop_red_surface_mask_keep3_20260507",
+    "path": "outputs/stop_red_surface_mask_keep3_20260507",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "stop_surface_recolor_reference_blue_20260507",
+    "path": "outputs/stop_surface_recolor_reference_blue_20260507",
+    "missing": [
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "stop_surface_recolor_reference_blue_fillholes_20260507",
+    "path": "outputs/stop_surface_recolor_reference_blue_fillholes_20260507",
+    "missing": [
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "stop_surface_recolor_reference_blue_keep3_20260507",
+    "path": "outputs/stop_surface_recolor_reference_blue_keep3_20260507",
+    "missing": [
+      "stats.json",
+      "command.txt"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "sunglasses_effect_good_20260504",
+    "path": "outputs/sunglasses_effect_good_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "sunglasses_effect_good_nomasklayer_20260504",
+    "path": "outputs/sunglasses_effect_good_nomasklayer_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "sunglasses_independent_velocity_diff_20260504",
+    "path": "outputs/sunglasses_independent_velocity_diff_20260504",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "sunglasses_local",
+    "path": "outputs/sunglasses_local",
+    "missing": [],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A panda is walking in a forest.",
+    "target_prompt": "A panda wearing small black sunglasses is walking in a forest.",
+    "seed": 10
+  },
+  {
+    "run": "tiger_sunglasses_auto_support_20260504",
+    "path": "outputs/tiger_sunglasses_auto_support_20260504",
+    "missing": [
+      "result.png",
+      "stats.json",
+      "metadata.json"
+    ],
+    "git_commit": null,
+    "source_prompt": null,
+    "target_prompt": null,
+    "seed": null
+  },
+  {
+    "run": "tiger_sunglasses_auto_support_fallback_ode_20260506",
+    "path": "outputs/tiger_sunglasses_auto_support_fallback_ode_20260506",
+    "missing": [
+      "command.txt"
+    ],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A tiger standing outdoors.",
+    "target_prompt": "A tiger wearing black sunglasses standing outdoors.",
+    "seed": 10
+  },
+  {
+    "run": "tiger_sunglasses_auto_support_fallback_tighter_ode_20260506",
+    "path": "outputs/tiger_sunglasses_auto_support_fallback_tighter_ode_20260506",
+    "missing": [
+      "command.txt"
+    ],
+    "git_commit": "8c057b3d4248a6169a601280ceb19fc931121b4b",
+    "source_prompt": "A tiger standing outdoors.",
+    "target_prompt": "A tiger wearing black sunglasses standing outdoors.",
+    "seed": 10
+  }
+]

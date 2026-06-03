@@ -1,0 +1,256 @@
+{
+  "_schema": {
+    "description": "Manual visual-review annotations consumed by scripts/evaluate_paper_metrics.py.",
+    "key_format": "outputs/main_matrix-relative run path, e.g. cat_crown/full/seed_10",
+    "failure_flag_values": [
+      "",
+      "semantic_miss",
+      "overlay",
+      "background_drift",
+      "mask_artifact",
+      "localization_error",
+      "hybrid_object",
+      "color_miss"
+    ]
+  },
+  "cat_crown/base_only/seed_10": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No crown insertion; source-like reconstruction only."
+  },
+  "cat_crown/base_only/seed_11": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No crown insertion; source-like reconstruction only."
+  },
+  "cat_crown/base_only/seed_12": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No crown insertion; source-like reconstruction only."
+  },
+  "cat_crown/direct_target/seed_10": {
+    "failure_flag": "background_drift",
+    "failure_note": "Crown appears, but cat identity and face structure drift strongly."
+  },
+  "cat_crown/direct_target/seed_11": {
+    "failure_flag": "background_drift",
+    "failure_note": "Crown appears, but cat identity and face structure drift strongly."
+  },
+  "cat_crown/direct_target/seed_12": {
+    "failure_flag": "background_drift",
+    "failure_note": "Crown appears, but cat identity and face structure drift strongly."
+  },
+  "cat_crown/anchor_only/seed_10": {
+    "failure_flag": "background_drift",
+    "failure_note": "Crown appears, but cat identity and face structure drift strongly."
+  },
+  "cat_crown/anchor_only/seed_11": {
+    "failure_flag": "background_drift",
+    "failure_note": "Crown appears, but cat identity and face structure drift strongly."
+  },
+  "cat_crown/anchor_only/seed_12": {
+    "failure_flag": "background_drift",
+    "failure_note": "Crown appears, but cat identity and face structure drift strongly."
+  },
+  "cat_crown/decoupled_rec/seed_10": {
+    "failure_flag": "background_drift",
+    "failure_note": "Crown appears, but cat identity still changes substantially."
+  },
+  "cat_crown/decoupled_rec/seed_11": {
+    "failure_flag": "background_drift",
+    "failure_note": "Crown appears, but cat identity still changes substantially."
+  },
+  "cat_crown/decoupled_rec/seed_12": {
+    "failure_flag": "background_drift",
+    "failure_note": "Crown appears, but cat identity still changes substantially."
+  },
+  "cat_crown/full/seed_10": {
+    "failure_flag": "",
+    "failure_note": "Crown insertion succeeds with much better subject preservation than direct target variants."
+  },
+  "cat_crown/full/seed_11": {
+    "failure_flag": "",
+    "failure_note": "Crown insertion succeeds with much better subject preservation than direct target variants."
+  },
+  "cat_crown/full/seed_12": {
+    "failure_flag": "",
+    "failure_note": "Crown insertion succeeds with much better subject preservation than direct target variants."
+  },
+  "backpack_blue/base_only/seed_10": {
+    "failure_flag": "color_miss",
+    "failure_note": "Backpack remains burgundy."
+  },
+  "backpack_blue/base_only/seed_11": {
+    "failure_flag": "color_miss",
+    "failure_note": "Backpack remains burgundy."
+  },
+  "backpack_blue/base_only/seed_12": {
+    "failure_flag": "color_miss",
+    "failure_note": "Backpack remains burgundy."
+  },
+  "backpack_blue/direct_target/seed_10": {
+    "failure_flag": "background_drift",
+    "failure_note": "Blue backpack appears, but object placement and scene content drift strongly."
+  },
+  "backpack_blue/direct_target/seed_11": {
+    "failure_flag": "background_drift",
+    "failure_note": "Blue backpack appears, but object placement and scene content drift strongly."
+  },
+  "backpack_blue/direct_target/seed_12": {
+    "failure_flag": "background_drift",
+    "failure_note": "Blue backpack appears, but object placement and scene content drift strongly."
+  },
+  "backpack_blue/anchor_only/seed_10": {
+    "failure_flag": "background_drift",
+    "failure_note": "Blue backpack appears, but object placement and scene content drift strongly."
+  },
+  "backpack_blue/anchor_only/seed_11": {
+    "failure_flag": "background_drift",
+    "failure_note": "Blue backpack appears, but object placement and scene content drift strongly."
+  },
+  "backpack_blue/anchor_only/seed_12": {
+    "failure_flag": "background_drift",
+    "failure_note": "Blue backpack appears, but object placement and scene content drift strongly."
+  },
+  "backpack_blue/decoupled_rec/seed_10": {
+    "failure_flag": "background_drift",
+    "failure_note": "Blue edit appears, but object placement and surrounding structure drift."
+  },
+  "backpack_blue/decoupled_rec/seed_11": {
+    "failure_flag": "background_drift",
+    "failure_note": "Blue edit appears, but object placement and surrounding structure drift."
+  },
+  "backpack_blue/decoupled_rec/seed_12": {
+    "failure_flag": "background_drift",
+    "failure_note": "Blue edit appears, but object placement and surrounding structure drift."
+  },
+  "backpack_blue/full/seed_10": {
+    "failure_flag": "hybrid_object",
+    "failure_note": "Preserves much of the scene but creates a large blue object beside a still-red backpack."
+  },
+  "backpack_blue/full/seed_11": {
+    "failure_flag": "hybrid_object",
+    "failure_note": "Preserves much of the scene but creates a large blue object beside a still-red backpack."
+  },
+  "backpack_blue/full/seed_12": {
+    "failure_flag": "hybrid_object",
+    "failure_note": "Preserves much of the scene but creates a large blue object beside a still-red backpack."
+  },
+  "yellow_car_blue/base_only/seed_10": {
+    "failure_flag": "color_miss",
+    "failure_note": "Car remains yellow."
+  },
+  "yellow_car_blue/base_only/seed_11": {
+    "failure_flag": "color_miss",
+    "failure_note": "Car remains yellow."
+  },
+  "yellow_car_blue/base_only/seed_12": {
+    "failure_flag": "color_miss",
+    "failure_note": "Car remains yellow."
+  },
+  "yellow_car_blue/direct_target/seed_10": {
+    "failure_flag": "color_miss",
+    "failure_note": "Target color is not achieved; scene and vehicle structure drift."
+  },
+  "yellow_car_blue/direct_target/seed_11": {
+    "failure_flag": "color_miss",
+    "failure_note": "Target color is not achieved; scene and vehicle structure drift."
+  },
+  "yellow_car_blue/direct_target/seed_12": {
+    "failure_flag": "color_miss",
+    "failure_note": "Target color is not achieved; scene and vehicle structure drift."
+  },
+  "yellow_car_blue/anchor_only/seed_10": {
+    "failure_flag": "color_miss",
+    "failure_note": "Target color is not achieved; vehicle remains mostly yellow."
+  },
+  "yellow_car_blue/anchor_only/seed_11": {
+    "failure_flag": "color_miss",
+    "failure_note": "Target color is not achieved; vehicle remains mostly yellow."
+  },
+  "yellow_car_blue/anchor_only/seed_12": {
+    "failure_flag": "color_miss",
+    "failure_note": "Target color is not achieved; vehicle remains mostly yellow."
+  },
+  "yellow_car_blue/decoupled_rec/seed_10": {
+    "failure_flag": "color_miss",
+    "failure_note": "Target color is not achieved; vehicle remains mostly yellow."
+  },
+  "yellow_car_blue/decoupled_rec/seed_11": {
+    "failure_flag": "color_miss",
+    "failure_note": "Target color is not achieved; vehicle remains mostly yellow."
+  },
+  "yellow_car_blue/decoupled_rec/seed_12": {
+    "failure_flag": "color_miss",
+    "failure_note": "Target color is not achieved; vehicle remains mostly yellow."
+  },
+  "yellow_car_blue/full/seed_10": {
+    "failure_flag": "color_miss",
+    "failure_note": "Full method preserves structure but fails to turn the car body blue."
+  },
+  "yellow_car_blue/full/seed_11": {
+    "failure_flag": "color_miss",
+    "failure_note": "Full method preserves structure but fails to turn the car body blue."
+  },
+  "yellow_car_blue/full/seed_12": {
+    "failure_flag": "color_miss",
+    "failure_note": "Full method preserves structure but fails to turn the car body blue."
+  },
+  "rabbit_sunglasses/base_only/seed_10": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No sunglasses insertion."
+  },
+  "rabbit_sunglasses/base_only/seed_11": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No sunglasses insertion."
+  },
+  "rabbit_sunglasses/base_only/seed_12": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No sunglasses insertion."
+  },
+  "rabbit_sunglasses/direct_target/seed_10": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No reliable sunglasses; rabbit pose and framing drift."
+  },
+  "rabbit_sunglasses/direct_target/seed_11": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No reliable sunglasses; rabbit pose and framing drift."
+  },
+  "rabbit_sunglasses/direct_target/seed_12": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No reliable sunglasses; rabbit pose and framing drift."
+  },
+  "rabbit_sunglasses/anchor_only/seed_10": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No reliable sunglasses; rabbit pose and framing drift."
+  },
+  "rabbit_sunglasses/anchor_only/seed_11": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No reliable sunglasses; rabbit pose and framing drift."
+  },
+  "rabbit_sunglasses/anchor_only/seed_12": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No reliable sunglasses; rabbit pose and framing drift."
+  },
+  "rabbit_sunglasses/decoupled_rec/seed_10": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No reliable sunglasses; partial preservation improvement but edit is weak."
+  },
+  "rabbit_sunglasses/decoupled_rec/seed_11": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No reliable sunglasses; partial preservation improvement but edit is weak."
+  },
+  "rabbit_sunglasses/decoupled_rec/seed_12": {
+    "failure_flag": "semantic_miss",
+    "failure_note": "No reliable sunglasses; partial preservation improvement but edit is weak."
+  },
+  "rabbit_sunglasses/full/seed_10": {
+    "failure_flag": "localization_error",
+    "failure_note": "Small sunglasses-like edit appears, but rabbit scale/framing changes and placement is unreliable."
+  },
+  "rabbit_sunglasses/full/seed_11": {
+    "failure_flag": "localization_error",
+    "failure_note": "Small sunglasses-like edit appears, but rabbit scale/framing changes and placement is unreliable."
+  },
+  "rabbit_sunglasses/full/seed_12": {
+    "failure_flag": "localization_error",
+    "failure_note": "Small sunglasses-like edit appears, but rabbit scale/framing changes and placement is unreliable."
+  }
+}

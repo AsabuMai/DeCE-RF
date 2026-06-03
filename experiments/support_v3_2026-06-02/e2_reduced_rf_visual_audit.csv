@@ -1,0 +1,73 @@
+task,method,seed,edit_success_1_5,source_preservation_1_5,locality_1_5,artifact_severity_1_5,overall_1_5,pass_fail,result_image,notes
+backpack_remove_toy_charm,flowalign,10,3,2,2,3,2,borderline,outputs/e2_rf_comparison/backpack_remove_toy_charm/flowalign/seed_10/result.png,removal/replacement remains unstable with backpack/strap drift
+backpack_remove_toy_charm,flowalign,11,3,2,2,3,2,borderline,outputs/e2_rf_comparison/backpack_remove_toy_charm/flowalign/seed_11/result.png,removal/replacement remains unstable with backpack/strap drift
+backpack_remove_toy_charm,flowalign,12,3,2,2,3,2,borderline,outputs/e2_rf_comparison/backpack_remove_toy_charm/flowalign/seed_12/result.png,removal/replacement remains unstable with backpack/strap drift
+backpack_remove_toy_charm,flowedit,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/backpack_remove_toy_charm/flowedit/seed_10/result.png,removal fails; charm/strap/backpack content changes and target object remains or is replaced
+backpack_remove_toy_charm,flowedit,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/backpack_remove_toy_charm/flowedit/seed_11/result.png,removal fails; charm/strap/backpack content changes and target object remains or is replaced
+backpack_remove_toy_charm,flowedit,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/backpack_remove_toy_charm/flowedit/seed_12/result.png,removal fails; charm/strap/backpack content changes and target object remains or is replaced
+backpack_remove_toy_charm,splitflow,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/backpack_remove_toy_charm/splitflow/seed_10/result.png,removal remains unstable with backpack/object content redrawn
+backpack_remove_toy_charm,splitflow,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/backpack_remove_toy_charm/splitflow/seed_11/result.png,removal remains unstable with backpack/object content redrawn
+backpack_remove_toy_charm,splitflow,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/backpack_remove_toy_charm/splitflow/seed_12/result.png,removal remains unstable with backpack/object content redrawn
+backpack_remove_toy_charm,support_v3_controller_rmsgap,10,5,5,5,1,5,pass,outputs/e2_rf_comparison/backpack_remove_toy_charm/support_v3_controller_rmsgap/seed_10/result.png,reuses strict Phase 1 human quick audit pass
+backpack_remove_toy_charm,support_v3_controller_rmsgap,11,5,5,5,1,5,pass,outputs/e2_rf_comparison/backpack_remove_toy_charm/support_v3_controller_rmsgap/seed_11/result.png,reuses strict Phase 1 human quick audit pass
+backpack_remove_toy_charm,support_v3_controller_rmsgap,12,5,5,5,1,5,pass,outputs/e2_rf_comparison/backpack_remove_toy_charm/support_v3_controller_rmsgap/seed_12/result.png,reuses strict Phase 1 human quick audit pass
+bowl_apple_inside,flowalign,10,3,2,2,3,2,borderline,outputs/e2_rf_comparison/bowl_apple_inside/flowalign/seed_10/result.png,target apple forms; scene is square-cropped and bowl/table appearance shifts
+bowl_apple_inside,flowalign,11,3,2,2,3,2,borderline,outputs/e2_rf_comparison/bowl_apple_inside/flowalign/seed_11/result.png,target apple forms; scene is square-cropped and bowl/table appearance shifts
+bowl_apple_inside,flowalign,12,3,2,2,3,2,borderline,outputs/e2_rf_comparison/bowl_apple_inside/flowalign/seed_12/result.png,target apple forms; scene is square-cropped and bowl/table appearance shifts
+bowl_apple_inside,flowedit,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/bowl_apple_inside/flowedit/seed_10/result.png,apple forms but bowl/table crop and surrounding layout are heavily redrawn
+bowl_apple_inside,flowedit,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/bowl_apple_inside/flowedit/seed_11/result.png,apple forms but bowl/table crop and surrounding layout are heavily redrawn
+bowl_apple_inside,flowedit,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/bowl_apple_inside/flowedit/seed_12/result.png,apple forms but bowl/table crop and surrounding layout are heavily redrawn
+bowl_apple_inside,splitflow,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/bowl_apple_inside/splitflow/seed_10/result.png,apple forms but bowl/table layout and object identity drift substantially
+bowl_apple_inside,splitflow,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/bowl_apple_inside/splitflow/seed_11/result.png,apple forms but bowl/table layout and object identity drift substantially
+bowl_apple_inside,splitflow,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/bowl_apple_inside/splitflow/seed_12/result.png,apple forms but bowl/table layout and object identity drift substantially
+bowl_apple_inside,support_v3_controller_rmsgap,10,5,5,5,1,5,pass,outputs/e2_rf_comparison/bowl_apple_inside/support_v3_controller_rmsgap/seed_10/result.png,reuses strict Phase 1 human quick audit pass
+bowl_apple_inside,support_v3_controller_rmsgap,11,5,5,5,1,5,pass,outputs/e2_rf_comparison/bowl_apple_inside/support_v3_controller_rmsgap/seed_11/result.png,reuses strict Phase 1 human quick audit pass
+bowl_apple_inside,support_v3_controller_rmsgap,12,5,5,5,1,5,pass,outputs/e2_rf_comparison/bowl_apple_inside/support_v3_controller_rmsgap/seed_12/result.png,reuses strict Phase 1 human quick audit pass
+cat_crown,flowalign,10,3,2,2,3,2,borderline,outputs/e2_rf_comparison/cat_crown/flowalign/seed_10/result.png,"crown forms; source mostly retained but square crop, blur, and mild identity drift remain"
+cat_crown,flowalign,11,3,2,2,3,2,borderline,outputs/e2_rf_comparison/cat_crown/flowalign/seed_11/result.png,"crown forms; source mostly retained but square crop, blur, and mild identity drift remain"
+cat_crown,flowalign,12,3,2,2,3,2,borderline,outputs/e2_rf_comparison/cat_crown/flowalign/seed_12/result.png,"crown forms; source mostly retained but square crop, blur, and mild identity drift remain"
+cat_crown,flowedit,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/cat_crown/flowedit/seed_10/result.png,target crown forms but cat identity/color and background are heavily redrawn
+cat_crown,flowedit,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/cat_crown/flowedit/seed_11/result.png,target crown forms but cat identity/color and background are heavily redrawn
+cat_crown,flowedit,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/cat_crown/flowedit/seed_12/result.png,target crown forms but cat identity/color and background are heavily redrawn
+cat_crown,splitflow,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/cat_crown/splitflow/seed_10/result.png,"target crown forms but cat identity, crop, and background are heavily redrawn"
+cat_crown,splitflow,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/cat_crown/splitflow/seed_11/result.png,"target crown forms but cat identity, crop, and background are heavily redrawn"
+cat_crown,splitflow,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/cat_crown/splitflow/seed_12/result.png,"target crown forms but cat identity, crop, and background are heavily redrawn"
+cat_crown,support_v3_controller_rmsgap,10,5,5,5,1,5,pass,outputs/e2_rf_comparison/cat_crown/support_v3_controller_rmsgap/seed_10/result.png,reuses strict Phase 1 human quick audit pass
+cat_crown,support_v3_controller_rmsgap,11,5,5,5,1,5,pass,outputs/e2_rf_comparison/cat_crown/support_v3_controller_rmsgap/seed_11/result.png,reuses strict Phase 1 human quick audit pass
+cat_crown,support_v3_controller_rmsgap,12,5,5,5,1,5,pass,outputs/e2_rf_comparison/cat_crown/support_v3_controller_rmsgap/seed_12/result.png,reuses strict Phase 1 human quick audit pass
+pillow_vertical_fabric_strip,flowalign,10,3,2,2,3,2,borderline,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/flowalign/seed_10/result.png,strip forms but pillow/room crop and texture drift remain
+pillow_vertical_fabric_strip,flowalign,11,3,2,2,3,2,borderline,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/flowalign/seed_11/result.png,strip forms but pillow/room crop and texture drift remain
+pillow_vertical_fabric_strip,flowalign,12,3,2,2,3,2,borderline,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/flowalign/seed_12/result.png,strip forms but pillow/room crop and texture drift remain
+pillow_vertical_fabric_strip,flowedit,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/flowedit/seed_10/result.png,strip forms but pillow/sofa scene is redrawn into a different frontal pillow
+pillow_vertical_fabric_strip,flowedit,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/flowedit/seed_11/result.png,strip forms but pillow/sofa scene is redrawn into a different frontal pillow
+pillow_vertical_fabric_strip,flowedit,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/flowedit/seed_12/result.png,strip forms but pillow/sofa scene is redrawn into a different frontal pillow
+pillow_vertical_fabric_strip,splitflow,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/splitflow/seed_10/result.png,strip forms but pillow/sofa scene is globally redrawn
+pillow_vertical_fabric_strip,splitflow,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/splitflow/seed_11/result.png,strip forms but pillow/sofa scene is globally redrawn
+pillow_vertical_fabric_strip,splitflow,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/splitflow/seed_12/result.png,strip forms but pillow/sofa scene is globally redrawn
+pillow_vertical_fabric_strip,support_v3_controller_rmsgap,10,5,5,5,1,5,pass,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/support_v3_controller_rmsgap/seed_10/result.png,reuses strict Phase 1 human quick audit pass
+pillow_vertical_fabric_strip,support_v3_controller_rmsgap,11,5,5,5,1,5,pass,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/support_v3_controller_rmsgap/seed_11/result.png,reuses strict Phase 1 human quick audit pass
+pillow_vertical_fabric_strip,support_v3_controller_rmsgap,12,5,5,5,1,5,pass,outputs/e2_rf_comparison/pillow_vertical_fabric_strip/support_v3_controller_rmsgap/seed_12/result.png,reuses strict Phase 1 human quick audit pass
+red_chair_blue,flowalign,10,3,2,2,3,2,borderline,outputs/e2_rf_comparison/red_chair_blue/flowalign/seed_10/result.png,blue recolor forms but chair and room appearance drift
+red_chair_blue,flowalign,11,3,2,2,3,2,borderline,outputs/e2_rf_comparison/red_chair_blue/flowalign/seed_11/result.png,blue recolor forms but chair and room appearance drift
+red_chair_blue,flowalign,12,3,2,2,3,2,borderline,outputs/e2_rf_comparison/red_chair_blue/flowalign/seed_12/result.png,blue recolor forms but chair and room appearance drift
+red_chair_blue,flowedit,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/red_chair_blue/flowedit/seed_10/result.png,"blue chair forms but chair geometry, room layout, and crop are changed"
+red_chair_blue,flowedit,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/red_chair_blue/flowedit/seed_11/result.png,"blue chair forms but chair geometry, room layout, and crop are changed"
+red_chair_blue,flowedit,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/red_chair_blue/flowedit/seed_12/result.png,"blue chair forms but chair geometry, room layout, and crop are changed"
+red_chair_blue,splitflow,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/red_chair_blue/splitflow/seed_10/result.png,"blue chair forms but geometry, crop, and room context drift substantially"
+red_chair_blue,splitflow,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/red_chair_blue/splitflow/seed_11/result.png,"blue chair forms but geometry, crop, and room context drift substantially"
+red_chair_blue,splitflow,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/red_chair_blue/splitflow/seed_12/result.png,"blue chair forms but geometry, crop, and room context drift substantially"
+red_chair_blue,support_v3_controller_rmsgap,10,5,5,5,1,5,pass,outputs/e2_rf_comparison/red_chair_blue/support_v3_controller_rmsgap/seed_10/result.png,reuses strict Phase 1 human quick audit pass
+red_chair_blue,support_v3_controller_rmsgap,11,5,5,5,1,5,pass,outputs/e2_rf_comparison/red_chair_blue/support_v3_controller_rmsgap/seed_11/result.png,reuses strict Phase 1 human quick audit pass
+red_chair_blue,support_v3_controller_rmsgap,12,5,5,5,1,5,pass,outputs/e2_rf_comparison/red_chair_blue/support_v3_controller_rmsgap/seed_12/result.png,reuses strict Phase 1 human quick audit pass
+tshirt_star,flowalign,10,3,2,2,3,2,borderline,outputs/e2_rf_comparison/tshirt_star/flowalign/seed_10/result.png,star forms; shirt/body/background crop and texture drift remain
+tshirt_star,flowalign,11,3,2,2,3,2,borderline,outputs/e2_rf_comparison/tshirt_star/flowalign/seed_11/result.png,star forms; shirt/body/background crop and texture drift remain
+tshirt_star,flowalign,12,3,2,2,3,2,borderline,outputs/e2_rf_comparison/tshirt_star/flowalign/seed_12/result.png,star forms; shirt/body/background crop and texture drift remain
+tshirt_star,flowedit,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/tshirt_star/flowedit/seed_10/result.png,star forms but person/background identity and crop drift substantially
+tshirt_star,flowedit,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/tshirt_star/flowedit/seed_11/result.png,star forms but person/background identity and crop drift substantially
+tshirt_star,flowedit,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/tshirt_star/flowedit/seed_12/result.png,star forms but person/background identity and crop drift substantially
+tshirt_star,splitflow,10,3,1,1,4,1,reject,outputs/e2_rf_comparison/tshirt_star/splitflow/seed_10/result.png,star forms but shirt/person/background are globally redrawn
+tshirt_star,splitflow,11,3,1,1,4,1,reject,outputs/e2_rf_comparison/tshirt_star/splitflow/seed_11/result.png,star forms but shirt/person/background are globally redrawn
+tshirt_star,splitflow,12,3,1,1,4,1,reject,outputs/e2_rf_comparison/tshirt_star/splitflow/seed_12/result.png,star forms but shirt/person/background are globally redrawn
+tshirt_star,support_v3_controller_rmsgap,10,5,5,5,1,5,pass,outputs/e2_rf_comparison/tshirt_star/support_v3_controller_rmsgap/seed_10/result.png,reuses strict Phase 1 human quick audit pass
+tshirt_star,support_v3_controller_rmsgap,11,5,5,5,1,5,pass,outputs/e2_rf_comparison/tshirt_star/support_v3_controller_rmsgap/seed_11/result.png,reuses strict Phase 1 human quick audit pass
+tshirt_star,support_v3_controller_rmsgap,12,5,5,5,1,5,pass,outputs/e2_rf_comparison/tshirt_star/support_v3_controller_rmsgap/seed_12/result.png,reuses strict Phase 1 human quick audit pass

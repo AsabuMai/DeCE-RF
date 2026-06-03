@@ -1,0 +1,62 @@
+{
+  "backpack_remove_toy_charm": {
+    "eval_mask": "experiments/support_v3_2026-06-02/eval_masks/backpack_remove_toy_charm_eval_mask.png",
+    "fixed_eval_mask_area": 0.23122151692708334,
+    "seed": "10",
+    "source": "experiments/support_v3_2026-06-02/eval_masks/manual/backpack_remove_toy_charm_eval_mask.png",
+    "source_image": "/workspace/rf_h_edit/data/pretty_free_candidates/unsplash_backpack_keychain_njwnKDUDKNM.jpg",
+    "source_type": "manual",
+    "task": "backpack_remove_toy_charm"
+  },
+  "bowl_apple_inside": {
+    "eval_mask": "experiments/support_v3_2026-06-02/eval_masks/bowl_apple_inside_eval_mask.png",
+    "fixed_eval_mask_area": 0.09208751860119048,
+    "seed": "10",
+    "source": "experiments/support_v3_2026-06-02/eval_masks/manual/bowl_apple_inside_eval_mask.png",
+    "source_image": "/workspace/rf_h_edit/data/pretty_free_candidates/pexels_empty_ceramic_bowl_phase1.jpg",
+    "source_type": "manual",
+    "task": "bowl_apple_inside"
+  },
+  "cat_crown": {
+    "eval_mask": "experiments/support_v3_2026-06-02/eval_masks/cat_crown_eval_mask.png",
+    "fixed_eval_mask_area": 0.09184337797619048,
+    "seed": "10",
+    "source": "experiments/support_v3_2026-06-02/eval_masks/manual/cat_crown_eval_mask.png",
+    "source_image": "/workspace/rf_h_edit/data/paper_images/cat_sitting_in_grass.jpg",
+    "source_type": "manual",
+    "task": "cat_crown"
+  },
+  "pillow_vertical_fabric_strip": {
+    "area": 0.0885649181547619,
+    "eval_mask": "experiments/support_v3_2026-06-02/eval_masks/pillow_vertical_fabric_strip_eval_mask.png",
+    "fixed_eval_mask_area": 0.0885649181547619,
+    "methods": [
+      "direct_target",
+      "adaptive_full_generic_support",
+      "support_v3_controller_rmsgap"
+    ],
+    "reason": "diff_minus_base",
+    "seed": "10",
+    "source_image": "/workspace/rf_h_edit/data/pretty_free_candidates/pexels_plain_pillow_sofa_phase1.jpg",
+    "source_type": "diff_minus_base",
+    "task": "pillow_vertical_fabric_strip"
+  },
+  "red_chair_blue": {
+    "eval_mask": "experiments/support_v3_2026-06-02/eval_masks/red_chair_blue_eval_mask.png",
+    "fixed_eval_mask_area": 0.18696925951086957,
+    "seed": "10",
+    "source": "experiments/support_v3_2026-06-02/eval_masks/manual/red_chair_blue_eval_mask.png",
+    "source_image": "/workspace/rf_h_edit/data/pretty_free_candidates/pexels_red_armchair_room_6758347.jpg",
+    "source_type": "manual",
+    "task": "red_chair_blue"
+  },
+  "tshirt_star": {
+    "eval_mask": "experiments/support_v3_2026-06-02/eval_masks/tshirt_star_eval_mask.png",
+    "fixed_eval_mask_area": 0.0648193359375,
+    "seed": "10",
+    "source": "experiments/support_v3_2026-06-02/eval_masks/manual/tshirt_star_eval_mask.png",
+    "source_image": "/workspace/rf_h_edit/data/pretty_free_candidates/pexels_person_white_tshirt_blue_jeans_8217483.jpg",
+    "source_type": "manual",
+    "task": "tshirt_star"
+  }
+}

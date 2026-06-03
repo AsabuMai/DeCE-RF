@@ -1,0 +1,66 @@
+{
+  "backpack_remove_toy_charm": {
+    "area": 0.08325703938802083,
+    "eval_mask": "experiments/support_v3_2026-05-11/eval_masks/backpack_remove_toy_charm_eval_mask.png",
+    "fixed_eval_mask_area": 0.08325703938802083,
+    "methods": [
+      "direct_target",
+      "adaptive_full_generic_support",
+      "support_v3_fixed",
+      "support_v3_controller_rmsgap"
+    ],
+    "reason": "diff_minus_base",
+    "seed": "10",
+    "source_image": "/workspace/rf_h_edit/data/pretty_free_candidates/unsplash_backpack_keychain_njwnKDUDKNM.jpg",
+    "source_type": "diff_minus_base",
+    "task": "backpack_remove_toy_charm"
+  },
+  "cat_crown": {
+    "area": 0.03076171875,
+    "eval_mask": "experiments/support_v3_2026-05-11/eval_masks/cat_crown_eval_mask.png",
+    "fixed_eval_mask_area": 0.03076171875,
+    "methods": [
+      "direct_target",
+      "adaptive_full_generic_support",
+      "support_v3_fixed",
+      "support_v3_controller_rmsgap"
+    ],
+    "reason": "diff_minus_base",
+    "seed": "10",
+    "source_image": "/workspace/rf_h_edit/data/paper_images/cat_sitting_in_grass.jpg",
+    "source_type": "diff_minus_base",
+    "task": "cat_crown"
+  },
+  "dog_sunglasses": {
+    "area": 0.04890625,
+    "eval_mask": "experiments/support_v3_2026-05-11/eval_masks/dog_sunglasses_eval_mask.png",
+    "fixed_eval_mask_area": 0.04890625,
+    "methods": [
+      "direct_target",
+      "adaptive_full_generic_support",
+      "support_v3_fixed",
+      "support_v3_controller_rmsgap"
+    ],
+    "reason": "diff_minus_base",
+    "seed": "10",
+    "source_image": "/workspace/rf_h_edit/data/pretty_free_candidates/unsplash_dog_front_malinois_PGlA5efHOiI.jpg",
+    "source_type": "diff_minus_base",
+    "task": "dog_sunglasses"
+  },
+  "mug_heart": {
+    "area": 0.040707542782738096,
+    "eval_mask": "experiments/support_v3_2026-05-11/eval_masks/mug_heart_eval_mask.png",
+    "fixed_eval_mask_area": 0.040707542782738096,
+    "methods": [
+      "direct_target",
+      "adaptive_full_generic_support",
+      "support_v3_fixed",
+      "support_v3_controller_rmsgap"
+    ],
+    "reason": "diff_minus_base",
+    "seed": "10",
+    "source_image": "/workspace/rf_h_edit/data/pretty_free_candidates/pexels_white_mug_6312107.jpg",
+    "source_type": "diff_minus_base",
+    "task": "mug_heart"
+  }
+}

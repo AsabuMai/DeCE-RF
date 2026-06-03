@@ -1,0 +1,73 @@
+{
+  "anchor_box_xyxy": [
+    167,
+    286,
+    336,
+    477
+  ],
+  "anchor_mask_area_ratio": 0.10910542805989583,
+  "anchor_output": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/backpack_remove_toy_charm/adaptive_full_support_v3/seed_10/masks/semantic_anchor.png",
+  "blur": 1,
+  "box_threshold": 0.25,
+  "boxes_xyxy": [
+    [
+      165.36215209960938,
+      283.889404296875,
+      337.87164306640625,
+      478.7847900390625
+    ]
+  ],
+  "dilate": 6,
+  "eyes_anchor_area_ratio": 0.10910542805989583,
+  "eyes_anchor_area_threshold": 0.16,
+  "eyes_anchor_box_area_ratio": 0.16417948404947916,
+  "eyes_anchor_box_area_threshold": 0.34,
+  "eyes_anchor_fallback_used": false,
+  "eyes_anchor_max_area_ratio": 0.16,
+  "eyes_anchor_max_box_area_ratio": 0.34,
+  "grounding_model": "IDEA-Research/grounding-dino-base",
+  "image": "/home/Wu_25R8111/rf_h_edit_project/data/pretty_free_candidates/unsplash_backpack_keychain_njwnKDUDKNM.jpg",
+  "labels": [
+    "yellow dangling toy charm"
+  ],
+  "mask_area_ratio": 0.12550862630208334,
+  "mask_mode": "sam_box_intersect",
+  "max_box_area_ratio": 0.25,
+  "num_boxes": 1,
+  "output": "/home/Wu_25R8111/rf_h_edit_project/outputs/pretty_matrix/backpack_remove_toy_charm/adaptive_full_support_v3/seed_10/masks/semantic_support.png",
+  "phrase": "yellow dangling toy charm",
+  "sam_model": "facebook/sam-vit-base",
+  "scores": [
+    0.6209236979484558
+  ],
+  "semantic_edit_words": [
+    "same",
+    "removed",
+    "zipper",
+    "fabric",
+    "preserved"
+  ],
+  "semantic_phrase_after_quality_gate": "yellow dangling toy charm",
+  "semantic_phrase_explicit": "yellow dangling toy charm",
+  "semantic_phrase_inferred": "yellow dangling toy charm",
+  "source_prompt": "A close-up photo of a grey backpack with a yellow dangling toy charm attached to a pink keychain strap.",
+  "support_band_ratio": 0.55,
+  "support_box_xyxy": [
+    167,
+    286,
+    336,
+    477
+  ],
+  "support_expand_x": 0.0,
+  "support_expand_y": 0.0,
+  "support_overlap_ratio": 0.2,
+  "support_plan_params": {},
+  "support_plan_rule": null,
+  "support_relation": "inside",
+  "support_relation_after_quality_gate": "inside",
+  "support_relation_inferred": "inside",
+  "support_relation_requested": "inside",
+  "support_threshold": 0.2,
+  "target_prompt": "A close-up photo of the same grey backpack with the yellow dangling toy charm removed, pink strap, zipper, and fabric preserved.",
+  "text_threshold": 0.2
+}
