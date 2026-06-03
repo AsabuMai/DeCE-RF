@@ -134,6 +134,27 @@ def make_photorealistic_prompt(prompt: str) -> str:
     )
 
 
+def load_sd3_pipeline(args, device: torch.device):
+    pipe = StableDiffusion3Pipeline.from_pretrained(
+        "stabilityai/stable-diffusion-3-medium-diffusers",
+        torch_dtype=torch.float16,
+    )
+    if hasattr(pipe, "enable_attention_slicing"):
+        pipe.enable_attention_slicing()
+    if args.no_model_offload:
+        pipe = pipe.to(device)
+    elif args.low_vram and hasattr(pipe, "enable_sequential_cpu_offload"):
+        pipe.enable_sequential_cpu_offload()
+    elif hasattr(pipe, "enable_model_cpu_offload"):
+        pipe.enable_model_cpu_offload()
+    else:
+        if hasattr(pipe, "enable_sequential_cpu_offload"):
+            pipe.enable_sequential_cpu_offload()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    return pipe
+
+
 def load_image_latent(
     pipe,
     image_path: str,
@@ -153,9 +174,8 @@ def load_image_latent(
     return (x0_src_denorm - pipe.vae.config.shift_factor) * pipe.vae.config.scaling_factor
 
 
-def main() -> None:
+def run_edit(args, pipe=None, scheduler=None) -> None:
     run_started_at = time.perf_counter()
-    args = build_parser().parse_args()
     if torch.cuda.is_available():
         torch.cuda.reset_peak_memory_stats()
     edit_mask_box = parse_normalized_box(args.edit_mask_box, "--edit-mask-box")
@@ -252,22 +272,10 @@ def main() -> None:
         print(f"[prompt] target: {target_prompt}")
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    pipe = StableDiffusion3Pipeline.from_pretrained(
-        "stabilityai/stable-diffusion-3-medium-diffusers",
-        torch_dtype=torch.float16,
-    )
-    scheduler = pipe.scheduler
-    if hasattr(pipe, "enable_attention_slicing"):
-        pipe.enable_attention_slicing()
-    if args.low_vram and hasattr(pipe, "enable_sequential_cpu_offload"):
-        pipe.enable_sequential_cpu_offload()
-    elif hasattr(pipe, "enable_model_cpu_offload"):
-        pipe.enable_model_cpu_offload()
-    else:
-        if hasattr(pipe, "enable_sequential_cpu_offload"):
-            pipe.enable_sequential_cpu_offload()
-    if torch.cuda.is_available():
-        torch.cuda.empty_cache()
+    if pipe is None:
+        pipe = load_sd3_pipeline(args, device)
+    if scheduler is None:
+        scheduler = pipe.scheduler
 
     x_src = load_image_latent(
         pipe=pipe,
@@ -809,6 +817,11 @@ def main() -> None:
         json.dump(metadata, f, indent=2)
     print(f"Saved result to {args.output}")
     print(f"Saved metadata to {metadata_output}")
+
+
+def main() -> None:
+    args = build_parser().parse_args()
+    run_edit(args)
 
 
 if __name__ == "__main__":

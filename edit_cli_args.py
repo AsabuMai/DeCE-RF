@@ -18,6 +18,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Prefer sequential CPU offload over model CPU offload for small-memory GPUs.",
     )
+    parser.add_argument(
+        "--no-model-offload",
+        action="store_true",
+        help="Keep the SD3 pipeline on the active device instead of enabling CPU/model offload.",
+    )
     parser.add_argument("--seed", type=int, default=10)
     parser.add_argument("--num-inference-steps", type=int, default=28)
     parser.add_argument(

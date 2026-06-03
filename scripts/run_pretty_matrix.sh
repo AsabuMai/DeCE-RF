@@ -25,6 +25,8 @@ SEEDS="${SEEDS:-${SEED}}"
 DRY_RUN="${DRY_RUN:-0}"
 SKIP_EXISTING="${SKIP_EXISTING:-0}"
 SUPPORT_DEBUG_ONLY="${SUPPORT_DEBUG_ONLY:-0}"
+BATCH_MANIFEST="${BATCH_MANIFEST:-}"
+MODEL_OFFLOAD="${MODEL_OFFLOAD:-1}"
 
 GROUNDING_MODEL="${GROUNDING_MODEL:-IDEA-Research/grounding-dino-base}"
 SAM_MODEL="${SAM_MODEL:-facebook/sam-vit-base}"
@@ -552,6 +554,9 @@ run_one() {
   if [[ "${LOW_VRAM}" == "1" ]]; then
     cmd+=(--low-vram)
   fi
+  if [[ "${MODEL_OFFLOAD}" == "0" ]]; then
+    cmd+=(--no-model-offload)
+  fi
   if [[ -n "${EDIT_TEXT_SOURCE_PROMPT}" ]]; then
     cmd+=(--edit-text-source-prompt "${EDIT_TEXT_SOURCE_PROMPT}")
   fi
@@ -651,6 +656,10 @@ run_one() {
   echo "[pretty-matrix] out=${out_dir}"
   if [[ "${DRY_RUN}" == "1" ]]; then
     cat "${out_dir}/command.txt"
+  elif [[ -n "${BATCH_MANIFEST}" ]]; then
+    mkdir -p "$(dirname "${BATCH_MANIFEST}")"
+    printf '%s\n' "${out_dir}/command.txt" >> "${BATCH_MANIFEST}"
+    echo "[pretty-matrix] queued for batch: ${out_dir}/command.txt"
   else
     CUDA_VISIBLE_DEVICES="${DEVICE}" "${cmd[@]}"
   fi
