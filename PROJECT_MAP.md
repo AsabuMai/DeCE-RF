@@ -91,10 +91,14 @@ experiments/support_v3_2026-06-02/
 
 Important files:
 
-- `fixed_eval_metrics.csv`
-- `e2_reduced_rf_metrics.csv`
-- `visual_audit_core6.csv`
-- `README.md`
+- `strict_fixed_mask_metrics.csv`
+- `strict_fixed_mask_metrics_summary.md`
+- `strict_visual_human_quick_audit.csv`
+- `e2_reduced_rf_comparison_summary.csv`
+- `e2_reduced_rf_comparison_summary.md`
+- `e2_native_flux_contextual_table.md`
+- `e2_support_matched_contextual_table.md`
+- `e4_fixed_dece_component_ablation_compact.md`
 
 Older experiment summaries were moved to:
 
@@ -122,10 +126,10 @@ Current WACV Phase 1 strict tasks:
 - bowl_apple_inside: implemented T2 container-constrained insertion; seed-10 gate passed.
 - tshirt_star: implemented T3 surface decal; replaces mug_heart as the canonical row.
 - red_chair_blue: implemented T4 local recolor; strict audit passed.
-- pillow_vertical_fabric_strip: implemented T5 surface material strip; supersedes pillow_blue_stripes after seeds 10/11/12 human review.
+- pillow_same_color_corduroy_panel: implemented T5 localized same-color material replacement; replaces the blue-strip diagnostic probe as the canonical T5 row.
 - backpack_remove_toy_charm: implemented T6 exposed-object removal.
 
-Previous server-evidence tasks such as dog_sunglasses, mug_heart, and pillow_blue_stripes are supplement/diagnostic rows, not replacements for the revised strict Core-6.
+Previous server-evidence tasks such as dog_sunglasses, mug_heart, pillow_blue_stripes, and pillow_vertical_fabric_strip are supplement/diagnostic rows, not replacements for the revised strict Core-6.
 `outputs/` is large and generated. Do not treat it as the project entry point.
 
 ## Cleanup Rules
