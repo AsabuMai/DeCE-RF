@@ -477,7 +477,7 @@ task_config() {
       SUPPORT_CHROMA_GUARD="1"
       IMAGE="${ROOT}/data/pretty_free_candidates/pexels_plain_pillow_sofa_phase1.jpg"
       SOURCE_PROMPT="A cozy living room photo with a plain dark grey pillow on a rattan-backed sofa beside a wooden table, soft natural light, and a simple home interior."
-      TARGET_PROMPT="A photo of the same plain dark grey pillow on the same rattan-backed sofa, with the entire pillow surface changed into same-color dark grey chunky cable-knit fabric with thick braided knitted columns, while preserving the pillow shape, outline, lighting, sofa, table, wall, and the rest of the scene."
+      TARGET_PROMPT="${T5_TARGET_PROMPT_OVERRIDE:-A photo of the same plain dark grey pillow on the same rattan-backed sofa, with the entire pillow surface uniformly changed into same-color dark grey chunky cable-knit fabric, the same thick braided knitted columns covering every part of the pillow including the brightly lit left side, while preserving the pillow shape, outline, lighting, sofa, table, wall, and the rest of the scene.}"
       ATTENTION_TARGET_WORDS="knit,cable,braided,pillow"
       CHANGED_TARGET_WORDS="knit,cable,braided"
       SUPPORT_EDIT_OPERATION="add_decal"
@@ -489,20 +489,20 @@ task_config() {
       SUPPORT_RELATION="inside"
       DECAL_SHAPE="waffle_panel"
       DECAL_COLOR="128,128,128"
-      DECAL_BOX="0.430,0.470,0.815,0.708"
+      DECAL_BOX="${T5_DECAL_BOX:-0.430,0.470,0.815,0.708}"
       DECAL_SLANT_X="0.00"
       DECAL_PERSPECTIVE_Y="0.010"
       DECAL_EDGE_FEATHER_RADIUS="2.0"
       DECAL_TOP_FEATHER_FRAC="0.02"
       DECAL_TOP_FEATHER_MIN_ALPHA="0.65"
       DECAL_OPACITY="1.0"
-      TASK_DECAL_REF_GUIDANCE_SCALE="0.08"
-      TASK_DECAL_REF_LUMA_PRESERVE="0.60"
-      TASK_DECAL_REF_GRADIENT_PRESERVE="0.20"
-      TASK_OPFIELD_DECAL_HEDIT="0.68"
-      TASK_OPFIELD_DECAL_TEXT="0.14"
-      TASK_OPFIELD_DECAL_REC="0.40"
-      TASK_OPFIELD_DECAL_TRAJ="0.25"
+      TASK_DECAL_REF_GUIDANCE_SCALE="${T5_REF_GUIDANCE_SCALE:-0.08}"
+      TASK_DECAL_REF_LUMA_PRESERVE="${T5_REF_LUMA_PRESERVE:-0.60}"
+      TASK_DECAL_REF_GRADIENT_PRESERVE="${T5_REF_GRADIENT_PRESERVE:-0.20}"
+      TASK_OPFIELD_DECAL_HEDIT="${T5_OPFIELD_HEDIT:-0.78}"
+      TASK_OPFIELD_DECAL_TEXT="${T5_OPFIELD_TEXT:-0.18}"
+      TASK_OPFIELD_DECAL_REC="${T5_OPFIELD_REC:-0.34}"
+      TASK_OPFIELD_DECAL_TRAJ="${T5_OPFIELD_TRAJ:-0.25}"
       TASK_FINAL_REF_COMPOSITE_SCALE="0.0"
       TASK_FINAL_CHROMA_SOURCE_SCALE="1.0"
       TASK_FINAL_CHROMA_SOURCE_BLUR="2.0"
@@ -532,13 +532,13 @@ task_config() {
       DECAL_TOP_FEATHER_FRAC="0.02"
       DECAL_TOP_FEATHER_MIN_ALPHA="0.65"
       DECAL_OPACITY="1.0"
-      TASK_DECAL_REF_GUIDANCE_SCALE="0.08"
-      TASK_DECAL_REF_LUMA_PRESERVE="0.60"
-      TASK_DECAL_REF_GRADIENT_PRESERVE="0.20"
-      TASK_OPFIELD_DECAL_HEDIT="0.68"
-      TASK_OPFIELD_DECAL_TEXT="0.14"
-      TASK_OPFIELD_DECAL_REC="0.40"
-      TASK_OPFIELD_DECAL_TRAJ="0.25"
+      TASK_DECAL_REF_GUIDANCE_SCALE="${T5_REF_GUIDANCE_SCALE:-0.08}"
+      TASK_DECAL_REF_LUMA_PRESERVE="${T5_REF_LUMA_PRESERVE:-0.60}"
+      TASK_DECAL_REF_GRADIENT_PRESERVE="${T5_REF_GRADIENT_PRESERVE:-0.20}"
+      TASK_OPFIELD_DECAL_HEDIT="${T5_OPFIELD_HEDIT:-0.68}"
+      TASK_OPFIELD_DECAL_TEXT="${T5_OPFIELD_TEXT:-0.14}"
+      TASK_OPFIELD_DECAL_REC="${T5_OPFIELD_REC:-0.40}"
+      TASK_OPFIELD_DECAL_TRAJ="${T5_OPFIELD_TRAJ:-0.25}"
       TASK_FINAL_REF_COMPOSITE_SCALE="0.0"
       TASK_FINAL_CHROMA_SOURCE_SCALE="1.0"
       TASK_FINAL_CHROMA_SOURCE_BLUR="2.0"
@@ -646,9 +646,9 @@ task_config() {
       SUPPORT_REMOVED_TOKENS="toy,charm"
       SUPPORT_V2_CANDIDATE="removed_src_x_clean"
       SUPPORT_V3_RELATION="remove_source_object"
-      SEMANTIC_PHRASE="yellow dangling toy charm"
-      SEMANTIC_DILATE="6"
-      SEMANTIC_BLUR="1"
+      SEMANTIC_PHRASE="${T6_SEMANTIC_PHRASE:-yellow dangling toy charm}"
+      SEMANTIC_DILATE="${T6_SEMANTIC_DILATE:-16}"
+      SEMANTIC_BLUR="${T6_SEMANTIC_BLUR:-1}"
       SUPPORT_RELATION="inside"
       ;;
     P8|backpack_replace_patch_blue|backpack_replace_patch_badge)
@@ -2845,10 +2845,10 @@ run_one() {
       remove_semantic)
         OBJECT_MASK_PROVIDER="semantic_velocity"
         ensure_semantic_mask "${out_dir}"
-        EDIT_HEDIT_GUIDANCE_SCALE="0.78"
-        EDIT_TEXT_GUIDANCE_SCALE="0.10"
-        REC_GUIDANCE_SCALE="0.20"
-        TRAJECTORY_PRESERVE_SCALE="0.16"
+        EDIT_HEDIT_GUIDANCE_SCALE="${T6_HEDIT:-0.78}"
+        EDIT_TEXT_GUIDANCE_SCALE="${T6_TEXT:-0.10}"
+        REC_GUIDANCE_SCALE="${T6_REC:-0.20}"
+        TRAJECTORY_PRESERVE_SCALE="${T6_TRAJ:-0.16}"
         FINAL_MASK_ARGS=(--final-edit-mask "${SUPPORT_MASK}" --final-edit-mask-mode replace)
         ;;
       replace_semantic_badge)
@@ -2896,6 +2896,39 @@ run_one() {
       exit 2
       ;;
   esac
+
+  # Route-independent removal fill reference: cloned-grain texture hint for
+  # remove_semantic tasks (T6_FILL_* env hooks; off by default).
+  if [[ "${TASK_KIND}" == "remove_semantic" && "${T6_FILL_REF_SCALE:-0.0}" != "0.0" && -n "${T6_FILL_PATCH_BOX:-}" && -n "${SUPPORT_MASK:-}" && -s "${SUPPORT_MASK}" ]]; then
+    REMOVAL_FILL_REF="${out_dir}/masks/removal_fill_reference.png"
+    "${PYTHON}" "${ROOT}/scripts/make_removal_fill_reference.py" \
+      --image "${IMAGE}" \
+      --mask "${SUPPORT_MASK}" \
+      --output "${REMOVAL_FILL_REF}" \
+      --patch-box "${T6_FILL_PATCH_BOX}" \
+      --grain-scale "${T6_FILL_GRAIN_SCALE:-1.0}" \
+      --metadata-output "${out_dir}/masks/removal_fill_reference.json"
+    EDIT_REF_GUIDANCE_SCALE="${T6_FILL_REF_SCALE}"
+    # Structure image must be the fill reference, not the source: preserving
+    # source luma structure inside the mask resurrects the removed object.
+    REF_ARGS=(
+      --edit-ref-image "${REMOVAL_FILL_REF}"
+      --edit-ref-mask "${SUPPORT_MASK}"
+      --edit-ref-structure-image "${REMOVAL_FILL_REF}"
+      --edit-ref-chroma-mode yuv
+      --edit-ref-luma-preserve-scale "${T6_FILL_REF_LUMA_PRESERVE:-0.0}"
+      --edit-ref-gradient-preserve-scale "${T6_FILL_REF_GRADIENT_PRESERVE:-0.0}"
+      --edit-ref-smooth-kernel 1
+    )
+    if [[ "${T6_FILL_COMPOSITE_SCALE:-0.0}" != "0.0" ]]; then
+      REF_ARGS+=(
+        --final-ref-composite-image "${REMOVAL_FILL_REF}"
+        --final-ref-composite-mask "${SUPPORT_MASK}"
+        --final-ref-composite-scale "${T6_FILL_COMPOSITE_SCALE}"
+        --final-ref-composite-mask-blur "${T6_FILL_COMPOSITE_BLUR:-1.2}"
+      )
+    fi
+  fi
 
   local edit_strength_multiplier="${TASK_EDIT_STRENGTH_MULTIPLIER:-${EDIT_STRENGTH_MULTIPLIER:-1.0}}"
   if [[ "${edit_strength_multiplier}" != "1.0" ]]; then

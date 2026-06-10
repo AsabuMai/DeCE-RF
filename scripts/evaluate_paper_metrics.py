@@ -294,6 +294,7 @@ def evaluate_run(
     failure_annotations: dict[str, Any] | None = None,
     mask_candidates: tuple[str, ...] = MASK_CANDIDATES,
     eval_mask_dir: Path | None = None,
+    removal_phrases: dict[str, tuple[str, str]] | None = None,
 ) -> dict[str, Any]:
     present = {name: (run_dir / name).exists() for name in REQUIRED_FILES}
     missing = [name for name, exists in present.items() if not exists]
@@ -406,6 +407,28 @@ def evaluate_run(
             "inside_blue_ratio": blue_ratio(result, mask),
         }
     )
+    if mask is not None and inside is not None and np.any(inside):
+        # Texture-consistency diagnostic: gradient energy inside the mask vs a
+        # ring just outside it, both measured on the result. Near 1.0 means the
+        # filled/edited region matches the surrounding material texture.
+        from PIL import ImageFilter as _ImageFilter
+
+        result_luma = (
+            0.299 * result[..., 0] + 0.587 * result[..., 1] + 0.114 * result[..., 2]
+        ) * 255.0
+        grad_y, grad_x = np.gradient(result_luma)
+        grad_mag = np.hypot(grad_x, grad_y)
+        dilated = np.asarray(
+            Image.fromarray((mask * 255).astype(np.uint8)).filter(_ImageFilter.MaxFilter(31)),
+            dtype=np.float32,
+        ) / 255.0
+        ring = (dilated > 0.5) & (mask <= 0.2)
+        if np.any(ring):
+            inside_tex = float(grad_mag[inside].mean())
+            ring_tex = float(grad_mag[ring].mean())
+            record["inside_texture_energy"] = inside_tex
+            record["ring_texture_energy"] = ring_tex
+            record["fill_texture_ratio"] = inside_tex / max(ring_tex, 1e-6)
     if clip_scorer is not None:
         source_prompt = str(record.get("source_prompt") or "")
         target_prompt = str(record.get("target_prompt") or "")
@@ -429,6 +452,24 @@ def evaluate_run(
             record["local_clip_target_score"] = local_scores[1]
             record["local_clip_target_minus_source"] = local_scores[1] - local_scores[0]
             record["local_crop_box"] = ",".join(str(value) for value in bbox)
+        removal_entry = (removal_phrases or {}).get(task)
+        if removal_entry is not None and mask is not None:
+            object_phrase, background_phrase = removal_entry
+            source_image_full = Image.open(source_path).convert("RGB").resize(size, Image.Resampling.LANCZOS)
+            phrase_texts = [object_phrase, background_phrase]
+            src_local = clip_scorer.score_image(source_image_full.crop(bbox), phrase_texts)
+            res_local = clip_scorer.score_image(result_image.crop(bbox), phrase_texts)
+            if len(src_local) == 2 and len(res_local) == 2:
+                record["removal_object_phrase"] = object_phrase
+                record["removal_background_phrase"] = background_phrase
+                record["removal_object_clip_source"] = src_local[0]
+                record["removal_object_clip_result"] = res_local[0]
+                # Higher = the removed object is less recognizable in the result.
+                record["removal_object_clip_drop"] = src_local[0] - res_local[0]
+                record["removal_background_clip_gain"] = res_local[1] - src_local[1]
+                record["removal_edit_score"] = (
+                    (src_local[0] - res_local[0]) + (res_local[1] - src_local[1])
+                )
     if dino_scorer is not None:
         record["dino_source_similarity"] = dino_scorer.similarity(source_path, result_path)
     if lpips_scorer is not None:
@@ -515,7 +556,28 @@ def main() -> int:
         default=None,
         help="Optional preserve-floor reference table kept for compatibility with experiment runners.",
     )
+    parser.add_argument(
+        "--removal-phrase",
+        action="append",
+        default=[],
+        metavar="TASK=OBJECT|BACKGROUND",
+        help=(
+            "Removal-aware CLIP scoring for a task: 'task=object phrase|background phrase'. "
+            "Adds removal_object_clip_drop / removal_edit_score columns. Repeatable."
+        ),
+    )
     args = parser.parse_args()
+
+    removal_phrases: dict[str, tuple[str, str]] = {}
+    for item in args.removal_phrase:
+        if "=" not in item:
+            print(f"WARNING: ignoring malformed --removal-phrase '{item}'")
+            continue
+        task_key, _, phrases = item.partition("=")
+        object_phrase, _, background_phrase = phrases.partition("|")
+        if not background_phrase:
+            background_phrase = "a plain empty surface"
+        removal_phrases[task_key.strip()] = (object_phrase.strip(), background_phrase.strip())
 
     clip_scorer = None
     if args.clip_model:
@@ -572,6 +634,7 @@ def main() -> int:
             failure_annotations=failure_annotations,
             mask_candidates=mask_candidates,
             eval_mask_dir=args.eval_mask_dir,
+            removal_phrases=removal_phrases,
         )
         for path in find_run_dirs(
             args.outputs_dir,
