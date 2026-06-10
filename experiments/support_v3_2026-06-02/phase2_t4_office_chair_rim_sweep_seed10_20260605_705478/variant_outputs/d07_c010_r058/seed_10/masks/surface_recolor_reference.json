@@ -1,0 +1,18 @@
+{
+  "blend": 1.0,
+  "image": "/cluster/users/grad/2025/25t8103/project/data/pretty_free_candidates/unsplash_red_office_chair_concrete_lvVWRzm_NwY.jpg",
+  "luma_image": "/cluster/users/grad/2025/25t8103/project/data/pretty_free_candidates/unsplash_red_office_chair_concrete_lvVWRzm_NwY.jpg",
+  "mask_area_gt_0_5": 0.10915829090589887,
+  "mask_blur": 1,
+  "mode": "yuv-chroma",
+  "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_10/masks/surface_recolor_reference.png",
+  "purpose": "surface_recolor_reference_for_ode_guidance",
+  "surface_mask": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_10/masks/recolor_source_color_mask.png",
+  "surface_name": "chair",
+  "target_color": "blue",
+  "target_rgb": [
+    0.05000000074505806,
+    0.2199999988079071,
+    0.8999999761581421
+  ]
+}

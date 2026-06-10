@@ -1,0 +1,9 @@
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_mask_metrics.csv
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_summary.csv
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_by_task_summary.csv
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_correlation.csv
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_summary.md
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_tshirt_star_seed10_figure4_panel.png
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_seed10_task_sheet.png
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_complete_2026-06-04.md
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_complete_2026-06-04.csv

@@ -1,0 +1,13 @@
+task,category,boundary_label,paper_message
+cat_crown,positive_core,above-host accessory,canonical attached-accessory success case
+dog_bow_tie_phase2,extension_core,below-host accessory,tests neck/chest accessory geometry
+dog_front_sunglasses_phase2,boundary_core,face-attached accessory,strict alignment and identity preservation
+bowl_apple_inside,positive_core,inside-container insertion,canonical container insertion
+white_bowl_orange_tabletop_phase2,boundary_core,surface placement clarity,orange visibility and scale are human-review sensitive
+brown_bowl_lemon_phase2,extension_core,inside-container insertion,small bowl interior placement
+tshirt_star,boundary_core,decal naturalness,hard-edge symbol can look pasted if texture/shading is weak
+mug_heart,positive_core,compact decal,small hard-edge decal on curved mug
+tote_leaf,extension_core,fabric-panel decal,larger flat tote panel
+red_office_chair_to_blue_office_chair,positive_core,object recolor,chair shell recolor with metal/floor preservation
+green_mug_orange_phase2,boundary_core,object recolor,edge grey and orange clarity are human-review sensitive
+yellow_vase_blue_phase2,boundary_core,object recolor,fabric boundary and matte blue realism are human-review sensitive

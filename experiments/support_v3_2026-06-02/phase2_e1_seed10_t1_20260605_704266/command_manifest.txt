@@ -1,0 +1,12 @@
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/base_only/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/direct_target/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/adaptive_full_generic_support/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/support_v3_controller_rmsgap/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/base_only/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/direct_target/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/adaptive_full_generic_support/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/support_v3_controller_rmsgap/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/base_only/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/direct_target/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/adaptive_full_generic_support/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap/seed_10/command.txt

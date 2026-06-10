@@ -1,0 +1,9 @@
+{
+  "scope": "Phase2 T1-T4 DeCE-RF only, seeds 10/11/12",
+  "method_suffix": "_t1t4_3seed_20260609",
+  "complete": 36,
+  "expected": 36,
+  "missing_count": 0,
+  "yellow_vase_blue_phase2_status": "flag_for_human_review",
+  "missing": []
+}

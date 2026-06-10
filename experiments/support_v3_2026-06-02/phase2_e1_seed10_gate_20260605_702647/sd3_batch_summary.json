@@ -1,0 +1,655 @@
+{
+  "started_at": "2026-06-05T00:24:38+0900",
+  "command_count": 72,
+  "records": [
+    {
+      "index": 1,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/base_only/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005017319926992059
+    },
+    {
+      "index": 2,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/direct_target/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0003599610645323992
+    },
+    {
+      "index": 3,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0003659019712358713
+    },
+    {
+      "index": 4,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_crown/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.00035968597512692213
+    },
+    {
+      "index": 5,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 15.109078856068663
+    },
+    {
+      "index": 6,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 16.370049764052965
+    },
+    {
+      "index": 7,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 25.330698871985078
+    },
+    {
+      "index": 8,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_crown_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.23641237197444
+    },
+    {
+      "index": 9,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 11.901235940982588
+    },
+    {
+      "index": 10,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 12.619527567992918
+    },
+    {
+      "index": 11,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 25.04659235593863
+    },
+    {
+      "index": 12,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_crown_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.241979165934026
+    },
+    {
+      "index": 13,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 12.655598638928495
+    },
+    {
+      "index": 14,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 11.747555529000238
+    },
+    {
+      "index": 15,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.994240606902167
+    },
+    {
+      "index": 16,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 24.549793910002336
+    },
+    {
+      "index": 17,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 10.705104129971005
+    },
+    {
+      "index": 18,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 11.760200514923781
+    },
+    {
+      "index": 19,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 24.298690467025153
+    },
+    {
+      "index": 20,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_strawberry_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 24.35213824303355
+    },
+    {
+      "index": 21,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 10.498998349066824
+    },
+    {
+      "index": 22,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 11.892033707001247
+    },
+    {
+      "index": 23,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 24.12866413104348
+    },
+    {
+      "index": 24,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 24.314938939060085
+    },
+    {
+      "index": 25,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/base_only/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0008470939937978983
+    },
+    {
+      "index": 26,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/direct_target/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005408739671111107
+    },
+    {
+      "index": 27,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005255149444565177
+    },
+    {
+      "index": 28,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005193189717829227
+    },
+    {
+      "index": 29,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/base_only/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0006400010315701365
+    },
+    {
+      "index": 30,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/direct_target/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005197919672355056
+    },
+    {
+      "index": 31,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005397259956225753
+    },
+    {
+      "index": 32,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005345450481399894
+    },
+    {
+      "index": 33,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 10.54007059102878
+    },
+    {
+      "index": 34,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 11.422733491985127
+    },
+    {
+      "index": 35,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 24.105239817057736
+    },
+    {
+      "index": 36,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 24.35366126091685
+    },
+    {
+      "index": 37,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/base_only/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0007457089377567172
+    },
+    {
+      "index": 38,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/direct_target/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005081269191578031
+    },
+    {
+      "index": 39,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.000514328945428133
+    },
+    {
+      "index": 40,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_blue/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005207839421927929
+    },
+    {
+      "index": 41,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 10.0977903570747
+    },
+    {
+      "index": 42,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 11.307002914021723
+    },
+    {
+      "index": 43,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 30.525255157030188
+    },
+    {
+      "index": 44,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_product_blue_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 30.828846837976016
+    },
+    {
+      "index": 45,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 10.185973523068242
+    },
+    {
+      "index": 46,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 11.106794910971075
+    },
+    {
+      "index": 47,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 30.188290536985733
+    },
+    {
+      "index": 48,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_chair_restaurant_blue_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 32.102827797993086
+    },
+    {
+      "index": 49,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 10.35144316102378
+    },
+    {
+      "index": 50,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 11.669852674007416
+    },
+    {
+      "index": 51,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.624225740903057
+    },
+    {
+      "index": 52,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_blue_stripes/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 26.590017096023075
+    },
+    {
+      "index": 53,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 10.469042235985398
+    },
+    {
+      "index": 54,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 11.024176468956284
+    },
+    {
+      "index": 55,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.48637963994406
+    },
+    {
+      "index": 56,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_dots_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 26.630052853026427
+    },
+    {
+      "index": 57,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 10.354627712978981
+    },
+    {
+      "index": 58,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 11.245470230933279
+    },
+    {
+      "index": 59,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.460662979981862
+    },
+    {
+      "index": 60,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_pillow_blue_cross_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 27.109945241943933
+    },
+    {
+      "index": 61,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/base_only/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0007424369687214494
+    },
+    {
+      "index": 62,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/direct_target/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005087399622425437
+    },
+    {
+      "index": 63,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005201760213822126
+    },
+    {
+      "index": 64,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_toy_charm/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "skipped_existing",
+      "runtime_seconds": 0.0005151500226929784
+    },
+    {
+      "index": 65,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 10.616753993090242
+    },
+    {
+      "index": 66,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 11.109762754058465
+    },
+    {
+      "index": 67,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.56187084596604
+    },
+    {
+      "index": 68,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/backpack_remove_silver_keychain_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 24.23223477404099
+    },
+    {
+      "index": 69,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 12.419564998010173
+    },
+    {
+      "index": 70,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 15.633549854974262
+    },
+    {
+      "index": 71,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 34.287737576058134
+    },
+    {
+      "index": 72,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bag_remove_decorative_tag_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 35.996301010018215
+    }
+  ],
+  "finished_at": "2026-06-05T00:41:02+0900"
+}

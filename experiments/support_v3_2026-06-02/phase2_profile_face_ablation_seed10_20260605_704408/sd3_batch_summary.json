@@ -1,0 +1,34 @@
+{
+  "started_at": "2026-06-05T15:18:10+0900",
+  "command_count": 3,
+  "records": [
+    {
+      "index": 1,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileA_old_onface/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileA_old_onface/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileA_old_onface/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileA_old_onface/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 43.250159263960086
+    },
+    {
+      "index": 2,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileB_strict_onface/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileB_strict_onface/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileB_strict_onface/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileB_strict_onface/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 41.090951559948735
+    },
+    {
+      "index": 3,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileC_onprofile_strict/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileC_onprofile_strict/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileC_onprofile_strict/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileC_onprofile_strict/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 35.947754920925945
+    }
+  ],
+  "finished_at": "2026-06-05T15:20:10+0900"
+}

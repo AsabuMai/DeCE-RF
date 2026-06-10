@@ -1,0 +1,3 @@
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/bowl_apple_inside/support_v3_controller_rmsgap/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/brown_bowl_lemon_phase2/support_v3_controller_rmsgap/seed_10/command.txt

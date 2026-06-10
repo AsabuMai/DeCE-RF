@@ -1,0 +1,8 @@
+task,category,failure_type,paper_message
+laptop_remove_sticker,positive_extension,high-confidence completion prior,extension can help when completion prior is reliable
+whiteboard_probe_red_star_sticker,positive_extension,replacement target route,replacement route is useful but separately named
+dog_remove_tennis_ball,failure_limit,removal completion failure,localization is not enough when the host mouth/fur must be synthesized
+whiteboard_remove_yellow_letter,failure_limit,semantic glyph hallucination,blank removal in text-like fields is outside the claim
+fridge_remove_yellow_magnet,failure_limit,cluttered-surface damage,support may be accurate while completion damages cluttered surfaces
+fridge_remove_peach_magnet,failure_limit,cluttered-surface damage,support may be accurate while completion damages cluttered surfaces
+dog_replace_tennis_ball_star,failure_limit,replacement ambiguity,target pressure can fire without clean replacement

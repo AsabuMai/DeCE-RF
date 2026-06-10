@@ -1,0 +1,43 @@
+{
+  "started_at": "2026-06-05T13:13:13+0900",
+  "command_count": 4,
+  "records": [
+    {
+      "index": 1,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 135.01784155494533
+    },
+    {
+      "index": 2,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 20.398372327093966
+    },
+    {
+      "index": 3,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 51.95584123895969
+    },
+    {
+      "index": 4,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 38.3538335749181
+    }
+  ],
+  "finished_at": "2026-06-05T13:17:19+0900"
+}

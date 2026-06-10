@@ -1,0 +1,35 @@
+{
+  "started_at": "2026-06-09T11:32:09+0900",
+  "command_count": 3,
+  "mode": "subprocess_fallback",
+  "records": [
+    {
+      "index": 1,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 39.63731491500221
+    },
+    {
+      "index": 2,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 42.768752568998025
+    },
+    {
+      "index": 3,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix4_20260609/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 43.965704365997226
+    }
+  ],
+  "finished_at": "2026-06-09T11:34:15+0900"
+}

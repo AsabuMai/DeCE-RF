@@ -1,0 +1,11 @@
+item,status,notes
+scope,complete,"3 tasks x 6 variants x 3 seeds = 54 support-map rows"
+mask_metrics,complete,e3_support_geometry_mask_metrics.csv
+summary,complete,e3_support_geometry_summary.csv and e3_support_geometry_summary.md
+by_task_summary,complete,e3_support_geometry_by_task_summary.csv
+correlation,complete,e3_support_geometry_correlation.csv
+figure4_panel,complete,e3_support_geometry_tshirt_star_seed10_figure4_panel.png
+task_sheet,complete,e3_support_geometry_seed10_task_sheet.png
+checksum,complete,e3_support_geometry.sha256
+manual_upper_bound,deferred_optional,not required for current E3
+support_perturbation,deferred_optional,can be moved to E4/stress if needed

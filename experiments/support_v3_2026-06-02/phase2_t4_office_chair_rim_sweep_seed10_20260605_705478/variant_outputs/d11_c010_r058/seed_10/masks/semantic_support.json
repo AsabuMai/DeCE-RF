@@ -1,0 +1,74 @@
+{
+  "anchor_box_xyxy": [
+    31,
+    38,
+    284,
+    342
+  ],
+  "anchor_mask_area_ratio": 0.1632357510653409,
+  "anchor_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_10/masks/semantic_anchor.png",
+  "blur": 0,
+  "box_threshold": 0.25,
+  "boxes_xyxy": [
+    [
+      31.08391571044922,
+      36.08924865722656,
+      285.77545166015625,
+      341.70654296875
+    ]
+  ],
+  "dilate": 0,
+  "eyes_anchor_area_ratio": 0.1632357510653409,
+  "eyes_anchor_area_threshold": 0.16,
+  "eyes_anchor_box_area_ratio": 0.4267578125,
+  "eyes_anchor_box_area_threshold": 0.34,
+  "eyes_anchor_fallback_used": false,
+  "eyes_anchor_max_area_ratio": 0.16,
+  "eyes_anchor_max_box_area_ratio": 0.34,
+  "grounding_model": "IDEA-Research/grounding-dino-base",
+  "image": "/cluster/users/grad/2025/25t8103/project/data/pretty_free_candidates/unsplash_red_office_chair_concrete_lvVWRzm_NwY.jpg",
+  "labels": [
+    "chair"
+  ],
+  "mask_area_ratio": 0.1632357510653409,
+  "mask_mode": "sam_box_intersect",
+  "max_box_area_ratio": 0.25,
+  "num_boxes": 1,
+  "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png",
+  "phrase": "chair",
+  "sam_model": "facebook/sam-vit-base",
+  "scores": [
+    0.8516589999198914
+  ],
+  "semantic_edit_words": [
+    "base",
+    "wheels",
+    "wall",
+    "floor",
+    "remain",
+    "unchanged"
+  ],
+  "semantic_phrase_after_quality_gate": "chair",
+  "semantic_phrase_explicit": "chair",
+  "semantic_phrase_inferred": "chair",
+  "source_prompt": "A photo of a red office chair on a concrete floor.",
+  "support_band_ratio": 0.55,
+  "support_box_xyxy": [
+    31,
+    38,
+    284,
+    342
+  ],
+  "support_expand_x": 0.0,
+  "support_expand_y": 0.0,
+  "support_overlap_ratio": 0.2,
+  "support_plan_params": {},
+  "support_plan_rule": null,
+  "support_relation": "inside",
+  "support_relation_after_quality_gate": "inside",
+  "support_relation_inferred": "inside",
+  "support_relation_requested": "inside",
+  "support_threshold": 0.2,
+  "target_prompt": "A photo of the same office chair on the same concrete floor, with only the red plastic seat and back shell changed to deep blue while the silver metal base, wheels, wall, and floor remain unchanged.",
+  "text_threshold": 0.2
+}

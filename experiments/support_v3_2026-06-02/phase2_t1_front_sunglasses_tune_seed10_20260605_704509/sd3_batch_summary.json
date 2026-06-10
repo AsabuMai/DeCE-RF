@@ -1,0 +1,35 @@
+{
+  "started_at": "2026-06-05T16:05:40+0900",
+  "command_count": 3,
+  "mode": "subprocess_fallback",
+  "records": [
+    {
+      "index": 1,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_add_editor_v2_frontN_addedit_response/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_add_editor_v2_frontN_addedit_response/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_add_editor_v2_frontN_addedit_response/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_add_editor_v2_frontN_addedit_response/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 55.66021166997962
+    },
+    {
+      "index": 2,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_add_editor_v2_frontO_addedit_relonly/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_add_editor_v2_frontO_addedit_relonly/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_add_editor_v2_frontO_addedit_relonly/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_add_editor_v2_frontO_addedit_relonly/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 56.66537777602207
+    },
+    {
+      "index": 3,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_frontP_relonly_strong/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_frontP_relonly_strong/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_frontP_relonly_strong/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_frontP_relonly_strong/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 50.59971406799741
+    }
+  ],
+  "finished_at": "2026-06-05T16:08:23+0900"
+}

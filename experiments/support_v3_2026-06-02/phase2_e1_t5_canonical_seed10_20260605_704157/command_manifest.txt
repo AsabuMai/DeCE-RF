@@ -1,0 +1,4 @@
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/base_only/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/direct_target/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/adaptive_full_generic_support/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/pillow_vertical_fabric_strip/support_v3_controller_rmsgap/seed_10/command.txt

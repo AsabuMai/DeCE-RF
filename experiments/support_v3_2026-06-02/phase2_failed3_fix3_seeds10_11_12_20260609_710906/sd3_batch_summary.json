@@ -1,0 +1,62 @@
+{
+  "started_at": "2026-06-09T12:04:23+0900",
+  "command_count": 6,
+  "mode": "subprocess_fallback",
+  "records": [
+    {
+      "index": 1,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 40.08363717800239
+    },
+    {
+      "index": 2,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 57.074130435998086
+    },
+    {
+      "index": 3,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 42.041489947994705
+    },
+    {
+      "index": 4,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 63.199812830993324
+    },
+    {
+      "index": 5,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 44.19173342701106
+    },
+    {
+      "index": 6,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix6_20260609/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 44.68897686600394
+    }
+  ],
+  "finished_at": "2026-06-09T12:09:15+0900"
+}

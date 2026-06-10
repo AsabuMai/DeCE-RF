@@ -1,0 +1,19 @@
+task,variant,display_name,n,role,support_iou_mean,support_precision_mean,support_recall_mean,support_area_ratio_mean,outside_mask_l1_mean,inside_mask_l1_mean,source_ssim_luma_mean,edit_score_mean
+cat_crown,attention_only,Attention only,3,semantic localization only,0.0766,0.1608,0.1277,0.0442,,,,
+cat_crown,clean_disagreement,Clean disagreement,3,source-target clean-estimate gap,0.0488,0.1004,0.0868,0.0481,,,,
+cat_crown,velocity_disagreement,Velocity disagreement,3,RF response without relation prior,0.0488,0.1006,0.0866,0.0479,,,,
+cat_crown,grounding_sam,Grounding/SAM,3,external segmentation only,0.4590,0.6079,0.6520,0.0596,,,,
+cat_crown,generic_support,Generic support,3,weak automatic support,0.0993,0.2013,0.1638,0.0452,0.0582,0.0574,0.6575,0.0022
+cat_crown,operation_conditioned_support,Operation support,3,operation-conditioned geometry estimator,0.0000,0.0000,0.0000,0.0290,0.0572,0.0547,0.6503,0.0988
+tshirt_star,attention_only,Attention only,3,semantic localization only,0.0000,0.0000,0.0000,0.0468,,,,
+tshirt_star,clean_disagreement,Clean disagreement,3,source-target clean-estimate gap,0.0000,0.0000,0.0000,0.0466,,,,
+tshirt_star,velocity_disagreement,Velocity disagreement,3,RF response without relation prior,0.0000,0.0000,0.0000,0.0466,,,,
+tshirt_star,grounding_sam,Grounding/SAM,3,external segmentation only,0.1118,0.1122,0.9686,0.3353,,,,
+tshirt_star,generic_support,Generic support,3,weak automatic support,0.0000,0.0000,0.0000,0.0377,0.0286,0.0104,0.8648,-0.0092
+tshirt_star,operation_conditioned_support,Operation support,3,operation-conditioned geometry estimator,0.3883,0.4403,0.7668,0.0677,0.0176,0.0824,0.8780,0.0798
+backpack_remove_toy_charm,attention_only,Attention only,3,semantic localization only,0.0450,0.1927,0.0555,0.0469,,,,
+backpack_remove_toy_charm,clean_disagreement,Clean disagreement,3,source-target clean-estimate gap,0.0827,0.3432,0.0982,0.0466,,,,
+backpack_remove_toy_charm,velocity_disagreement,Velocity disagreement,3,RF response without relation prior,0.0820,0.3428,0.0973,0.0463,,,,
+backpack_remove_toy_charm,grounding_sam,Grounding/SAM,3,external segmentation only,0.5015,0.7711,0.5892,0.1245,,,,
+backpack_remove_toy_charm,generic_support,Generic support,3,weak automatic support,0.1813,0.6873,0.1976,0.0469,0.0280,0.0800,0.7956,-0.0078
+backpack_remove_toy_charm,operation_conditioned_support,Operation support,3,operation-conditioned geometry estimator,0.5015,0.7711,0.5892,0.1245,0.0295,0.1390,0.7366,-0.0169

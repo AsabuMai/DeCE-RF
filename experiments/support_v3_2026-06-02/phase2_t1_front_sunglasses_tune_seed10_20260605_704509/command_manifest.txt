@@ -1,0 +1,3 @@
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_add_editor_v2_frontN_addedit_response/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_add_editor_v2_frontO_addedit_relonly/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_front_sunglasses_phase2/support_v3_controller_rmsgap_frontP_relonly_strong/seed_10/command.txt

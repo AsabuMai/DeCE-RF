@@ -1,0 +1,3 @@
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileA_old_onface/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileB_strict_onface/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/cat_side_sunglasses_phase2/support_v3_controller_rmsgap_profileC_onprofile_strict/seed_10/command.txt

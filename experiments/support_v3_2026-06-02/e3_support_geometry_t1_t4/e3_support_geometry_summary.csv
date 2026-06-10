@@ -1,0 +1,7 @@
+variant,display_name,n,role,threshold_policy,support_iou_mean,support_precision_mean,support_recall_mean,support_area_ratio_mean,outside_mask_l1_mean,inside_mask_l1_mean,source_ssim_luma_mean,edit_score_mean
+attention_only,Attention only,36,semantic localization only,top_5_percent_nonzero,0.0588,0.0839,0.1098,0.0454,,,,
+clean_disagreement,Clean disagreement,36,source-target clean-estimate gap,top_5_percent_nonzero,0.0644,0.1172,0.1277,0.0474,,,,
+velocity_disagreement,Velocity disagreement,36,RF response without relation prior,top_5_percent_nonzero,0.0646,0.1174,0.1286,0.0478,,,,
+grounding_sam,Grounding/SAM,36,external segmentation only,binary_midpoint,0.3220,0.3292,0.8205,0.1963,,,,
+generic_support,Generic support,36,weak automatic support,binary_midpoint,0.2044,0.2457,0.2817,0.0513,0.0496,0.0704,0.6779,0.0018
+operation_conditioned_support,Operation support,36,operation-conditioned geometry estimator,binary_midpoint,0.5242,0.5661,0.7470,0.0693,0.0427,0.0744,0.6883,0.0663

@@ -1,0 +1,5 @@
+method,n,backbone,e2_layer,edit_success_mean,preservation_mean,locality_mean,artifact_mean,overall_mean,dominant_failure
+direct_target_raw,6,SD3,E2.4 support-matched diagnostic,1.67,1.67,1.33,3.33,1.33,target_miss_global_identity_drift
+direct_target_mask_blend,6,SD3,E2.4 support-matched diagnostic,1.33,4.00,3.00,2.33,2.00,target_miss_blend_boundary
+flowedit_mask_blend,6,SD3,E2.4 support-matched diagnostic,1.33,3.67,2.67,2.00,1.67,target_miss_blend_boundary
+support_v3_controller_rmsgap,6,SD3,E2.4 support-matched diagnostic,4.67,3.67,4.00,3.67,4.33,none

@@ -1,0 +1,12 @@
+{
+  "mask": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png",
+  "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_10/masks/surface_refined_mask.png",
+  "threshold": 0.5,
+  "erode_kernel": 3,
+  "erode_iterations": 0,
+  "dilate_kernel": 0,
+  "dilate_iterations": 0,
+  "blur_kernel": 3,
+  "input_area_gt_0_5": 0.08114188058035714,
+  "output_area_gt_0_5": 0.08114769345238096
+}

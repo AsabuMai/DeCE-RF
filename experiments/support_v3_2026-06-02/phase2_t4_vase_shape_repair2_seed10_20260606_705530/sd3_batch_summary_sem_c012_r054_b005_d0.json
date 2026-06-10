@@ -1,0 +1,17 @@
+{
+  "started_at": "2026-06-06T00:26:38+0900",
+  "command_count": 1,
+  "mode": "subprocess_fallback",
+  "records": [
+    {
+      "index": 1,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 62.410932471975684
+    }
+  ],
+  "finished_at": "2026-06-06T00:27:40+0900"
+}

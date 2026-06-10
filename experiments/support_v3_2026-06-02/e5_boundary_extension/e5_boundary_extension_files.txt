@@ -1,0 +1,8 @@
+experiments/support_v3_2026-06-02/e5_boundary_extension/e5_boundary_extension_complete_2026-06-04.md
+experiments/support_v3_2026-06-02/e5_boundary_extension/e5_boundary_extension_files.txt
+experiments/support_v3_2026-06-02/e5_boundary_extension/e5_boundary_extension_summary.md
+experiments/support_v3_2026-06-02/e5_boundary_extension/e5_failure_taxonomy.csv
+experiments/support_v3_2026-06-02/e5_boundary_extension/e5_figure6_boundary_extension_seed10.png
+experiments/support_v3_2026-06-02/e5_boundary_extension/e5_gated_completion_protocol.json
+experiments/support_v3_2026-06-02/e5_boundary_extension/e5_selected_manifest.csv
+experiments/support_v3_2026-06-02/e5_boundary_extension/e5_whiteboard_red_star_protocol.json

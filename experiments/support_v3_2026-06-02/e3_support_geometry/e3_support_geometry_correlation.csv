@@ -1,0 +1,17 @@
+support_metric,downstream_metric,n,pearson_r,spearman_r,scope
+support_iou,outside_mask_l1,18,-0.5809,-0.3722,runnable rows only: generic_support and operation_conditioned_support
+support_iou,inside_mask_l1,18,0.8901,0.9733,runnable rows only: generic_support and operation_conditioned_support
+support_iou,source_ssim_luma,18,0.2511,0.3149,runnable rows only: generic_support and operation_conditioned_support
+support_iou,edit_score,18,-0.1380,-0.3722,runnable rows only: generic_support and operation_conditioned_support
+support_precision,outside_mask_l1,18,-0.5337,-0.3149,runnable rows only: generic_support and operation_conditioned_support
+support_precision,inside_mask_l1,18,0.8654,0.9161,runnable rows only: generic_support and operation_conditioned_support
+support_precision,source_ssim_luma,18,0.1785,0.2004,runnable rows only: generic_support and operation_conditioned_support
+support_precision,edit_score,18,-0.3989,-0.4867,runnable rows only: generic_support and operation_conditioned_support
+support_recall,outside_mask_l1,18,-0.6193,-0.5439,runnable rows only: generic_support and operation_conditioned_support
+support_recall,inside_mask_l1,18,0.7246,0.9161,runnable rows only: generic_support and operation_conditioned_support
+support_recall,source_ssim_luma,18,0.3818,0.4867,runnable rows only: generic_support and operation_conditioned_support
+support_recall,edit_score,18,0.0989,-0.1431,runnable rows only: generic_support and operation_conditioned_support
+support_area_ratio,outside_mask_l1,18,-0.4314,-0.4232,runnable rows only: generic_support and operation_conditioned_support
+support_area_ratio,inside_mask_l1,18,0.8703,0.9311,runnable rows only: generic_support and operation_conditioned_support
+support_area_ratio,source_ssim_luma,18,0.0898,0.4232,runnable rows only: generic_support and operation_conditioned_support
+support_area_ratio,edit_score,18,-0.3431,-0.4797,runnable rows only: generic_support and operation_conditioned_support

@@ -1,0 +1,43 @@
+{
+  "started_at": "2026-06-05T14:21:08+0900",
+  "command_count": 4,
+  "records": [
+    {
+      "index": 1,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 21.15694109897595
+    },
+    {
+      "index": 2,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 19.908399099018425
+    },
+    {
+      "index": 3,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 38.78307027905248
+    },
+    {
+      "index": 4,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/support_v3_controller_rmsgap/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/support_v3_controller_rmsgap/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/support_v3_controller_rmsgap/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/dog_bow_tie_phase2/support_v3_controller_rmsgap/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 38.888875265954994
+    }
+  ],
+  "finished_at": "2026-06-05T14:23:07+0900"
+}

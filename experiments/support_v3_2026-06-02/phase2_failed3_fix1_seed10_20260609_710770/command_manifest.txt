@@ -1,0 +1,3 @@
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/white_bowl_orange_tabletop_phase2/support_v3_controller_rmsgap_failed3_fix3_20260609/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap_failed3_fix3_20260609/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap_failed3_fix3_20260609/seed_10/command.txt

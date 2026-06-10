@@ -1,0 +1,74 @@
+{
+  "anchor_box_xyxy": [
+    79,
+    313,
+    258,
+    445
+  ],
+  "anchor_mask_area_ratio": 0.08114188058035714,
+  "anchor_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_10/masks/semantic_anchor.png",
+  "blur": 0,
+  "box_threshold": 0.25,
+  "boxes_xyxy": [
+    [
+      78.34683227539062,
+      311.1203918457031,
+      258.68353271484375,
+      445.1689758300781
+    ]
+  ],
+  "dilate": 0,
+  "eyes_anchor_area_ratio": 0.08114188058035714,
+  "eyes_anchor_area_threshold": 0.16,
+  "eyes_anchor_box_area_ratio": 0.13734654017857142,
+  "eyes_anchor_box_area_threshold": 0.34,
+  "eyes_anchor_fallback_used": false,
+  "eyes_anchor_max_area_ratio": 0.16,
+  "eyes_anchor_max_box_area_ratio": 0.34,
+  "grounding_model": "IDEA-Research/grounding-dino-base",
+  "image": "/cluster/users/grad/2025/25t8103/project/data/pretty_free_candidates/pexels_yellow_ceramic_vase_8356822.jpg",
+  "labels": [
+    "vase"
+  ],
+  "mask_area_ratio": 0.08114188058035714,
+  "mask_mode": "sam_box_intersect",
+  "max_box_area_ratio": 0.25,
+  "num_boxes": 1,
+  "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png",
+  "phrase": "vase",
+  "sam_model": "facebook/sam-vit-base",
+  "scores": [
+    0.8739341497421265
+  ],
+  "semantic_edit_words": [
+    "while",
+    "fabric",
+    "lighting",
+    "shadows",
+    "remain",
+    "unchanged"
+  ],
+  "semantic_phrase_after_quality_gate": "vase",
+  "semantic_phrase_explicit": "vase",
+  "semantic_phrase_inferred": "vase",
+  "source_prompt": "A still-life photo of a small yellow ceramic vase resting on white fabric.",
+  "support_band_ratio": 0.55,
+  "support_box_xyxy": [
+    79,
+    313,
+    258,
+    445
+  ],
+  "support_expand_x": 0.0,
+  "support_expand_y": 0.0,
+  "support_overlap_ratio": 0.2,
+  "support_plan_params": {},
+  "support_plan_rule": null,
+  "support_relation": "inside",
+  "support_relation_after_quality_gate": "inside",
+  "support_relation_inferred": "inside",
+  "support_relation_requested": "inside",
+  "support_threshold": 0.2,
+  "target_prompt": "A still-life photo of the same small ceramic vase resting on the same white fabric, with only the vase color changed from yellow to deep blue while the fabric, lighting, and shadows remain unchanged.",
+  "text_threshold": 0.2
+}

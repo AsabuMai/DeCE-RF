@@ -1,0 +1,19 @@
+{
+  "box": null,
+  "dilate_iterations": 1,
+  "dilate_kernel": 7,
+  "dilate_min_saturation": 0.08,
+  "fill_holes": true,
+  "hue_threshold": 0.1,
+  "image": "/cluster/users/grad/2025/25t8103/project/data/pretty_free_candidates/pexels_yellow_ceramic_vase_8356822.jpg",
+  "lab_threshold": 0.42,
+  "mask_area_gt_0_5": 0.062442725909261344,
+  "mask_mean": 0.06214085966348648,
+  "mask_threshold": 0.14,
+  "max_value": 0.98,
+  "min_saturation": 0.22,
+  "min_value": 0.18,
+  "source_color": "yellow",
+  "support_mask": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_10/masks/surface_refined_mask.png",
+  "target_hue": 0.14444445073604584
+}

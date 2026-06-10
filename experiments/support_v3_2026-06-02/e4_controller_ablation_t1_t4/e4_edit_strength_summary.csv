@@ -1,0 +1,13 @@
+method,display_name,edit_strength_multiplier,n,outside_mask_l1_mean,inside_mask_l1_mean,source_ssim_luma_mean,local_edit_l1_mean,edit_score_mean
+support_v3_fixed,Fixed DeCE displacement,0.50,12,0.0342,0.1726,0.9121,0.1726,0.1726
+support_v3_fixed,Fixed DeCE displacement,0.75,12,0.0345,0.1750,0.9102,0.1750,0.1750
+support_v3_fixed,Fixed DeCE displacement,1.00,12,0.0350,0.1736,0.9149,0.1736,0.1736
+support_v3_fixed,Fixed DeCE displacement,1.25,12,0.0349,0.1849,0.9068,0.1849,0.1849
+support_v3_fixed,Fixed DeCE displacement,1.50,12,0.0350,0.1885,0.9028,0.1885,0.1885
+support_v3_fixed,Fixed DeCE displacement,2.00,12,0.0353,0.1995,0.8937,0.1995,0.1995
+support_v3_controller_rmsgap,DeCE-RF,0.50,12,0.0341,0.1733,0.9096,0.1733,0.1733
+support_v3_controller_rmsgap,DeCE-RF,0.75,12,0.0345,0.1799,0.9070,0.1799,0.1799
+support_v3_controller_rmsgap,DeCE-RF,1.00,12,0.0342,0.1922,0.9064,0.1922,0.1922
+support_v3_controller_rmsgap,DeCE-RF,1.25,12,0.0347,0.1829,0.9030,0.1829,0.1829
+support_v3_controller_rmsgap,DeCE-RF,1.50,12,0.0350,0.1822,0.9126,0.1822,0.1822
+support_v3_controller_rmsgap,DeCE-RF,2.00,12,0.0353,0.1987,0.8942,0.1987,0.1987

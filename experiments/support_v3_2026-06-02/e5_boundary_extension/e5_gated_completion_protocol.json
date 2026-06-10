@@ -1,0 +1,154 @@
+{
+  "experiment": "reliability_gated_completion_clean_delta",
+  "source_method": "support_v3_controller_rmsgap",
+  "output_method": "support_v3_controller_rmsgap_completion_clean_delta_gated_highconf",
+  "reference_method": "same_support_inpaint_telea",
+  "reliability_csv": "/cluster/users/grad/2025/25t8103/project/experiments/support_v3_2026-05-11/prior_reliability/completion_prior_reliability_seed10.csv",
+  "tasks": [
+    "laptop_remove_sticker",
+    "fridge_remove_yellow_magnet",
+    "fridge_remove_peach_magnet",
+    "whiteboard_remove_yellow_letter",
+    "dog_remove_tennis_ball"
+  ],
+  "seeds": [
+    "10",
+    "11",
+    "12"
+  ],
+  "gate": {
+    "type": "high_confidence",
+    "low": 0.5,
+    "high": 0.5,
+    "medium_scale": 0.0,
+    "base_completion_clean_delta_scale": 0.55
+  },
+  "fixed_guidance": {
+    "edit_text_guidance_scale_when_enabled": 0.02,
+    "completion_clean_delta_schedule_start": 0.0,
+    "completion_clean_delta_schedule_stop": 0.0,
+    "completion_clean_delta_schedule_power": 1.0
+  },
+  "per_task_gate": [
+    {
+      "task": "laptop_remove_sticker",
+      "seed": "10",
+      "R": 0.7509115406936108,
+      "gate_factor": 1.0,
+      "completion_clean_delta_scale": 0.55,
+      "mode": "clean_delta"
+    },
+    {
+      "task": "fridge_remove_yellow_magnet",
+      "seed": "10",
+      "R": 0.21297608599928072,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    },
+    {
+      "task": "fridge_remove_peach_magnet",
+      "seed": "10",
+      "R": 0.2258448631741434,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    },
+    {
+      "task": "whiteboard_remove_yellow_letter",
+      "seed": "10",
+      "R": 0.20597518824726707,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    },
+    {
+      "task": "dog_remove_tennis_ball",
+      "seed": "10",
+      "R": 0.09230510095263346,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    },
+    {
+      "task": "laptop_remove_sticker",
+      "seed": "11",
+      "R": 0.7509115406936108,
+      "gate_factor": 1.0,
+      "completion_clean_delta_scale": 0.55,
+      "mode": "clean_delta"
+    },
+    {
+      "task": "fridge_remove_yellow_magnet",
+      "seed": "11",
+      "R": 0.21297608599928072,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    },
+    {
+      "task": "fridge_remove_peach_magnet",
+      "seed": "11",
+      "R": 0.2258448631741434,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    },
+    {
+      "task": "whiteboard_remove_yellow_letter",
+      "seed": "11",
+      "R": 0.20597518824726707,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    },
+    {
+      "task": "dog_remove_tennis_ball",
+      "seed": "11",
+      "R": 0.09230510095263346,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    },
+    {
+      "task": "laptop_remove_sticker",
+      "seed": "12",
+      "R": 0.7509115406936108,
+      "gate_factor": 1.0,
+      "completion_clean_delta_scale": 0.55,
+      "mode": "clean_delta"
+    },
+    {
+      "task": "fridge_remove_yellow_magnet",
+      "seed": "12",
+      "R": 0.21297608599928072,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    },
+    {
+      "task": "fridge_remove_peach_magnet",
+      "seed": "12",
+      "R": 0.2258448631741434,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    },
+    {
+      "task": "whiteboard_remove_yellow_letter",
+      "seed": "12",
+      "R": 0.20597518824726707,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    },
+    {
+      "task": "dog_remove_tennis_ball",
+      "seed": "12",
+      "R": 0.09230510095263346,
+      "gate_factor": 0.0,
+      "completion_clean_delta_scale": 0.0,
+      "mode": "default_source"
+    }
+  ]
+}

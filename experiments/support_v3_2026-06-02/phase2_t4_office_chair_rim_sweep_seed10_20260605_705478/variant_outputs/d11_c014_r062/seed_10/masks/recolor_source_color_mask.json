@@ -1,0 +1,19 @@
+{
+  "box": null,
+  "dilate_iterations": 1,
+  "dilate_kernel": 11,
+  "dilate_min_saturation": 0.12,
+  "fill_holes": false,
+  "hue_threshold": 0.1,
+  "image": "/cluster/users/grad/2025/25t8103/project/data/pretty_free_candidates/unsplash_red_office_chair_concrete_lvVWRzm_NwY.jpg",
+  "lab_threshold": 0.42,
+  "mask_area_gt_0_5": 0.11022263430477527,
+  "mask_mean": 0.11012139171361923,
+  "mask_threshold": 0.2,
+  "max_value": 0.98,
+  "min_saturation": 0.22,
+  "min_value": 0.18,
+  "source_color": "red",
+  "support_mask": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_10/masks/surface_refined_mask.png",
+  "target_hue": 0.0
+}

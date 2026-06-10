@@ -1,0 +1,2 @@
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tshirt_star/support_v3_controller_rmsgap/seed_10/command.txt
+/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/mug_heart/support_v3_controller_rmsgap/seed_10/command.txt

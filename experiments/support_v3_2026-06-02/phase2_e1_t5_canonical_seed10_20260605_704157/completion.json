@@ -1,0 +1,7 @@
+{
+  "task": "pillow_vertical_fabric_strip",
+  "seed": 10,
+  "complete": 4,
+  "expected": 4,
+  "missing": []
+}

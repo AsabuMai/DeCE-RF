@@ -1,0 +1,377 @@
+{
+  "started_at": "2026-06-09T12:40:17+0900",
+  "command_count": 41,
+  "mode": "subprocess_fallback",
+  "records": [
+    {
+      "index": 1,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.535340244998224
+    },
+    {
+      "index": 2,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/base_only/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.46828983600426
+    },
+    {
+      "index": 3,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.65080626201234
+    },
+    {
+      "index": 4,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/direct_target/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.642830907992902
+    },
+    {
+      "index": 5,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 35.944159158010734
+    },
+    {
+      "index": 6,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/adaptive_full_generic_support/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 36.98662655100634
+    },
+    {
+      "index": 7,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 40.19787181899301
+    },
+    {
+      "index": 8,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/tote_leaf/support_v3_controller_rmsgap/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 40.791014432004886
+    },
+    {
+      "index": 9,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 21.875219421010115
+    },
+    {
+      "index": 10,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 30.88384862699604
+    },
+    {
+      "index": 11,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/base_only/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.236470474003
+    },
+    {
+      "index": 12,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.175279378992855
+    },
+    {
+      "index": 13,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.63829593700939
+    },
+    {
+      "index": 14,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/direct_target/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.00818881399755
+    },
+    {
+      "index": 15,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 41.8972279800073
+    },
+    {
+      "index": 16,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 42.991696785000386
+    },
+    {
+      "index": 17,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/adaptive_full_generic_support/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 41.742573629991966
+    },
+    {
+      "index": 18,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 49.77070743100194
+    },
+    {
+      "index": 19,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/red_office_chair_to_blue_office_chair/support_v3_controller_rmsgap/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 47.7687581479986
+    },
+    {
+      "index": 20,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.23159002099419
+    },
+    {
+      "index": 21,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.40865433299041
+    },
+    {
+      "index": 22,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/base_only/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.3307882569934
+    },
+    {
+      "index": 23,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.759404108990566
+    },
+    {
+      "index": 24,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.269555544000468
+    },
+    {
+      "index": 25,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/direct_target/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.10348760600027
+    },
+    {
+      "index": 26,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 43.57578178799304
+    },
+    {
+      "index": 27,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 42.77560897798685
+    },
+    {
+      "index": 28,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/adaptive_full_generic_support/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 43.07746566199057
+    },
+    {
+      "index": 29,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/support_v3_controller_rmsgap/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/support_v3_controller_rmsgap/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/support_v3_controller_rmsgap/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/support_v3_controller_rmsgap/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 43.82972084300127
+    },
+    {
+      "index": 30,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/support_v3_controller_rmsgap/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/support_v3_controller_rmsgap/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/support_v3_controller_rmsgap/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/green_mug_orange_phase2/support_v3_controller_rmsgap/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 44.843159228999866
+    },
+    {
+      "index": 31,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.399837236996973
+    },
+    {
+      "index": 32,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.84310007399472
+    },
+    {
+      "index": 33,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/base_only/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 22.310418093999033
+    },
+    {
+      "index": 34,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.73463925300166
+    },
+    {
+      "index": 35,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 24.03637261300173
+    },
+    {
+      "index": 36,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/direct_target/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 23.379032990007545
+    },
+    {
+      "index": 37,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_10/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_10/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_10/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_10/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 43.34132575299009
+    },
+    {
+      "index": 38,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 42.8131202240038
+    },
+    {
+      "index": 39,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/adaptive_full_generic_support/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 42.86406220200297
+    },
+    {
+      "index": 40,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_11/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_11/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_11/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_11/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 44.322733768000035
+    },
+    {
+      "index": 41,
+      "command_file": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_12/command.txt",
+      "output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_12/result.png",
+      "stats_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_12/stats.json",
+      "metadata_output": "/cluster/users/grad/2025/25t8103/project/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_12/metadata.json",
+      "status": "complete",
+      "runtime_seconds": 43.81756330600183
+    }
+  ],
+  "finished_at": "2026-06-09T13:02:24+0900"
+}

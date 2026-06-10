@@ -1,0 +1,5 @@
+method,n,outside_mask_l1_mean,inside_mask_l1_mean,source_ssim_luma_mean,edit_score_mean
+direct_target_raw,36,0.2359,0.1621,0.1441,
+direct_target_mask_blend,36,0.0000,0.1593,0.9867,
+flowedit_mask_blend,36,0.0000,0.2184,0.9755,
+support_v3_controller_rmsgap,36,0.2174,0.2356,0.1932,

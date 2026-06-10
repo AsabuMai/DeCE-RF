@@ -1,0 +1,7 @@
+baseline,manifest_complete,manifest_failed,metric_rows,outside_mask_l1_mean,inside_mask_l1_mean,source_ssim_luma_mean,edit_score_mean
+flowedit,36,0,36,0.1543,0.2036,0.5278,
+flowalign,36,0,36,0.0760,0.1370,0.8292,
+splitflow,36,0,36,0.0794,0.1511,0.7625,
+fireflow,36,0,36,0.0670,0.1024,0.8404,
+rf_solver_edit,36,0,36,0.0551,0.0848,0.8778,
+reflex,36,0,36,0.0676,0.1351,0.8315,

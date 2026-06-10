@@ -1,0 +1,7 @@
+{
+  "all_tasks_grid": "/cluster/users/grad/2025/25t8103/project/experiments/support_v3_2026-06-02/phase2_e1_seed10_gate_20260605_702647/visual_review/phase2_e1_seed10_all_tasks_grid.png",
+  "index_csv": "/cluster/users/grad/2025/25t8103/project/experiments/support_v3_2026-06-02/phase2_e1_seed10_gate_20260605_702647/visual_review/phase2_e1_seed10_gate_index.csv",
+  "audit_template_csv": "/cluster/users/grad/2025/25t8103/project/experiments/support_v3_2026-06-02/phase2_e1_seed10_gate_20260605_702647/visual_review/phase2_e1_seed10_visual_audit_template.csv",
+  "task_count": 18,
+  "method_count": 4
+}

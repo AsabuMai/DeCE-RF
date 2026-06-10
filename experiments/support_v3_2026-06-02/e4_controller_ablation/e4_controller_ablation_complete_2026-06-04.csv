@@ -1,0 +1,12 @@
+item,value
+base_metric_rows,18
+stress_metric_rows,36
+base_summary_rows,2
+stress_summary_rows,12
+trajectory_rows,18
+tasks,cat_crown;tshirt_star;pillow_vertical_fabric_strip
+base_methods,support_v3_fixed;support_v3_controller_rmsgap
+stress_seed,10
+stress_multipliers,0.50;0.75;1.00;1.25;1.50;2.00
+backbone,Stable Diffusion 3 Medium / project RF edit pipeline
+normalization_policy,512 evaluation masks and native pretty_matrix outputs

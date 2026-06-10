@@ -1,0 +1,25 @@
+{
+  "scope": "Phase2 T1-T4 rerun eval assets",
+  "tasks": [
+    "cat_crown",
+    "dog_bow_tie_phase2",
+    "dog_front_sunglasses_phase2",
+    "bowl_apple_inside",
+    "white_bowl_orange_tabletop_phase2",
+    "brown_bowl_lemon_phase2",
+    "tshirt_star",
+    "mug_heart",
+    "tote_leaf",
+    "red_office_chair_to_blue_office_chair",
+    "green_mug_orange_phase2",
+    "yellow_vase_blue_phase2"
+  ],
+  "seeds": [
+    "10",
+    "11",
+    "12"
+  ],
+  "canvas": 512,
+  "eval_mask_policy": "seed-aggregated DeCE-RF operation support proxy; use for rerun diagnostics only",
+  "manifest": "experiments/support_v3_2026-06-02/normalized_512/t1_t4_eval_assets_manifest.csv"
+}

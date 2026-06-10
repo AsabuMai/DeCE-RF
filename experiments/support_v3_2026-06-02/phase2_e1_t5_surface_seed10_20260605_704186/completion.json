@@ -1,0 +1,10 @@
+{
+  "tasks": [
+    "white_pillow_blue_dots_phase2",
+    "white_pillow_blue_cross_phase2"
+  ],
+  "seed": 10,
+  "complete": 8,
+  "expected": 8,
+  "missing": []
+}
