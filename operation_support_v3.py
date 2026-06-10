@@ -164,6 +164,26 @@ def build_above_host_region(
     return _box_mask_like(host, (rx0, ry0, rx1, ry1)).to(device=host.device, dtype=host.dtype)
 
 
+def build_below_host_region(
+    host_mask: torch.Tensor,
+    expand_x: float = 0.18,
+    below_height: float = 0.32,
+    overlap_height: float = 0.08,
+) -> torch.Tensor:
+    host = normalize_spatial_map(host_mask)
+    bbox = _binary_bbox(host)
+    if bbox is None:
+        return torch.zeros_like(host)
+    x0, y0, x1, y1 = bbox
+    bw = max(1, x1 - x0)
+    bh = max(1, y1 - y0)
+    rx0 = int(round(x0 - expand_x * bw))
+    rx1 = int(round(x1 + expand_x * bw))
+    ry0 = int(round(y1 - overlap_height * bh))
+    ry1 = int(round(y1 + below_height * bh))
+    return _box_mask_like(host, (rx0, ry0, rx1, ry1)).to(device=host.device, dtype=host.dtype)
+
+
 def build_surface_region(
     host_mask: torch.Tensor,
     erode_kernel: int = 5,
@@ -312,6 +332,37 @@ def build_face_accessory_region(
     return normalize_spatial_map(region).to(device=host.device, dtype=host.dtype)
 
 
+def build_profile_face_accessory_region(
+    host_mask: torch.Tensor,
+    direction: str = "right",
+    x_start: float = 0.45,
+    x_end: float = 0.95,
+    y_start: float = 0.20,
+    y_end: float = 0.55,
+) -> torch.Tensor:
+    host = normalize_spatial_map(host_mask)
+    bbox = _binary_bbox(host)
+    if bbox is None:
+        return host
+    x0, y0, x1, y1 = bbox
+    bw = max(1, x1 - x0)
+    bh = max(1, y1 - y0)
+    direction = (direction or "right").strip().lower()
+    if direction in {"left", "profile_left", "facing_left"}:
+        sx0 = int(round(x0 + (1.0 - x_end) * bw))
+        sx1 = int(round(x0 + (1.0 - x_start) * bw))
+    else:
+        sx0 = int(round(x0 + x_start * bw))
+        sx1 = int(round(x0 + x_end * bw))
+    sy0 = int(round(y0 + y_start * bh))
+    sy1 = int(round(y0 + y_end * bh))
+    profile_box = _box_mask_like(host, (sx0, sy0, sx1, sy1))
+    region = torch.minimum(host, profile_box)
+    if float(region.detach().float().max().item()) <= 1e-6:
+        region = profile_box
+    return normalize_spatial_map(region).to(device=host.device, dtype=host.dtype)
+
+
 def build_relation_region(
     relation: str,
     host_mask: torch.Tensor | None,
@@ -330,6 +381,8 @@ def build_relation_region(
             above_height=0.42,
             overlap_height=0.02,
         )
+    if relation in {"below_host", "below"} and base_host is not None:
+        return build_below_host_region(base_host)
     if relation in {"on_surface", "surface"} and base_host is not None:
         return build_surface_region(base_host)
     if relation in {"remove_source_object", "removed_object"}:
@@ -339,9 +392,18 @@ def build_relation_region(
             return removed_attention_map
     if relation in {"on_face", "face", "eye_band", "eyes"} and base_host is not None:
         return build_face_accessory_region(base_host)
+    if relation in {"on_profile_face", "on_profile_face_right", "on_profile_face_left", "profile_face", "profile_eye"} and base_host is not None:
+        direction = "right"
+        if ":" in relation:
+            _, direction = relation.split(":", 1)
+        elif relation.endswith("_left"):
+            direction = "left"
+        elif relation.endswith("_right"):
+            direction = "right"
+        return build_profile_face_accessory_region(base_host, direction=direction)
     if relation in {"inside_container", "container_interior", "interior"} and base_host is not None:
         return build_container_interior_region(base_host)
-    if relation in {"inside_host", "inside"} and base_host is not None:
+    if relation in {"inside_host", "inside_object", "inside"} and base_host is not None:
         return normalize_spatial_map(base_host)
     return None
 

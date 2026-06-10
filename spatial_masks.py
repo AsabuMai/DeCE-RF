@@ -134,6 +134,59 @@ def build_object_contact_masks(
     return subject_mask, object_mask, contact_mask, preserve_mask, edge_mask
 
 
+def build_recolor_trimap_masks(
+    edit_mask: torch.Tensor,
+    core_mask: torch.Tensor | None = None,
+    object_threshold: float = 0.45,
+    inner_erode_kernel: int = 3,
+    outer_dilate_kernel: int = 5,
+    boundary_edit_scale: float = 0.8,
+    boundary_preserve_scale: float = 0.0,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    """
+    Split a recolor support into inner object, boundary band, and outer preserve.
+
+    Unlike the generic object/contact split, the recolor band remains editable:
+    it should receive target color pressure while avoiding source-color
+    reconstruction pressure. `preserve_mask` therefore defaults to the strict
+    outside region only, with optional weak boundary preservation for sweeps.
+    """
+    base = edit_mask if core_mask is None else torch.minimum(core_mask, edit_mask)
+    object_threshold = max(0.0, min(1.0, float(object_threshold)))
+    if object_threshold > 0.0:
+        host = (base.detach().float() > object_threshold).to(dtype=edit_mask.dtype, device=edit_mask.device)
+        host = host * edit_mask.clamp(0.0, 1.0)
+    else:
+        host = base.clamp(0.0, 1.0)
+    if float(host.detach().float().max().item()) <= 1e-6:
+        host = base.clamp(0.0, 1.0)
+
+    inner = host
+    inner_erode_kernel = int(inner_erode_kernel)
+    if inner_erode_kernel > 1:
+        if inner_erode_kernel % 2 == 0:
+            inner_erode_kernel += 1
+        inner = (
+            1.0
+            - dilate_spatial_mask((1.0 - host).clamp(0.0, 1.0), kernel_size=inner_erode_kernel)
+        ).clamp(0.0, 1.0)
+
+    support = host
+    outer_dilate_kernel = int(outer_dilate_kernel)
+    if outer_dilate_kernel > 1:
+        if outer_dilate_kernel % 2 == 0:
+            outer_dilate_kernel += 1
+        support = dilate_spatial_mask(host, kernel_size=outer_dilate_kernel).clamp(0.0, 1.0)
+
+    boundary = (support - inner).clamp(0.0, 1.0)
+    edit = (inner + float(boundary_edit_scale) * boundary).clamp(0.0, 1.0)
+    preserve = (
+        (1.0 - support).clamp(0.0, 1.0)
+        + float(boundary_preserve_scale) * boundary
+    ).clamp(0.0, 1.0)
+    return edit, inner.clamp(0.0, 1.0), boundary, preserve
+
+
 def filter_spatial_mask_components(
     mask: torch.Tensor,
     threshold: float = 0.5,
@@ -752,4 +805,3 @@ def _box_to_list(box: tuple[float, float, float, float] | None) -> list[float] |
     if box is None:
         return None
     return [float(v) for v in box]
-

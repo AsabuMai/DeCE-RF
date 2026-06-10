@@ -78,6 +78,9 @@ def main() -> None:
     parser.add_argument("--fill-holes", action="store_true", default=False)
     parser.add_argument("--open-kernel", type=int, default=3)
     parser.add_argument("--close-kernel", type=int, default=5)
+    parser.add_argument("--dilate-kernel", type=int, default=0)
+    parser.add_argument("--dilate-iterations", type=int, default=0)
+    parser.add_argument("--dilate-min-saturation", type=float, default=0.0)
     parser.add_argument("--metadata-output", type=Path, default=None)
     args = parser.parse_args()
 
@@ -110,8 +113,10 @@ def main() -> None:
     mask = np.minimum(hue_weight, lab_weight).astype(np.float32)
     mask *= chroma_gate.astype(np.float32)
 
+    spatial_gate = np.ones_like(mask, dtype=np.float32)
     if args.support_mask is not None:
         support = load_gray(str(args.support_mask), image.size)
+        spatial_gate *= support
         mask *= support
 
     if args.box is not None:
@@ -126,6 +131,7 @@ def main() -> None:
         iy1 = max(0, min(height, int(round(max(y0, y1) * height))))
         box_mask = np.zeros_like(mask, dtype=np.float32)
         box_mask[iy0:iy1, ix0:ix1] = 1.0
+        spatial_gate *= box_mask
         mask *= box_mask
 
     if args.mask_threshold > 0.0:
@@ -141,6 +147,16 @@ def main() -> None:
         mask = keep_components(mask, args.keep_components, args.min_area)
     if args.fill_holes:
         mask = fill_binary_holes(mask)
+    if args.dilate_kernel > 1 and args.dilate_iterations > 0:
+        kernel_size = int(args.dilate_kernel)
+        if kernel_size % 2 == 0:
+            kernel_size += 1
+        kernel = np.ones((kernel_size, kernel_size), dtype=np.uint8)
+        binary = (mask > 0.0).astype(np.uint8)
+        mask = cv2.dilate(binary, kernel, iterations=int(args.dilate_iterations)).astype(np.float32)
+        mask *= spatial_gate
+        if args.dilate_min_saturation > 0.0:
+            mask *= (sat >= float(args.dilate_min_saturation)).astype(np.float32)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     Image.fromarray((np.clip(mask, 0.0, 1.0) * 255.0).round().astype(np.uint8), mode="L").save(args.output)
@@ -166,6 +182,9 @@ def main() -> None:
                     "max_value": args.max_value,
                     "mask_threshold": args.mask_threshold,
                     "fill_holes": bool(args.fill_holes),
+                    "dilate_kernel": int(args.dilate_kernel),
+                    "dilate_iterations": int(args.dilate_iterations),
+                    "dilate_min_saturation": float(args.dilate_min_saturation),
                 },
                 indent=2,
                 sort_keys=True,

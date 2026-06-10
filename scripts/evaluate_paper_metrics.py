@@ -89,91 +89,6 @@ def max_value(rows: list[dict[str, Any]], key: str) -> float:
     return max((scalar(row, key) for row in rows), default=0.0)
 
 
-def optional_float(row: dict[str, Any], key: str) -> float | None:
-    value = row.get(key)
-    if value in (None, ""):
-        return None
-    try:
-        return float(value)
-    except (TypeError, ValueError):
-        return None
-
-
-def add_preserve_error_primitives(row: dict[str, Any]) -> None:
-    for source_key, target_key in (
-        ("source_ssim_luma", "source_ssim_luma_loss"),
-        ("source_ssim", "source_ssim_loss"),
-        ("dino_source_similarity", "dino_source_distance"),
-        ("clip_image_source_similarity", "clip_image_source_distance"),
-    ):
-        value = optional_float(row, source_key)
-        if value is not None:
-            row[target_key] = 1.0 - value
-
-
-PRESERVE_ERROR_METRICS = (
-    "outside_mask_l1",
-    "outside_mask_rmse",
-    "source_l1",
-    "source_rmse",
-    "lpips_outside",
-    "source_ssim_luma_loss",
-    "source_ssim_loss",
-    "dino_source_distance",
-    "clip_image_source_distance",
-)
-
-
-def load_preserve_floor_csvs(paths: list[Path]) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    for path in paths:
-        if not path.exists():
-            print(f"WARNING: preserve floor CSV not found: {path}")
-            continue
-        with path.open(newline="", encoding="utf-8") as handle:
-            reader = csv.DictReader(handle)
-            rows.extend(dict(row) for row in reader)
-    return rows
-
-
-def annotate_excess_preserve_errors(
-    records: list[dict[str, Any]],
-    floor_method: str = "base_only",
-    external_floor_records: list[dict[str, Any]] | None = None,
-) -> None:
-    floor_by_task_seed: dict[tuple[str, str], dict[str, Any]] = {}
-    floor_candidates = list(records)
-    if external_floor_records:
-        floor_candidates.extend(external_floor_records)
-
-    for row in floor_candidates:
-        add_preserve_error_primitives(row)
-        if str(row.get("method", "")) != floor_method:
-            continue
-        task = str(row.get("task", ""))
-        seed = str(row.get("seed", "")).removeprefix("seed_")
-        if task and seed:
-            floor_by_task_seed.setdefault((task, seed), row)
-
-    for row in records:
-        add_preserve_error_primitives(row)
-        task = str(row.get("task", ""))
-        seed = str(row.get("seed", "")).removeprefix("seed_")
-        floor = floor_by_task_seed.get((task, seed))
-        row["preserve_floor_method"] = floor_method
-        row["preserve_floor_key"] = f"{task}/seed_{seed}" if task and seed else ""
-        row["preserve_floor_available"] = bool(floor)
-        if not floor:
-            continue
-        for metric in PRESERVE_ERROR_METRICS:
-            value = optional_float(row, metric)
-            floor_value = optional_float(floor, metric)
-            if value is None or floor_value is None:
-                continue
-            row[f"{metric}_preserve_floor"] = floor_value
-            row[f"{metric}_excess_preserve_error"] = value - floor_value
-
-
 def simple_ssim_luma(a: np.ndarray, b: np.ndarray) -> float:
     wa = np.array([0.299, 0.587, 0.114], dtype=np.float32)
     ya = (a * wa).sum(axis=2)
@@ -437,7 +352,7 @@ def evaluate_run(
         }
     )
 
-    if not source_path.exists():
+    if not source_path.is_file():
         record["missing"] = "source_image"
         record["complete"] = False
         return record
@@ -595,22 +510,10 @@ def main() -> int:
         ),
     )
     parser.add_argument(
-        "--preserve-floor-method",
-        default="base_only",
-        help=(
-            "Method name used as the per-task/per-seed reconstruction floor for "
-            "Excess Preserve Error. Set to an empty string to disable annotation."
-        ),
-    )
-    parser.add_argument(
         "--preserve-floor-csv",
         type=Path,
-        action="append",
-        default=[],
-        help=(
-            "Optional metrics CSV containing reconstruction-floor rows, usually "
-            "the E1 strict metrics CSV. Can be passed multiple times."
-        ),
+        default=None,
+        help="Optional preserve-floor reference table kept for compatibility with experiment runners.",
     )
     args = parser.parse_args()
 
@@ -677,13 +580,6 @@ def main() -> int:
             seeds=seeds,
         )
     ]
-    if args.preserve_floor_method:
-        annotate_excess_preserve_errors(
-            records,
-            floor_method=args.preserve_floor_method,
-            external_floor_records=load_preserve_floor_csvs(args.preserve_floor_csv),
-        )
-
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
     args.json_output.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
 

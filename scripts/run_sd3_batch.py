@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import shlex
 import sys
 import time
@@ -16,7 +17,14 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from edit_cli_args import build_parser as build_edit_parser
-from run_edit_sd3 import load_sd3_pipeline, run_edit
+try:
+    from run_edit_sd3 import load_sd3_pipeline, run_edit
+except ImportError as exc:  # Fallback for CLI-only run_edit_sd3.py snapshots.
+    load_sd3_pipeline = None
+    run_edit = None
+    BATCH_API_IMPORT_ERROR = exc
+else:
+    BATCH_API_IMPORT_ERROR = None
 
 
 def _read_command_entries(paths: list[str], manifest: str | None) -> list[tuple[Path, str]]:
@@ -80,6 +88,58 @@ def main() -> None:
     for command_path, command in entries:
         edit_args = _parse_edit_args(command)
         parsed.append((command_path, command, edit_args))
+
+    if load_sd3_pipeline is None or run_edit is None:
+        print(
+            "[sd3-batch] batch API unavailable; falling back to subprocess mode: "
+            f"{BATCH_API_IMPORT_ERROR!r}"
+        )
+        summary = {
+            "started_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+            "command_count": len(parsed),
+            "mode": "subprocess_fallback",
+            "records": [],
+        }
+        for index, (command_path, command, edit_args) in enumerate(parsed, start=1):
+            record = {
+                "index": index,
+                "command_file": str(command_path),
+                "output": edit_args.output,
+                "stats_output": edit_args.stats_output,
+                "metadata_output": edit_args.metadata_output,
+                "status": "pending",
+            }
+            started = time.perf_counter()
+            print(f"[sd3-batch] {index}/{len(parsed)} {command_path}")
+            try:
+                if args.skip_existing and _complete(edit_args):
+                    record["status"] = "skipped_existing"
+                    print(f"[sd3-batch] skip existing: {edit_args.output}")
+                else:
+                    subprocess.run(command, shell=True, executable="/bin/bash", cwd=ROOT, check=True)
+                    record["status"] = "complete"
+            except Exception as exc:
+                record["status"] = "failed"
+                record["error"] = repr(exc)
+                print(f"[sd3-batch] failed: {exc!r}", file=sys.stderr)
+                if args.stop_on_failure:
+                    summary["records"].append(record)
+                    raise
+            finally:
+                record["runtime_seconds"] = time.perf_counter() - started
+                summary["records"].append(record)
+        summary["finished_at"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
+        if args.summary_output:
+            out = Path(args.summary_output)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+        complete = sum(1 for r in summary["records"] if r["status"] == "complete")
+        skipped = sum(1 for r in summary["records"] if r["status"] == "skipped_existing")
+        failed = sum(1 for r in summary["records"] if r["status"] == "failed")
+        print(f"[sd3-batch] done complete={complete} skipped={skipped} failed={failed}")
+        if failed:
+            raise SystemExit(1)
+        return
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(f"[sd3-batch] loading pipeline once on {device} for {len(parsed)} commands")
