@@ -260,28 +260,72 @@ Primary metrics must be split by region:
 | audit | edit success, preservation, locality, artifact, overall | internal visual audit | 1-5 rubric; not a user study |
 
 Every metric table must state that the evaluation mask is fixed per task and is
-not each method's own support mask.
+not each method's own support mask. This statement belongs in the MAIN-TEXT
+experimental setup, not the appendix: masks are never derived from any
+method's output and never adjusted after seeing results. The main text also
+carries one mask-robustness line — "the main ranking is stable under
+eroded/base/dilated evaluation masks" — with the actual sweep in supplement.
 
-Do not collapse the result into a single composite score. Report three metric
-families:
+Do not collapse the result into a single composite score. Report grouped
+metric families, each answering one question (define group composition in the
+caption/supplement, never as a flat metric-name row):
 
-| Metric group | Examples | Reviewer question |
+| Metric group | Question answered | Examples |
 | --- | --- | --- |
-| Edit success | masked CLIP-T, directional CLIP, local CLIP crop, VQA/binary audit | did the requested edit happen? |
-| Preserve fidelity | out-of-mask LPIPS/DINO/SSIM/L1 | did the method avoid unrelated changes? |
-| Leakage/locality | out-of-mask change energy, support leakage, preserve drift | is the edit actually localized? |
+| Edit success | did the requested local change happen? | task-specific success checks, masked/local CLIP-T, directional CLIP |
+| Relation correctness | is the object/relation spatially correct? | task-specific relation checks (on-head, inside-bowl, on-surface) |
+| Preserve fidelity | did source content outside the edit mask remain stable? | out-of-mask L1/RMSE, LPIPS/DINO, SSIM |
+| Leakage/locality | is the change concentrated near the intended region? | out-of-mask change energy, support leakage, preserve drift |
+| Artifact/reliability | did the method introduce visible distortions? | artifact audit, failure type, task wins |
+
+Task-specific success checks are a core feature of this evaluation, not a
+supplement detail. CLIP-style scores alone cannot certify localized success;
+each Core-5 task pairs a presence check with a relation/preservation check:
+
+```text
+cat_crown: crown present AND on the cat's head AND cat face preserved
+bowl_apple_inside: apple present AND inside the bowl AND bowl rim not redrawn
+tshirt_star: star on the shirt surface AND body contour unchanged
+red_chair_blue: blue ratio up inside the chair mask AND background not blued
+E5 removal probe: charm gone (removal_object_clip_drop) AND backpack plausible
+```
+
+Suggested experimental-setup sentence:
+
+```text
+Since localized editing requires relation-sensitive success beyond global
+prompt alignment, we report task-specific success checks and a blind internal
+audit in addition to CLIP-style scores.
+```
+
+Blind internal audit protocol (call it "blind internal audit", never "user
+study"): 3 raters, method order randomized per item, method names hidden,
+source image and target instruction visible, 1-5 rubric over edit success /
+preservation / locality / artifact / overall.
 
 ### Main Table Layout
 
 Table 1 should aggregate over all Core-5 tasks and also show per-operation
-breakdowns:
+breakdowns, using grouped headers (group composition in the caption):
 
 ```text
-Method | Edit success audit | Outside L1 down | Source SSIM up | Locality audit up | Artifact down | Task wins
+Method | Edit ↑ | Relation ↑ | Preserve ↓ | Locality ↑ | Artifact ↓ | Wins ↑
 ```
 
 Then add a compact appendix/supplement table with per-task rows. Do not spend
 half a WACV page on a giant per-task table in the main paper.
+
+### Efficiency / Cost Context (supplement)
+
+Efficiency is not the claim, but report cost transparently for ALL methods to
+pre-empt "is the edit-preserve gain bought with more computation?":
+
+```text
+Method | NFE | source/target forward passes | inversion used | resolution | runtime (s) | peak GPU mem (GB) | GPU
+```
+
+`runtime_seconds` and `peak_gpu_memory_gb` are already recorded in every run's
+metadata.json; NFE and pass counts follow from the method configuration.
 
 ## Experiment E2: Backbone-Controlled And Preservation-Aware RF Comparison
 
@@ -945,7 +989,10 @@ Support-matched blending is a fair main baseline.
 
 This isolates the operation-conditioned control geometry. The goal is not to
 prove the mask is perfect; it is to show that support estimation changes the
-edit-preserve tradeoff in predictable ways.
+edit-preserve tradeoff in predictable ways. The evidence must be closed-loop:
+support IoU alone proves nothing — feed each support variant into the SAME
+controller and report downstream edit success and outside drift, so the
+reviewer cannot reduce the result to "a better mask trivially wins".
 
 ### Tasks
 
@@ -1066,7 +1113,9 @@ These are not required before moving to E4 or paper evidence packaging.
 This answers whether feedback-updated clean-estimate control contributes beyond
 fixed DeCE displacement. Because the fixed-vs-feedback gap can be small in
 ordinary cases, the strongest evidence should be under perturbation or stronge
-edit pressure.
+edit pressure. Do not present a single fixed-vs-feedback mean as the E4
+result: the deliverable is the edit-preserve Pareto/stress curve (plus
+trajectory diagnostics), where feedback is defended as a tradeoff stabilizer.
 
 ### 2026-06-04 Status
 
