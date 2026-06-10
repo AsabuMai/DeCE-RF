@@ -253,6 +253,70 @@ class DinoScorer:
         return float((emb_a * emb_b).sum(dim=-1).detach().cpu().item())
 
 
+class GroundingSuccessChecker:
+    """Detection-based task-specific success: object presence plus a spatial
+    relation check against a host object. CLIP-style scores alone cannot
+    certify localized edit success (paper/wacv_experiment_design.md, Metrics)."""
+
+    def __init__(self, model_name: str, device: str, allow_download: bool):
+        import torch
+        from transformers import GroundingDinoForObjectDetection, GroundingDinoProcessor
+
+        self.torch = torch
+        self.device = torch.device(device if device != "auto" else ("cuda" if torch.cuda.is_available() else "cpu"))
+        self.processor = GroundingDinoProcessor.from_pretrained(model_name, local_files_only=not allow_download)
+        self.model = GroundingDinoForObjectDetection.from_pretrained(
+            model_name, local_files_only=not allow_download
+        ).to(self.device)
+        self.model.eval()
+
+    def detect(self, image: Image.Image, phrase: str, box_threshold: float = 0.25) -> tuple[float, tuple[float, float, float, float]] | None:
+        prompt = phrase if phrase.endswith(".") else f"{phrase}."
+        inputs = self.processor(images=image, text=prompt, return_tensors="pt").to(self.device)
+        with self.torch.no_grad():
+            outputs = self.model(**inputs)
+        results = self.processor.post_process_grounded_object_detection(
+            outputs,
+            inputs.input_ids,
+            box_threshold=box_threshold,
+            text_threshold=0.20,
+            target_sizes=[image.size[::-1]],
+        )[0]
+        boxes = results.get("boxes")
+        scores = results.get("scores")
+        if boxes is None or len(boxes) == 0:
+            return None
+        best = int(scores.argmax().item())
+        x0, y0, x1, y1 = (float(v) for v in boxes[best].tolist())
+        return float(scores[best].item()), (x0, y0, x1, y1)
+
+
+def relation_correct(
+    relation: str,
+    obj: tuple[float, float, float, float],
+    host: tuple[float, float, float, float],
+) -> bool:
+    ox0, oy0, ox1, oy1 = obj
+    hx0, hy0, hx1, hy1 = host
+    ocx = 0.5 * (ox0 + ox1)
+    ocy = 0.5 * (oy0 + oy1)
+    host_h = max(1.0, hy1 - hy0)
+    inter_w = max(0.0, min(ox1, hx1) - max(ox0, hx0))
+    inter_h = max(0.0, min(oy1, hy1) - max(oy0, hy0))
+    inter = inter_w * inter_h
+    obj_area = max(1.0, (ox1 - ox0) * (oy1 - oy0))
+    if relation == "above_host":
+        # Object sits at/over the host's upper region with horizontal overlap.
+        horizontal = inter_w / max(1.0, ox1 - ox0) >= 0.5
+        vertical = ocy <= hy0 + 0.45 * host_h
+        return horizontal and vertical
+    if relation == "inside_host":
+        return (inter / obj_area >= 0.7) and (hx0 <= ocx <= hx1) and (hy0 <= ocy <= hy1)
+    if relation == "on_host":
+        return (inter / obj_area >= 0.8) and (hx0 <= ocx <= hx1) and (hy0 <= ocy <= hy1)
+    raise ValueError(f"Unsupported success relation: {relation}")
+
+
 def find_run_dirs(
     outputs_dir: Path,
     task_names: set[str] | None = None,
@@ -295,6 +359,8 @@ def evaluate_run(
     mask_candidates: tuple[str, ...] = MASK_CANDIDATES,
     eval_mask_dir: Path | None = None,
     removal_phrases: dict[str, tuple[str, str]] | None = None,
+    success_checker: "GroundingSuccessChecker | None" = None,
+    success_specs: dict[str, tuple[str, str, str]] | None = None,
 ) -> dict[str, Any]:
     present = {name: (run_dir / name).exists() for name in REQUIRED_FILES}
     missing = [name for name, exists in present.items() if not exists]
@@ -470,6 +536,26 @@ def evaluate_run(
                 record["removal_edit_score"] = (
                     (src_local[0] - res_local[0]) + (res_local[1] - src_local[1])
                 )
+    success_spec = (success_specs or {}).get(task)
+    if success_checker is not None and success_spec is not None:
+        object_phrase, host_phrase, relation = success_spec
+        record["success_object_phrase"] = object_phrase
+        record["success_relation"] = relation
+        obj_hit = success_checker.detect(result_image, object_phrase)
+        source_image_full = Image.open(source_path).convert("RGB").resize(size, Image.Resampling.LANCZOS)
+        src_hit = success_checker.detect(source_image_full, object_phrase)
+        record["success_object_score"] = obj_hit[0] if obj_hit else 0.0
+        record["success_object_present"] = bool(obj_hit)
+        record["success_object_in_source_score"] = src_hit[0] if src_hit else 0.0
+        host_hit = success_checker.detect(result_image, host_phrase)
+        record["success_host_score"] = host_hit[0] if host_hit else 0.0
+        if obj_hit and host_hit:
+            record["success_relation_correct"] = relation_correct(relation, obj_hit[1], host_hit[1])
+            record["success_object_box"] = ",".join(f"{v:.1f}" for v in obj_hit[1])
+            record["success_host_box"] = ",".join(f"{v:.1f}" for v in host_hit[1])
+        else:
+            record["success_relation_correct"] = False
+        record["task_success"] = bool(obj_hit) and bool(record["success_relation_correct"])
     if dino_scorer is not None:
         record["dino_source_similarity"] = dino_scorer.similarity(source_path, result_path)
     if lpips_scorer is not None:
@@ -566,6 +652,19 @@ def main() -> int:
             "Adds removal_object_clip_drop / removal_edit_score columns. Repeatable."
         ),
     )
+    parser.add_argument(
+        "--success-spec",
+        action="append",
+        default=[],
+        metavar="TASK=OBJECT|HOST|RELATION",
+        help=(
+            "Detection-based task-specific success check: "
+            "'task=object phrase|host phrase|relation' with relation in "
+            "above_host/inside_host/on_host. Adds success_*/task_success columns. Repeatable."
+        ),
+    )
+    parser.add_argument("--success-grounding-model", default="IDEA-Research/grounding-dino-base")
+    parser.add_argument("--success-device", default="auto")
     args = parser.parse_args()
 
     removal_phrases: dict[str, tuple[str, str]] = {}
@@ -578,6 +677,26 @@ def main() -> int:
         if not background_phrase:
             background_phrase = "a plain empty surface"
         removal_phrases[task_key.strip()] = (object_phrase.strip(), background_phrase.strip())
+
+    success_specs: dict[str, tuple[str, str, str]] = {}
+    for item in args.success_spec:
+        if "=" not in item or item.count("|") < 2:
+            print(f"WARNING: ignoring malformed --success-spec '{item}'")
+            continue
+        task_key, _, spec = item.partition("=")
+        object_phrase, host_phrase, relation = (part.strip() for part in spec.split("|", 2))
+        if relation not in ("above_host", "inside_host", "on_host"):
+            print(f"WARNING: ignoring --success-spec with unsupported relation '{relation}'")
+            continue
+        success_specs[task_key.strip()] = (object_phrase, host_phrase, relation)
+    success_checker = None
+    if success_specs:
+        try:
+            success_checker = GroundingSuccessChecker(
+                args.success_grounding_model, args.success_device, args.allow_download
+            )
+        except Exception as exc:
+            print(f"WARNING: success checker unavailable: {exc}")
 
     clip_scorer = None
     if args.clip_model:
@@ -635,6 +754,8 @@ def main() -> int:
             mask_candidates=mask_candidates,
             eval_mask_dir=args.eval_mask_dir,
             removal_phrases=removal_phrases,
+            success_checker=success_checker,
+            success_specs=success_specs,
         )
         for path in find_run_dirs(
             args.outputs_dir,
