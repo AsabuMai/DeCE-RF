@@ -206,8 +206,14 @@ Use four paper-facing methods:
 | Generic support control | `adaptive_full_generic_support` | weak automatic support baseline |
 | DeCE-RF | `support_v3_controller_rmsgap` | full method |
 
+These four rows are the A-layer internal motivation baselines (see Baseline
+Layering A-E in the E2 section): `direct_target` is the most important
+motivation row — it demonstrates that target-conditioned velocity couples the
+edit with global drift — and `adaptive_full_generic_support` answers "is a
+rough mask enough?".
+
 Do not put `support_v3_fixed` in Table 1. It belongs to E4 as a component
-ablation.
+ablation and to E2.2/E2.4 as the preservation-control row.
 
 ### Matrix
 
@@ -339,6 +345,25 @@ E2.5 Cross-backbone DeCE-RF transfer probe
 E2.5 is useful only if a FLUX version of DeCE-RF is implemented and smoke-tested.
 It should not be allowed to destabilize the main SD3 paper claim.
 
+### Baseline Layering A-E (2026-06-10)
+
+Organizing frame for every baseline in the paper; each layer answers one
+reviewer question and must not leak into another layer's claim:
+
+| Layer | Question answered | Rows | Home |
+| --- | --- | --- | --- |
+| A. Internal motivation | does the problem exist? | base_only, direct_target (key coupling demo), generic support ("is a rough mask enough?"), DeCE-RF | E1 / Table 1 |
+| B. Same-backbone RF | does the algorithm win under matched backbone? | direct_target-SD3, generic support-SD3, FlowEdit-SD3 (core baseline: inversion-free, optimization-free, official SD3 setting), FlowAlign-SD3, SplitFlow-SD3, Fixed DeCE-SD3, DeCE-RF-SD3 | E2.2 / Table 2a |
+| C. Preservation-aware RF | does it answer fidelity-oriented RF editing? | priority 1: RF-Solver-Edit / RF-Edit; priority 2: OT-RF / OTIP-style; priority 3: ReFlex / FireFlow / DVRF | E2.3 / Table 2b (native context if backbone differs; never same-backbone algorithmic win) |
+| D. Support-matched diagnostic | is the gain just the mask? | direct_target raw / + binary M_edit gating, FlowEdit raw / + gating, preserve-aware + gating if possible, Fixed DeCE, DeCE-RF; baselines receive binary M_edit only, never M_core/M_contact/M_preserve/feedback/projection | E2.4 |
+| E. Non-RF context | broad editing positioning | InstructPix2Pix, P2P/PnP/InfEdit/H-Edit style | supplement/qualitative only; never main-claim evidence |
+
+Fixed DeCE belongs to E4 (component ablation) and E2.2/E2.4 (preservation-
+control row); it is not an E1 headline method. The B-layer claim is exactly:
+"Under the same SD3 backbone and fixed evaluation masks, DeCE-RF improves the
+localized edit-preserve tradeoff over RF-native baselines" — never "beats all
+RF editors".
+
 ### E2.1 Backbone Calibration
 
 #### Question
@@ -462,6 +487,12 @@ Preservation-control upgrade:
 + 6 tasks x Fixed DeCE x 3 seeds = 18 rows
 ```
 
+Generic-support join (B-layer row; reuse the E1 cache, no new generation):
+
+```text
++ 5 tasks x adaptive_full_generic_support x 3 seeds = 15 joined rows
+```
+
 Optional same-backbone preservation-aware external row:
 
 ```text
@@ -516,6 +547,13 @@ This is not the main algorithmic fairness table. It is a native implementation
 comparison with backbone and input caveats.
 
 #### Candidate Rows
+
+Selection priority (at least 1-2 rows must land): priority 1
+RF-Solver-Edit / RF-Edit (explicitly rectified-flow inversion/editing with
+structural preservation — the most direct preservation-aware comparator);
+priority 2 OT-RF / OTIP-style; priority 3 ReFlex / FireFlow / DVRF. Rows whose
+public route is FLUX/native-only stay in Table 2b native context and never
+enter the same-backbone algorithmic comparison.
 
 | Baseline slug | Paper-facing label | Native backbone | Preservation mechanism | Input condition | Current status |
 | --- | --- | --- | --- | --- | --- |
