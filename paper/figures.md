@@ -57,7 +57,7 @@ T1 attached accessory: cat_crown
 T2 container-constrained spatial insertion: bowl_apple_inside
 T3 surface decal/logo: tshirt_star
 T4 local recolor: red_chair_blue
-T5 surface material strip edit: pillow_vertical_fabric_strip
+T5 localized same-color material replacement: pillow_same_color_corduroy_panel
 T6 simple exposed removal: backpack_remove_toy_charm
 ```
 
@@ -76,7 +76,7 @@ Paper-use guidance:
 - `tshirt_star`: use as the strict surface-decal success case.
 - `mug_heart`: diagnostic only; visually clean but too small/weak for the main grid.
 - `bowl_apple_inside`: use as the strict T2 insertion row.
-- `pillow_vertical_fabric_strip`: use as the strict T5 surface-material success case; DeCE-RF adds a perspective-aligned blue silk strip with clean top and bottom boundaries.
+- `pillow_same_color_corduroy_panel`: use as the revised T5 same-color material-panel candidate after it passes the same visual and metric lock. Keep `pillow_vertical_fabric_strip` as a diagnostic blue-strip example, not the main T5 figure.
 - `backpack_remove_toy_charm`: use as exposed-object removal success with a
   caveat that global CLIP underestimates removal quality.
 - `red_chair_blue`: server evidence supports it as the localized
@@ -182,7 +182,7 @@ operation-conditioned support | M_edit/M_core | M_preserve
 
 ## Feedback Figure
 
-Use `cat_crown`, `tshirt_star`, or `pillow_vertical_fabric_strip`, comparing:
+Use `cat_crown`, `tshirt_star`, or `pillow_same_color_corduroy_panel`, comparing:
 
 ```text
 support_v3_fixed | DeCE-RF across stress levels

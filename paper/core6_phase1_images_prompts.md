@@ -6,6 +6,14 @@ Current source of truth for experiment scale and phase gates:
 paper/wacv_experiment_design.md
 ```
 
+T5 status note: this Phase 1 file preserves the previous blue-strip T5 lock
+(`pillow_vertical_fabric_strip`). The current canonical T5 for Phase 2 and the
+paper-facing Core-6 runner is `pillow_same_color_cable_knit` (2026-06-10:
+entire pillow surface to same-color white cable-knit, model-driven recipe with
+final source-chroma projection), because T5 is scoped as localized same-color
+material replacement rather than a surface strip/decal probe. The earlier
+`pillow_same_color_corduroy_panel` center-panel task is a diagnostic candidate.
+
 This file fixes the first-pass image/prompt plan for Phase 1. The goal is not
 to build the final benchmark yet. The goal is to run about 170 outputs and
 decide whether DeCE-RF has enough signal to justify Phase 2.

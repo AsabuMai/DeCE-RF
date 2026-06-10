@@ -48,7 +48,7 @@ The main paper should not look like a gallery. The underlying experiment cache,
 however, must be large enough that the selected examples do not look
 cherry-picked.
 
-## Reviewer Questions To Answer
+## Reviewer Questions To Answe
 
 | Reviewer question | Experiment that answers it | Main-paper artifact |
 | --- | --- | --- |
@@ -84,7 +84,7 @@ difficulty:
 | T2 | Container-constrained spatial insertion | `add_object` + `inside` | insert a new object inside an existing host/container without redrawing the host | inside-region prior and operation-conditioned support |
 | T3 | Surface decal / logo addition | `add_decal` + `on_surface` | place a mark on an existing surface without changing object boundary or background | surface-local support and preserve geometry |
 | T4 | Object-level recoloring | `recolor` + `inside` | change color while preserving shape, layout, and identity | low-drift appearance displacement |
-| T5 | Surface material strip editing | `add_decal` + `on_surface` | add a medium-size material strip while preserving host silhouette and background | edit-preserve Pareto under stronger surface appearance change |
+| T5 | Localized same-color material replacement | `add_decal` + `on_surface` with `material_panel` preset | replace a host-surface subregion with same-color textured material while preserving color, folds, geometry, shading, and surrounding fabric | material-identity change under fixed color and geometry |
 | T6 | Simple exposed-object removal | `remove_object` + `remove_source_object` | remove a visible small object without requiring hard occlusion completion | removal support and preserve-region correction |
 
 The Core-6 claim should be:
@@ -94,6 +94,11 @@ DeCE-RF improves localized edit-preserve control under reasonable support across
 insertion, surface editing, appearance editing, and simple exposed-removal
 scenarios.
 ```
+
+T3, T4, and T5 are separated by the edited attribute rather than by the fact
+that all three touch an object surface: T3 tests symbolic surface content, T4
+tests object color, and T5 tests local material identity under fixed color,
+geometry, and shading.
 
 Full object replacement is not part of E1. Replacement requires source-object
 suppression, target-object generation, and attribute inheritance at the same
@@ -110,14 +115,14 @@ Use one example per category for the first sanity-check run:
 | T2 Container-constrained spatial insertion | `bowl_apple_inside` | implemented seed-10 gate; uses `inside_container` relation |
 | T3 Surface decal / logo addition | `tshirt_star` | visual pass; clearer surface-local decal than mug heart for the main grid |
 | T4 Local recoloring | `red_chair_blue` | existing candidate; keep only after visual audit confirms local recolor |
-| T5 Surface material strip editing | `pillow_vertical_fabric_strip` | implemented seeds 10/11/12 gate; perspective-aligned blue silk strip with softened top seam and clean bottom edge |
+| T5 Localized same-color material replacement | `pillow_same_color_cable_knit` | revised canonical task (2026-06-10); entire pillow surface becomes same-color white cable-knit fabric, model-driven with final source-chroma projection; replaces the corduroy/quilted center-panel versions that failed visibility/naturalness review |
 | T6 Simple exposed-object removal | `backpack_remove_toy_charm` | existing, exposed small-object removal |
 
 `mug_heart` remains a diagnostic T3 example, but it is not the Phase 1 canonical T3 row because the visible edit is too small for the main grid. Use `tshirt_star` for the strict T3 clothing/surface-decal row.
 
 `red_chair_blue` has candidate outputs and metrics for the internal methods.
 Keep it in the main table only after a visual audit confirms that the result is
-a local chair-color change rather than a scene-level style drift. The paper
+a local chair-color change rather than a scene-level style drift. The pape
 should call it a "localized recolor probe", not evidence of general recoloring.
 
 The unified Core-6 implementation claim is:
@@ -134,9 +139,10 @@ allowed, not the editing algorithm itself.
 Do not use `next_to`, `beside`, `near`, or `on_desk` tasks in the main Core-6
 suite unless the corresponding relation constructors are added to
 `operation_support_v3.py`. Keep laptop/cactus-style next-to insertion for E5
-extension or failure analysis until then. Likewise, do not label T5 as full
-material transfer. In the current implementation it is a local surface-pattern
-edit implemented through `add_decal + on_surface`.
+extension or failure analysis until then. T5 should be described narrowly as
+localized same-color material replacement: unlike T3, it does not introduce a
+symbolic shape or new object; unlike T4, it primarily changes texture/material
+identity while keeping chroma, geometry, and shading as stable as possible.
 
 Code-level caveat for T2: the current `inside` relation is supported, but it is
 closer to a normalized host mask than a true container-interior/free-space mask.
@@ -149,7 +155,7 @@ Recommended operation-level area order:
 
 ```text
 T3 decal < T1 accessory ~= T6 removal < T2 inside insertion
-< T5 surface material strip < T4 recolor
+< T5 same-color material panel < T4 recolor
 ```
 
 Important wording: Core-6 is a controlled diagnostic suite, not a large-scale
@@ -164,7 +170,7 @@ preferred conference suite: 8-10 source images x 3 seeds
 stronger supplement: 6 operation categories x 5-10 source examples
 ```
 
-The preferred next expansion is not to add new operations blindly. Add one or
+The preferred next expansion is not to add new operations blindly. Add one o
 two extra images for already-supported operations: another accessory insertion,
 another decal/surface mark, another local recolor, and one additional exposed
 small-object removal if it passes the same frozen protocol.
@@ -193,10 +199,15 @@ seeds: 10, 11, 12
 Current completed evidence:
 
 ```text
-The revised strict Phase 1 matrix is complete for 6 tasks x 4 paper-facing
-methods x seeds 10, 11, and 12:
+The previous strict Phase 1 matrix is complete for 6 tasks x 4 paper-facing
+methods x seeds 10, 11, and 12, using the older blue-strip T5 probe:
 cat_crown, bowl_apple_inside, tshirt_star, red_chair_blue,
 pillow_vertical_fabric_strip, and backpack_remove_toy_charm.
+
+The revised canonical T5 is pillow_same_color_cable_knit (full-pillow same-color
+cable-knit replacement; seed 10/11/12 visual gate passed 2026-06-10). The earlier
+pillow_same_color_corduroy_panel row is a diagnostic candidate only. Fixed-mask
+metrics for the new task still need their own evaluation mask before headline use.
 
 Legacy 2026-06-01 server results cover the previous task set and should be
 used only as supplementary diagnostics. In that mapping, dog_sunglasses is a
@@ -258,7 +269,7 @@ leaderboard. It should answer four reviewer questions:
 2. Under the same SD3 backbone, does DeCE-RF improve localized edit-preserve
    behavior over RF-native and fidelity-oriented editing baselines?
 3. Do official/native preservation-aware RF editors already solve the same
-   localized edit-preserve tasks in practice, even when they use FLUX or another
+   localized edit-preserve tasks in practice, even when they use FLUX or anothe
    backbone?
 4. Is DeCE-RF's advantage merely caused by having an edit mask/support input,
    or by the clean-estimate edit/preserve controller built on top of that
@@ -272,7 +283,7 @@ Same-backbone comparison = algorithmic evidence.
 Different-backbone comparison = native implementation / ecosystem context.
 ```
 
-Do not place `DeCE-RF-SD3` and `ReFlex-FLUX`, `RF-Edit-FLUX`, or
+Do not place `DeCE-RF-SD3` and `ReFlex-FLUX`, `RF-Edit-FLUX`, o
 `FlowEdit-FLUX` in a single undifferentiated leaderboard and then claim a pure
 algorithmic win. Backbone differences can change prompt following, reconstruction
 fidelity, inversion error, image priors, resolution, memory use, and preserve
@@ -332,7 +343,7 @@ Use the simplest two controls per backbone:
 | Direct target guidance | `direct_target` | FLUX direct target or method-native target guidance if runnable | estimates naive edit/preserve behavior |
 
 For SD3, the strict E1 cache already provides `base_only` and `direct_target`
-for the canonical Core-6 tasks. For FLUX, this calibration should run only after
+for the canonical Core-6 tasks. For FLUX, this calibration should run only afte
 FLUX access and the adapter are validated. If FLUX remains blocked, E2.1 should
 report a status/audit row rather than inventing cross-backbone numbers.
 
@@ -488,9 +499,9 @@ comparison with backbone and input caveats.
 
 | Baseline slug | Paper-facing label | Native backbone | Preservation mechanism | Input condition | Current status |
 | --- | --- | --- | --- | --- | --- |
-| `rf_solver_edit` | RF-Solver-Edit / RF-Edit | FLUX.1-dev in current public route | RF solver / inversion accuracy + structural preservation | source image + target/edit prompt, method-native | repo/env present; strict run blocked by FLUX.1-dev access |
-| `reflex` | ReFlex | FLUX.1-dev | trajectory/attention or feature adaptation for structure/background preservation | source image + target prompt | repo/env present; help smoke passes; strict run blocked by FLUX.1-dev access |
-| `fireflow` | FireFlow | FLUX.1-dev | RF-flow editing/inversion route | source image + prompts | strict run blocked by FLUX.1-dev access |
+| `rf_solver_edit` | RF-Solver-Edit / RF-Edit | FLUX.1-dev in current public route | RF solver / inversion accuracy + structural preservation | source image + target/edit prompt, method-native | native FLUX Core-6 seeds 10/11/12 complete; contextual E2.3 row only |
+| `reflex` | ReFlex | FLUX.1-dev | trajectory/attention or feature adaptation for structure/background preservation | source image + target prompt | native FLUX Core-6 seeds 10/11/12 complete; contextual E2.3 row only |
+| `fireflow` | FireFlow | FLUX.1-dev | RF-flow editing/inversion route | source image + prompts | native FLUX Core-6 seeds 10/11/12 complete; contextual E2.3 row only |
 | `stable_flow` | stable-flow | FLUX.1-dev | flow-layer/feature editing route | source image + prompts | adapter pending |
 | `ot_rf_otip` | OT-RF / OTIP-style | SD3/FLUX/TBD after repo verification | optimal transport / inversion fidelity | TBD | registered; repo/env/adapter pending |
 | `dvrf` | DVRF / Delta Velocity RF | TBD | delta-velocity/path-aware RF control | TBD | registered; repo/env/adapter pending |
@@ -562,7 +573,7 @@ M_contact
 M_preserve
 adaptive feedback weights
 clean-estimate projection
-operation-conditioned preserve controller
+operation-conditioned preserve controlle
 ```
 
 Rows:
@@ -597,7 +608,7 @@ Recommended tasks:
 
 ```text
 cat_crown
-tshirt_star
+tshirt_sta
 backpack_remove_toy_charm
 ```
 
@@ -605,9 +616,58 @@ These cover attached accessory addition, surface decal, and exposed-object
 removal. If recolor fairness becomes reviewer-critical, add `red_chair_blue` as
 a fourth task.
 
+Current completed E2.4 diagnostic:
+
+```text
+3 representative tasks x 4 diagnostic rows x 2 seeds = 24 outputs
+tasks: cat_crown, tshirt_star, backpack_remove_toy_charm
+rows: direct_target_raw, direct_target_mask_blend, flowedit_mask_blend,
+support_v3_controller_rmsgap
+```
+
+The completed diagnostic now uses the recommended compact subset:
+attached accessory addition, surface decal, and exposed-object removal.
+`support_v3_fixed` is intentionally not included as an E2.4 support-only row:
+it keeps operation-conditioned support and fixed clean-estimate edit-preserve
+displacement, so it answers a component-ablation question rather than a pure
+localization question. The post-hoc blend rows are diagnostic only and must be
+reported as output blending, not as main inference-time baselines.
+
+Completed E2.4 artifacts:
+
+```text
+experiments/support_v3_2026-06-02/e2_support_matched_diagnostic_manifest.csv
+experiments/support_v3_2026-06-02/e2_support_matched_fixed_mask_metrics.csv
+experiments/support_v3_2026-06-02/e2_support_matched_contextual_table_with_audit.md
+experiments/support_v3_2026-06-02/visual_audit/e2_support_matched_visual_audit_filled.csv
+experiments/support_v3_2026-06-02/visual_audit/e2_support_matched_visual_audit_summary.csv
+experiments/support_v3_2026-06-02/visual_audit/e2_support_matched_visual_audit_conclusion.md
+```
+
+Related E4/component-ablation artifacts:
+
+```text
+experiments/support_v3_2026-06-02/e4_fixed_dece_component_ablation_compact.csv
+experiments/support_v3_2026-06-02/e4_fixed_dece_component_ablation_compact_rows.csv
+experiments/support_v3_2026-06-02/e4_fixed_dece_component_ablation_compact.md
+```
+
+E2.4 conclusion:
+
+```text
+Fixed binary output blending nearly eliminates outside-mask metric error by
+construction, but visual audit shows that it does not solve target correctness
+or boundary coherence. DeCE-RF is stronger on edit success and overall quality,
+but E2.4 should be framed as localization evidence rather than as the primary
+controller-ablation claim. Fixed DeCE displacement is reported separately in E4.
+```
+
 ### E2.5 Optional Cross-Backbone Transfer Probe
 
+Status: deferred for the current evidence lock.
+
 This is optional and should be attempted only after the SD3 story is stable.
+It is not required for the current paper-drafting package.
 
 Clean factorial probe:
 
@@ -622,6 +682,21 @@ If DeCE-RF-FLUX is not implemented, do not run this probe. Instead state:
 ```text
 The current DeCE-RF implementation is SD3-specific. Cross-backbone transfer to
 FLUX requires a separate implementation and validation.
+```
+
+Current decision:
+
+```text
+E2.5 is skipped in the 2026-06-04 evidence lock. All algorithm-level conclusions
+are drawn from same-backbone SD3 comparisons. Native FLUX rows remain contextual
+only. Full cross-backbone DeCE-RF transfer is left to future work.
+```
+
+Locked evidence package:
+
+```text
+experiments/support_v3_2026-06-02/e2_evidence_lock_2026-06-04.md
+experiments/support_v3_2026-06-02/e2_evidence_lock_2026-06-04.csv
 ```
 
 ### E2 Metrics And Normalization
@@ -764,12 +839,18 @@ comparison cache, not as a reduced or weaker experimental design.
 Current native-baseline state:
 
 ```text
-RF-Solver-Edit / ReFlex / FireFlow / stable-flow: FLUX.1-dev access or adapter blocked
+RF-Solver-Edit / ReFlex / FireFlow: native FLUX Core-6 seeds 10/11/12 complete
+and normalized to the 512 evaluation/display protocol for metrics and visual audit.
+These rows remain E2.3 native implementation context, not E2.2 same-backbone
+algorithmic evidence.
+stable-flow: single-case smoke complete; strict Core-6 adapter/matrix not yet complete
 OT-RF / OTIP and DVRF: registered planned entries, repo/env/adapter pending
 ```
 
-Until one native method becomes runnable, E2.3 is a status/audit table rather
-than a quantitative claim.
+E2.3 can now report a quantitative native-context table for FireFlow,
+RF-Solver-Edit, and ReFlex, with explicit FLUX.1-dev backbone and normalization
+columns. It must still be framed as native implementation context; E2.2 remains
+the same-backbone SD3 algorithmic comparison.
 
 ### E2 Wording Rules
 
@@ -813,7 +894,7 @@ Use three representative cases:
 
 ```text
 cat_crown
-tshirt_star
+tshirt_sta
 backpack_remove_toy_charm
 ```
 
@@ -868,14 +949,105 @@ The small table should report:
 This directly borrows the useful lesson from localized editing papers: the
 support/mask is part of the experiment, not just a hidden implementation detail.
 
+Current E3 diagnostic status: complete for the current manuscript package.
+
+```text
+3 tasks x 6 support geometry variants x 3 seeds = 54 support-map rows
+tasks: cat_crown, tshirt_star, backpack_remove_toy_charm
+variants: attention_only, clean_disagreement, velocity_disagreement,
+grounding_sam, generic_support, operation_conditioned_support
+```
+
+Completed E3 artifacts:
+
+```text
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_mask_metrics.csv
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_summary.csv
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_by_task_summary.csv
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_correlation.csv
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_summary.md
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_tshirt_star_seed10_figure4_panel.png
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_seed10_task_sheet.png
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_complete_2026-06-04.md
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry_complete_2026-06-04.csv
+experiments/support_v3_2026-06-02/e3_support_geometry/e3_support_geometry.sha256
+```
+
+E3 claim boundary:
+
+```text
+Attention/clean/velocity rows are support-map diagnostics, not runnable method
+rows. Downstream edit/preserve metrics are attached only to runnable rows with
+saved outputs, namely generic support and operation-conditioned support.
+```
+
+Current E3 conclusion:
+
+```text
+Operation-conditioned support improves support/eval-mask overlap and downstream
+edit behavior compared with weak generic support. Grounding/SAM has high recall
+but larger area, supporting the claim that segmentation alone is not edit
+geometry.
+```
+
+Optional E3 extensions are deferred:
+
+```text
+manual upper-bound support
+support shrink/dilate perturbation
+broader 6-task or 12-case expansion
+```
+
+These are not required before moving to E4 or paper evidence packaging.
+
 ## Experiment E4: Controller And Robustness Ablation
 
 ### Purpose
 
 This answers whether feedback-updated clean-estimate control contributes beyond
 fixed DeCE displacement. Because the fixed-vs-feedback gap can be small in
-ordinary cases, the strongest evidence should be under perturbation or stronger
+ordinary cases, the strongest evidence should be under perturbation or stronge
 edit pressure.
+
+### 2026-06-04 Status
+
+E4 is complete for the declared SD3 controller-ablation subset:
+
+```text
+experiments/support_v3_2026-06-02/e4_controller_ablation/
+```
+
+Completed evidence:
+
+| Artifact | Status |
+| --- | --- |
+| `e4_controller_base_metrics.csv` | 18/18 rows complete |
+| `e4_edit_strength_metrics.csv` | 36/36 rows complete |
+| `e4_controller_base_summary.csv` | fixed vs DeCE-RF summary |
+| `e4_edit_strength_summary.csv` | edit-strength Pareto table |
+| `e4_controller_trajectory_summary.csv` | controller signal table |
+| `e4_figure5_edit_strength_pareto.png` | Figure 5 Pareto candidate |
+| `e4_controller_trajectory_tshirt_star_seed10.png` | trajectory diagnostic |
+| `e4_controller_ablation_complete_2026-06-04.md` | completion audit |
+| `e4_controller_ablation.sha256` | artifact checksum |
+
+Primary quantitative readout:
+
+| Variant | n | Outside-mask L1 down | Local edit L1 proxy | Source SSIM up |
+| --- | ---: | ---: | ---: | ---: |
+| Fixed DeCE displacement | 9 | 0.0331 | 0.0731 | 0.9192 |
+| DeCE-RF | 9 | 0.0328 | 0.0637 | 0.9215 |
+
+Interpretation: E4 supports a conservative robustness/stabilization claim.
+DeCE-RF shows slightly lower outside-mask drift and higher source SSIM in the
+base fixed-vs-feedback comparison, while the edit-strength stress curve shows a
+similar edit-preserve frontier rather than a dramatic semantic-success jump.
+The y-axis uses fixed-mask local edit L1 as an edit-pressure proxy, not a
+standalone CLIP or human semantic success score.
+
+Claim boundary: E4 is controller evidence for the SD3 DeCE-RF implementation.
+It supports the mechanism story and Table 3/component discussion; it should not
+be used as the main external-baseline or cross-backbone claim.
 
 ### Methods
 
@@ -893,8 +1065,8 @@ Use:
 
 ```text
 cat_crown
-tshirt_star
-pillow_vertical_fabric_strip
+tshirt_sta
+pillow_same_color_cable_knit
 ```
 
 These cover attached accessory, surface decal, and the harder T5 surface
@@ -933,7 +1105,26 @@ comparable preservation budget, it should keep higher edit success.
 ```
 
 Single-point fixed-vs-feedback numbers are useful but not enough by themselves,
-because a reviewer can dismiss them as hyperparameter choice.
+because a reviewer can dismiss them as hyperparameter choice. The current
+compact table is a placement/ablation anchor rather than the final robustness
+claim:
+
+```text
+experiments/support_v3_2026-06-02/e4_fixed_dece_component_ablation_compact.csv
+experiments/support_v3_2026-06-02/e4_fixed_dece_component_ablation_compact.md
+```
+
+Use paper-facing names in this section:
+
+```text
+Fixed DeCE displacement = support_v3_fixed
+DeCE-RF = support_v3_controller_rmsgap
+```
+
+The fixed variant should not be described as an external baseline or as an E2.4
+support-only row; it keeps operation-conditioned support and fixed
+clean-estimate edit-preserve displacement, but removes feedback-updated weights
+and projection/correction.
 
 ## Experiment E5: Boundary, Extension, And Failure Cases
 
@@ -941,6 +1132,38 @@ because a reviewer can dismiss them as hyperparameter choice.
 
 This keeps the claim honest and turns failures into evidence about the method's
 scope.
+
+### 2026-06-04 Status
+
+E5 is complete for the selected boundary/extension package:
+
+```text
+experiments/support_v3_2026-06-02/e5_boundary_extension/
+```
+
+Completed evidence:
+
+| Artifact | Status |
+| --- | --- |
+| `e5_selected_manifest.csv` | 36/36 selected outputs complete |
+| `e5_failure_taxonomy.csv` | controlled extension/failure labels |
+| `e5_figure6_boundary_extension_seed10.png` | Figure 6 candidate |
+| `e5_gated_completion_protocol.json` | high-confidence completion-prior route |
+| `e5_whiteboard_red_star_protocol.json` | replacement-target route |
+| `e5_boundary_extension_complete_2026-06-04.md` | completion audit |
+| `e5_boundary_extension.sha256` | artifact checksum |
+
+Figure 6 candidate uses one positive extension row and two limitation rows:
+
+```text
+laptop_remove_sticker + high-confidence completion prio
+whiteboard_remove_yellow_letter as semantic glyph hallucination
+dog_replace_tennis_ball_star as replacement ambiguity
+```
+
+Claim boundary: E5 is boundary/extension evidence. It should be used for Figure
+6 and limitations/scope wording, not as a main quantitative table or as evidence
+that extension routes are part of the base DeCE-RF mean.
 
 ### Positive Extension Probes
 
@@ -1001,7 +1224,7 @@ for more:
 | `instruct_pix2pix` | InstructPix2Pix | instruction-guided diffusion editing | source image + instruction/text prompt, no DeCE support mask | representative text-instruction editor |
 | `h_edit_r_p2p` | H-Edit / P2P-style | diffusion bridge / Prompt-to-Prompt-style editing | source image + source/target prompts, no DeCE support mask | representative attention/path editing comparator |
 
-Do not add MasaCtrl, ZONE, Pix2Pix-Zero, Prompt-to-Prompt, LEDITS++, or
+Do not add MasaCtrl, ZONE, Pix2Pix-Zero, Prompt-to-Prompt, LEDITS++, o
 same-support inpainting to the main E2 plan. Add them only after the layered RF
 fairness evidence is stable, and keep them as supplement/transparency rows.
 
@@ -1023,7 +1246,7 @@ seeds: 10, 11, 12
 
 Use the same source images, prompts, max image size, fixed evaluation masks, and
 visual-audit rubric as E1/E2. Do not give these baselines DeCE operation support
-or hand-tuned masks. If a method cannot express a source/target prompt pair
+or hand-tuned masks. If a method cannot express a source/target prompt pai
 cleanly, record the exact instruction/prompt translation in its command file and
 metadata.
 
@@ -1070,7 +1293,7 @@ about 204 analyzed/generated rows, with E2.2 mostly reused from completed cache
 
 If Phase 1 is being rerun on a new server, do not rerun all E2.2 baselines by
 default. First verify the current environment with DeCE-RF migration checks and
-reuse the completed E2.2 SD3 artifacts unless prompts, image normalization, or
+reuse the completed E2.2 SD3 artifacts unless prompts, image normalization, o
 metric code changed.
 
 Phase 1 decision gate:
@@ -1136,7 +1359,7 @@ This is the target execution budget for the first serious WACV draft.
 
 ### Phase 3: WACV Robustness Completion
 
-Purpose: only after Phase 1 and Phase 2 look good, expand to a stronger
+Purpose: only after Phase 1 and Phase 2 look good, expand to a stronge
 WACV-ready robustness cache. Phase 3 should increase breadth; it should not
 change the E2 logic or turn cross-backbone rows into algorithmic evidence.
 
@@ -1180,7 +1403,7 @@ an algorithms paper.
 | Figure 5 | E4 Pareto + timestep diagnostics | prove feedback behavior |
 | Figure 6 | E5 extension + failure cases, optional | mark scope boundary |
 
-Do not add more main-paper grids unless one of these six figures fails to answer
+Do not add more main-paper grids unless one of these six figures fails to answe
 its reviewer question.
 
 Approximate main-paper image-cell budget:
@@ -1238,7 +1461,7 @@ If space allows, split Table 3 into separate support and controller tables. If
 space is tight, move detailed per-task rows and full ablation grids to the
 supplement.
 
-## Run Order
+## Run Orde
 
 ### Phase 1 Run Order: Half-Day Sanity Check
 
@@ -1255,7 +1478,7 @@ Six canonical categories, four internal methods, three seeds. For Phase 1, run
 the strict six-case sanity set:
 
 ```bash
-TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_vertical_fabric_strip backpack_remove_toy_charm" \
+TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit backpack_remove_toy_charm" \
 METHODS="base_only direct_target adaptive_full_generic_support support_v3_controller_rmsgap" \
 SEEDS="10 11 12" \
 SKIP_EXISTING=1 \
@@ -1303,7 +1526,7 @@ experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.md
 Use the currently runnable controller/fixed variants for the first pass:
 
 ```bash
-TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_vertical_fabric_strip backpack_remove_toy_charm" \
+TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit backpack_remove_toy_charm" \
 METHODS="support_v3_fixed support_v3_controller_rmsgap support_v3_controller_progress support_v3_controller_hybrid support_v3_controller_rmsgap_normgate" \
 SEEDS="10 11" \
 SKIP_EXISTING=1 \
@@ -1430,7 +1653,7 @@ Recommended tasks:
 
 ```text
 cat_crown
-tshirt_star
+tshirt_sta
 backpack_remove_toy_charm
 ```
 
@@ -1533,7 +1756,7 @@ into E2 evidence.
 ### Fixed-Control Cache Note
 
 ```bash
-TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_vertical_fabric_strip backpack_remove_toy_charm" \
+TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit backpack_remove_toy_charm" \
 METHODS="support_v3_fixed" \
 SEEDS="10 11 12" \
 bash scripts/run_pretty_matrix.sh
@@ -1557,7 +1780,7 @@ Freeze the audit rubric before scoring final outputs:
 edit success: 1-5
 source preservation: 1-5
 locality: 1-5
-artifact severity: 1-5, lower is better
+artifact severity: 1-5, lower is bette
 overall: 1-5
 failure type: controlled vocabulary
 ```

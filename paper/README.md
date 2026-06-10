@@ -4,9 +4,10 @@ Current source of truth for the WACV paper package.
 
 ## Active Experiment Design
 
-- `wacv_experiment_design.md`: canonical experiment design and claim boundary.
+- `wacv_experiment_design.md`: canonical 2026-06-05 experiment design and claim boundary.
 - `core6_phase1_images_prompts.md`: frozen strict Core-6 Phase 1 task/image plan.
 - `phase2_core6_images_prompts.md`: planned Phase 2 Core-6 expansion manifest.
+- `e2_status_lock.md`: E2 method/backbone status and paper-use lock.
 - `results.md`: current result readout and safe wording.
 - `figures.md`: current main/supplement figure plan.
 - `tables.md`: current main/supplement table plan.
@@ -29,7 +30,7 @@ cat_crown
 bowl_apple_inside
 tshirt_star
 red_chair_blue
-pillow_vertical_fabric_strip
+pillow_same_color_cable_knit
 backpack_remove_toy_charm
 ```
 

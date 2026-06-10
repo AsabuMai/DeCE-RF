@@ -69,7 +69,8 @@ side branch, not the mainline.
 - `docs/operation_conditioned_support_interface.md`: paper-facing abstraction
   that reframes support-v3 as operation-conditioned support rather than a
   task-specific heuristic.
-- `docs/worklog_2026-06-03.md`: current E2 baseline/environment worklog and experiment readout.
+- `docs/worklog_2026-06-03.md`: E2 baseline/environment worklog and experiment readout.
+- `docs/worklog_2026-06-10.md`: T5 cable-knit redesign, decal-reference code fixes, and E1-E5 consolidated report pointer.
 - `docs/rmsgap_mainline_mechanism_audit.md`: current rmsgap mainline mechanism
   map and next-step implications.
 - `docs/wacv_phase1_code_map.md`: current paper-to-code alignment and cleanup boundary for the redesigned WACV Phase 1 plan.
@@ -126,7 +127,7 @@ Current WACV Phase 1 strict tasks:
 - bowl_apple_inside: implemented T2 container-constrained insertion; seed-10 gate passed.
 - tshirt_star: implemented T3 surface decal; replaces mug_heart as the canonical row.
 - red_chair_blue: implemented T4 local recolor; strict audit passed.
-- pillow_same_color_corduroy_panel: implemented T5 localized same-color material replacement; replaces the blue-strip diagnostic probe as the canonical T5 row.
+- pillow_same_color_cable_knit: implemented T5 localized same-color material replacement (entire pillow surface to white cable-knit, model-driven recipe, 2026-06-10); replaces pillow_same_color_corduroy_panel, which stays as a diagnostic candidate.
 - backpack_remove_toy_charm: implemented T6 exposed-object removal.
 
 Previous server-evidence tasks such as dog_sunglasses, mug_heart, pillow_blue_stripes, and pillow_vertical_fabric_strip are supplement/diagnostic rows, not replacements for the revised strict Core-6.
