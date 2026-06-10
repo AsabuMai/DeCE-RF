@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+#SBATCH -J t4_vase
+#SBATCH -p a100
+#SBATCH -w a100-01
+#SBATCH --gres=shard:1
+#SBATCH -c 8
+#SBATCH --mem=56G
+#SBATCH -t 02:30:00
+#SBATCH -o /cluster/users/grad/2025/25t8103/project/logs/phase2_t4_vase_shape_sweep_seed10_%j.log
+
+set -euo pipefail
+
+ROOT="/cluster/users/grad/2025/25t8103/project"
+cd "${ROOT}"
+
+RUN_ID="phase2_t4_vase_shape_sweep_seed10_20260606_${SLURM_JOB_ID:-manual}"
+RUN_DIR="${ROOT}/experiments/support_v3_2026-06-02/${RUN_ID}"
+ARTIFACT="${ROOT}/experiments/support_v3_2026-06-02/phase2_t4_vase_shape_sweep_seed10_${SLURM_JOB_ID:-manual}.tgz"
+
+mkdir -p "${RUN_DIR}"
+
+echo "[t4-vase] start=$(date -Is)"
+echo "[t4-vase] host=$(hostname)"
+echo "[t4-vase] job_id=${SLURM_JOB_ID:-none}"
+echo "[t4-vase] run_dir=${RUN_DIR}"
+nvidia-smi || true
+
+export PYTHON="${ROOT}/.venv/bin/python"
+export HF_HOME="${ROOT}/../.cache/huggingface"
+export HF_HUB_ENABLE_HF_TRANSFER=0
+export MODEL_OFFLOAD=0
+export LOW_VRAM=0
+export NUM_INFERENCE_STEPS=28
+export N_MAX=24
+export MAX_IMAGE_SIZE=512
+export REGENERATE_MASKS=1
+export REUSE_SEMANTIC_MASKS=0
+
+TASKS_ONE="yellow_vase_blue_phase2"
+METHODS_ONE="support_v3_controller_rmsgap"
+SEEDS_ONE="10"
+TASK_OUT="${ROOT}/outputs/pretty_matrix/yellow_vase_blue_phase2/support_v3_controller_rmsgap/seed_10"
+BACKUP_DIR="${ROOT}/outputs/pretty_matrix_registry_backup/t4_vase_shape_sweep_seed10_${SLURM_JOB_ID:-manual}"
+
+run_variant() {
+  local label="$1"
+  local source_color="$2"
+  local source_dilate="$3"
+  local source_fill="$4"
+  local ref="$5"
+  local color="$6"
+  local traj_subj="$7"
+  local boundary_preserve="$8"
+  local manifest="${RUN_DIR}/command_manifest_${label}.txt"
+  local summary="${RUN_DIR}/sd3_batch_summary_${label}.json"
+
+  echo "[t4-vase] variant=${label} source=${source_color:-none} dilate=${source_dilate} fill=${source_fill} ref=${ref} color=${color} traj_subj=${traj_subj} bpres=${boundary_preserve}"
+  rm -f "${manifest}"
+
+  if [[ -d "${TASK_OUT}" ]]; then
+    mkdir -p "${BACKUP_DIR}/${label}"
+    rm -rf "${BACKUP_DIR}/${label}/seed_10"
+    mv "${TASK_OUT}" "${BACKUP_DIR}/${label}/seed_10"
+  fi
+
+  VASE_RECOLOR_SOURCE_COLOR="${source_color}" \
+  VASE_RECOLOR_SOURCE_MASK_THRESHOLD="0.14" \
+  VASE_RECOLOR_SOURCE_KEEP_COMPONENTS="1" \
+  VASE_RECOLOR_SOURCE_MIN_AREA="80" \
+  VASE_RECOLOR_SOURCE_CLOSE_KERNEL="7" \
+  VASE_RECOLOR_SOURCE_DILATE_KERNEL="${source_dilate}" \
+  VASE_RECOLOR_SOURCE_DILATE_ITERATIONS="1" \
+  VASE_RECOLOR_SOURCE_DILATE_MIN_SATURATION="0.08" \
+  VASE_RECOLOR_FILL_HOLES="${source_fill}" \
+  VASE_RECOLOR_REF_GUIDANCE_SCALE="${ref}" \
+  VASE_RECOLOR_COLOR_GUIDANCE_SCALE="${color}" \
+  VASE_RECOLOR_TRAJECTORY_SUBJECT_PRESERVE_SCALE="${traj_subj}" \
+  VASE_RECOLOR_TRIMAP_BOUNDARY_PRESERVE_SCALE="${boundary_preserve}" \
+  BATCH_MANIFEST="${manifest}" \
+  PREPARE_ONLY=1 \
+  SKIP_EXISTING=0 \
+  TASKS="${TASKS_ONE}" \
+  METHODS="${METHODS_ONE}" \
+  SEEDS="${SEEDS_ONE}" \
+  bash scripts/run_pretty_matrix.sh
+
+  echo "[t4-vase] manifest_count_${label}=$(wc -l < "${manifest}")"
+
+  "${PYTHON}" scripts/run_sd3_batch.py \
+    --manifest "${manifest}" \
+    --summary-output "${summary}"
+
+  for required in result.png metadata.json stats.json command.txt; do
+    test -s "${TASK_OUT}/${required}"
+  done
+
+  mkdir -p "${RUN_DIR}/variant_outputs/${label}"
+  cp -a "${TASK_OUT}" "${RUN_DIR}/variant_outputs/${label}/seed_10"
+}
+
+run_variant sem_shape_b015 "" 0 0 0.50 0.08 0.30 0.15
+run_variant sem_shape_b030 "" 0 0 0.46 0.07 0.45 0.30
+run_variant ysrc_d07 yellow 7 1 0.50 0.08 0.30 0.15
+run_variant ysrc_d11 yellow 11 1 0.46 0.07 0.45 0.30
+
+tar -czf "${ARTIFACT}" \
+  -C "${ROOT}" \
+  "experiments/support_v3_2026-06-02/${RUN_ID}"
+
+echo "[t4-vase] artifact=${ARTIFACT}"
+echo "[t4-vase] end=$(date -Is)"
