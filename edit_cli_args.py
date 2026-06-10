@@ -460,6 +460,7 @@ def build_parser() -> argparse.ArgumentParser:
             "seg_x_clean",
             "seg_x_velocity",
             "seg_x_response",
+            "relation_only",
             "relation_x_clean",
             "relation_x_velocity",
             "relation_x_response",
@@ -505,6 +506,7 @@ def build_parser() -> argparse.ArgumentParser:
             "seg_x_clean",
             "seg_x_velocity",
             "seg_x_response",
+            "relation_only",
             "relation_x_clean",
             "relation_x_velocity",
             "relation_x_response",
@@ -546,7 +548,22 @@ def build_parser() -> argparse.ArgumentParser:
         "--relation",
         "--support-relation",
         dest="support_relation",
-        choices=("auto", "none", "above_host", "on_face", "on_surface", "remove_source_object", "inside_host", "inside", "inside_container"),
+        choices=(
+            "auto",
+            "none",
+            "above_host",
+            "below_host",
+            "on_face",
+            "on_profile_face",
+            "on_profile_face_left",
+            "on_profile_face_right",
+            "on_surface",
+            "remove_source_object",
+            "inside_host",
+            "inside_object",
+            "inside",
+            "inside_container",
+        ),
         default="auto",
         help="Operation-level relation/layout proposal used by operation_support_v3.",
     )
@@ -591,7 +608,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--attention-velocity-support-min-height", type=float, default=0.065)
     parser.add_argument(
         "--mask-layering-mode",
-        choices=("none", "object_contact"),
+        choices=("none", "object_contact", "recolor_trimap"),
         default="object_contact",
         help="Split edit support into object/contact/preserve layers before editing.",
     )
@@ -624,6 +641,30 @@ def build_parser() -> argparse.ArgumentParser:
         type=float,
         default=0.75,
         help="How strongly source latent edges suppress the contact edit ring.",
+    )
+    parser.add_argument(
+        "--mask-trimap-inner-erode-kernel",
+        type=int,
+        default=3,
+        help="Erosion kernel for the strong inner object region in recolor trimap mode.",
+    )
+    parser.add_argument(
+        "--mask-trimap-outer-dilate-kernel",
+        type=int,
+        default=5,
+        help="Dilation kernel for the outer support boundary in recolor trimap mode.",
+    )
+    parser.add_argument(
+        "--mask-trimap-boundary-edit-scale",
+        type=float,
+        default=0.8,
+        help="Target-edit strength in the recolor boundary band.",
+    )
+    parser.add_argument(
+        "--mask-trimap-boundary-preserve-scale",
+        type=float,
+        default=0.0,
+        help="Optional source-preserve strength in the recolor boundary band; keep low to avoid preserving source chroma.",
     )
     parser.add_argument(
         "--mask-output-dir",
@@ -846,6 +887,26 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Optional normalized box pasted back from the source latent after editing.",
     )
+    parser.add_argument("--final-ref-composite-image", type=str, default=None)
+    parser.add_argument("--final-ref-composite-mask", type=str, default=None)
+    parser.add_argument("--final-ref-composite-scale", type=float, default=0.0)
+    parser.add_argument("--final-ref-composite-mask-blur", type=float, default=0.0)
+    parser.add_argument(
+        "--final-chroma-source-scale",
+        type=float,
+        default=0.0,
+        help="Blend result chroma toward source chroma inside the mask while keeping result luma; for same-color material tasks.",
+    )
+    parser.add_argument("--final-chroma-source-mask", type=str, default=None)
+    parser.add_argument("--final-chroma-source-mask-blur", type=float, default=0.0)
+    parser.add_argument(
+        "--final-outside-restore-scale",
+        type=float,
+        default=0.0,
+        help="Restore the region outside the final edit mask toward the source image at full pixel resolution; suppresses latent-downsampled mask feather leak.",
+    )
+    parser.add_argument("--final-outside-restore-mask", type=str, default=None)
+    parser.add_argument("--final-outside-restore-mask-blur", type=float, default=1.0)
     parser.add_argument(
         "--photo-prompt-mode",
         type=str,

@@ -10,9 +10,10 @@ METHODS="${METHODS:-base_only direct_target adaptive_full_generic_support suppor
 SEEDS="${SEEDS:-10 11 12}"
 SKIP_EXISTING="${SKIP_EXISTING:-1}"
 DRY_RUN="${DRY_RUN:-0}"
+RUN_PRETTY_CONFIG_SOURCE="${RUN_PRETTY_CONFIG_SOURCE:-core6}"
 
-STRICT_TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_vertical_fabric_strip backpack_remove_toy_charm"
-IMPLEMENTED_TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_vertical_fabric_strip backpack_remove_toy_charm"
+STRICT_TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit backpack_remove_toy_charm"
+IMPLEMENTED_TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit backpack_remove_toy_charm"
 OLD_SERVER_EVIDENCE_TASKS="cat_crown dog_sunglasses mug_heart tshirt_star backpack_remove_toy_charm red_chair_blue"
 PENDING_STRICT_TASKS="${PENDING_STRICT_TASKS:-}"
 
@@ -63,10 +64,12 @@ echo "[wacv-phase1] tasks=${TASKS}"
 echo "[wacv-phase1] methods=${METHODS}"
 echo "[wacv-phase1] seeds=${SEEDS}"
 echo "[wacv-phase1] skip_existing=${SKIP_EXISTING} dry_run=${DRY_RUN}"
+echo "[wacv-phase1] runner_config_source=${RUN_PRETTY_CONFIG_SOURCE}"
 
 TASKS="${TASKS}" \
 METHODS="${METHODS}" \
 SEEDS="${SEEDS}" \
 SKIP_EXISTING="${SKIP_EXISTING}" \
 DRY_RUN="${DRY_RUN}" \
+RUN_PRETTY_CONFIG_SOURCE="${RUN_PRETTY_CONFIG_SOURCE}" \
 bash "${RUNNER}"
