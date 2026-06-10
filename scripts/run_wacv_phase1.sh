@@ -12,18 +12,23 @@ SKIP_EXISTING="${SKIP_EXISTING:-1}"
 DRY_RUN="${DRY_RUN:-0}"
 RUN_PRETTY_CONFIG_SOURCE="${RUN_PRETTY_CONFIG_SOURCE:-core6}"
 
-STRICT_TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit backpack_remove_toy_charm"
-IMPLEMENTED_TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit backpack_remove_toy_charm"
+# Strict Core-5 (revised 2026-06-10): removal moved to the E5 boundary probe
+# because decoupled clean-displacement control has no defined edit target for
+# fill content; run backpack_remove_toy_charm via E5_REMOVAL_PROBE_TASKS.
+STRICT_TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit"
+IMPLEMENTED_TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit"
+E5_REMOVAL_PROBE_TASKS="backpack_remove_toy_charm"
 OLD_SERVER_EVIDENCE_TASKS="cat_crown dog_sunglasses mug_heart tshirt_star backpack_remove_toy_charm red_chair_blue"
 PENDING_STRICT_TASKS="${PENDING_STRICT_TASKS:-}"
 
 usage() {
   cat <<EOF
-Usage: SCOPE=<implemented|strict|old_server_evidence> [METHODS=...] [SEEDS=...] bash scripts/run_wacv_phase1.sh
+Usage: SCOPE=<implemented|strict|e5_removal_probe|old_server_evidence> [METHODS=...] [SEEDS=...] bash scripts/run_wacv_phase1.sh
 
 Scopes:
   implemented          Runs the updated WACV tasks currently implemented in scripts/run_pretty_matrix.sh.
-  strict               Runs the updated strict Core-6 task set; set PENDING_STRICT_TASKS to re-enable the missing-task guard.
+  strict               Runs the strict Core-5 task set (removal lives in the E5 boundary probe); set PENDING_STRICT_TASKS to re-enable the missing-task guard.
+  e5_removal_probe     Runs the E5 removal boundary probe task(s).
   old_server_evidence  Replays the previous server-evidence task set for diagnostics only.
 
 Default METHODS: ${METHODS}
@@ -37,12 +42,15 @@ case "${SCOPE}" in
     ;;
   strict)
     if [[ -n "${PENDING_STRICT_TASKS}" && "${ALLOW_PENDING_TASKS:-0}" != "1" ]]; then
-      echo "[wacv-phase1] strict Core-6 is not runnable yet." >&2
+      echo "[wacv-phase1] strict Core-5 is not runnable yet." >&2
       echo "[wacv-phase1] pending task definitions: ${PENDING_STRICT_TASKS}" >&2
       echo "[wacv-phase1] use SCOPE=implemented for the runnable subset, or add the missing task definitions first." >&2
       exit 2
     fi
     TASKS="${TASKS:-${STRICT_TASKS}}"
+    ;;
+  e5_removal_probe)
+    TASKS="${TASKS:-${E5_REMOVAL_PROBE_TASKS}}"
     ;;
   old_server_evidence)
     TASKS="${TASKS:-${OLD_SERVER_EVIDENCE_TASKS}}"

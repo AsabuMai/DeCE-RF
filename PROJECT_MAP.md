@@ -128,9 +128,9 @@ Current WACV Phase 1 strict tasks:
 - tshirt_star: implemented T3 surface decal; replaces mug_heart as the canonical row.
 - red_chair_blue: implemented T4 local recolor; strict audit passed.
 - pillow_same_color_cable_knit: implemented T5 localized same-color material replacement (entire pillow surface to white cable-knit, model-driven recipe, 2026-06-10); replaces pillow_same_color_corduroy_panel, which stays as a diagnostic candidate.
-- backpack_remove_toy_charm: implemented T6 exposed-object removal.
+- backpack_remove_toy_charm: exposed-object removal, demoted (2026-06-10) from headline E1 to the E5 boundary probe: decoupled clean-displacement control has no defined edit target for fill content; reported with removal-aware metrics and the VAE fill-texture ceiling analysis. The strict E1 set is now Core-5 (T1-T5 above).
 
-Previous server-evidence tasks such as dog_sunglasses, mug_heart, pillow_blue_stripes, and pillow_vertical_fabric_strip are supplement/diagnostic rows, not replacements for the revised strict Core-6.
+Previous server-evidence tasks such as dog_sunglasses, mug_heart, pillow_blue_stripes, and pillow_vertical_fabric_strip are supplement/diagnostic rows, not replacements for the revised strict Core-5.
 `outputs/` is large and generated. Do not treat it as the project entry point.
 
 ## Cleanup Rules

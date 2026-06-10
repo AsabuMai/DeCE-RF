@@ -8,6 +8,24 @@
 - Verification Status: UNVERIFIED until final reruns and visual audits are locked
 - Version Label: wacv_experiment_design_phase_plan
 
+## Scope Revision 2026-06-10: Core-5 Plus E5 Removal Probe
+
+The strict E1 benchmark is now Core-5 (T1-T5): attached accessory, container
+insertion, surface decal, local recolor, and same-color material replacement.
+Removal (former T6, `backpack_remove_toy_charm`) is demoted to the E5 boundary
+probe for the same reason replacement was excluded from E1: decoupled
+clean-displacement control requires a definable edit target, and removal's
+target ("whatever the background would be") is a completion problem the
+controller has no principled leverage over. Empirical basis (worklog
+2026-06-10): every removal-specific control probe failed or was inert
+(clean_fill hallucinations, reference-guidance ghosts), fill quality is capped
+by the 512 VAE reconstruction ceiling, and fair scoring required dedicated
+removal-aware metrics. The probe is reported in E5 with those metrics and the
+ceiling analysis. "Core-6" below this point predates the revision and should
+be read as Core-5 plus the E5 removal probe; this revised Core-5 is unrelated
+to the archived 2026-05 Core-5. E2 completion records that mention strict
+Core-6 runs are factual history and include the removal task.
+
 ## One-Sentence Experimental Thesis
 
 DeCE-RF should be evaluated as a localized Rectified Flow control method: it is
@@ -85,14 +103,14 @@ difficulty:
 | T3 | Surface decal / logo addition | `add_decal` + `on_surface` | place a mark on an existing surface without changing object boundary or background | surface-local support and preserve geometry |
 | T4 | Object-level recoloring | `recolor` + `inside` | change color while preserving shape, layout, and identity | low-drift appearance displacement |
 | T5 | Localized same-color material replacement | `add_decal` + `on_surface` with `material_panel` preset | replace a host-surface subregion with same-color textured material while preserving color, folds, geometry, shading, and surrounding fabric | material-identity change under fixed color and geometry |
-| T6 | Simple exposed-object removal | `remove_object` + `remove_source_object` | remove a visible small object without requiring hard occlusion completion | removal support and preserve-region correction |
+| T6 (moved to E5 probe, 2026-06-10) | Simple exposed-object removal | `remove_object` + `remove_source_object` | remove a visible small object without requiring hard occlusion completion | operation-conditioned support localization only; fill content has no displacement target |
 
-The Core-6 claim should be:
+The Core-5 claim should be:
 
 ```text
 DeCE-RF improves localized edit-preserve control under reasonable support across
-insertion, surface editing, appearance editing, and simple exposed-removal
-scenarios.
+insertion, surface editing, and appearance/material editing scenarios where the
+edit target is definable in clean-estimate space.
 ```
 
 T3, T4, and T5 are separated by the edited attribute rather than by the fact
@@ -116,7 +134,7 @@ Use one example per category for the first sanity-check run:
 | T3 Surface decal / logo addition | `tshirt_star` | visual pass; clearer surface-local decal than mug heart for the main grid |
 | T4 Local recoloring | `red_chair_blue` | existing candidate; keep only after visual audit confirms local recolor |
 | T5 Localized same-color material replacement | `pillow_same_color_cable_knit` | revised canonical task (2026-06-10); entire pillow surface becomes same-color white cable-knit fabric, model-driven with final source-chroma projection; replaces the corduroy/quilted center-panel versions that failed visibility/naturalness review |
-| T6 Simple exposed-object removal | `backpack_remove_toy_charm` | existing, exposed small-object removal |
+| E5 removal probe (former T6) | `backpack_remove_toy_charm` | 3-seed gate passed with shadow-dilated mask; reported in E5 with removal-aware metrics, not in Table 1 |
 
 `mug_heart` remains a diagnostic T3 example, but it is not the Phase 1 canonical T3 row because the visible edit is too small for the main grid. Use `tshirt_star` for the strict T3 clothing/surface-decal row.
 
@@ -1133,6 +1151,34 @@ and projection/correction.
 This keeps the claim honest and turns failures into evidence about the method's
 scope.
 
+### Removal Boundary Probe (former T6, added 2026-06-10)
+
+`backpack_remove_toy_charm` moved here from E1. What the probe shows:
+
+- Operation-conditioned support localizes the removal correctly (the geometry
+  component works), and the shadow-dilated mask (SEMANTIC_DILATE 16) removes
+  the cast-shadow ghost; the 3-seed visual gate passed.
+- Clean-displacement control has no leverage over fill content: the clean_fill
+  removal controller hallucinated adjacent-strap content at every scale, and
+  texture-reference guidance either resurrected the removed object (source
+  structure leakage) or invited hallucinations without adding grain.
+- Fill texture is capped by the backbone: source ring texture 9.0 vs base_only
+  reconstruction 3.1 (512 VAE round-trip), so the generated fill (~4.4) already
+  exceeds the reconstruction ceiling; the visible texture mismatch at the
+  preserve/generate boundary is a backbone limitation.
+- Scoring uses the removal-aware metrics in `scripts/evaluate_paper_metrics.py`
+  (`--removal-phrase`, columns `removal_object_clip_drop`,
+  `removal_edit_score`, `fill_texture_ratio`); validation table
+  `experiments/support_v3_2026-06-02/t6_removal_aware_metrics.csv` shows the
+  expected rank structure (no-edit floor ~0, removal-failure baseline lowest,
+  DeCE-RF positive with near-generic preservation, direct target most
+  aggressive removal at the worst preservation).
+
+Paper-safe wording: removal demonstrates the boundary of decoupled
+clean-displacement control — the support interface generalizes to removal
+localization, but the displacement formulation requires a definable edit
+target, which exposed-object removal does not provide.
+
 ### 2026-06-04 Status
 
 E5 is complete for the selected boundary/extension package:
@@ -1478,7 +1524,7 @@ Six canonical categories, four internal methods, three seeds. For Phase 1, run
 the strict six-case sanity set:
 
 ```bash
-TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit backpack_remove_toy_charm" \
+TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit" \
 METHODS="base_only direct_target adaptive_full_generic_support support_v3_controller_rmsgap" \
 SEEDS="10 11 12" \
 SKIP_EXISTING=1 \
@@ -1526,7 +1572,7 @@ experiments/support_v3_2026-06-02/e2_reduced_rf_visual_audit.md
 Use the currently runnable controller/fixed variants for the first pass:
 
 ```bash
-TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit backpack_remove_toy_charm" \
+TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit" \
 METHODS="support_v3_fixed support_v3_controller_rmsgap support_v3_controller_progress support_v3_controller_hybrid support_v3_controller_rmsgap_normgate" \
 SEEDS="10 11" \
 SKIP_EXISTING=1 \
@@ -1756,7 +1802,7 @@ into E2 evidence.
 ### Fixed-Control Cache Note
 
 ```bash
-TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit backpack_remove_toy_charm" \
+TASKS="cat_crown bowl_apple_inside tshirt_star red_chair_blue pillow_same_color_cable_knit" \
 METHODS="support_v3_fixed" \
 SEEDS="10 11 12" \
 bash scripts/run_pretty_matrix.sh

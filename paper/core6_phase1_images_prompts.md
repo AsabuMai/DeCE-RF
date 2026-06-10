@@ -50,7 +50,7 @@ https://www.pexels.com/photo/photo-of-pillows-on-sofa-4635231/
 | T3 | Surface decal / logo addition | `tshirt_star` | `data/pretty_free_candidates/pexels_person_white_tshirt_blue_jeans_8217483.jpg` | visual pass; replaces mug heart for main strict set |
 | T4 | Local recoloring | `red_chair_blue` | `data/pretty_free_candidates/pexels_red_armchair_room_6758347.jpg` | existing candidate, visual audit required |
 | T5 | Surface material strip editing | `pillow_vertical_fabric_strip` | `data/pretty_free_candidates/pexels_plain_pillow_sofa_phase1.jpg` | implemented; seeds 10/11/12 human visual gate passed |
-| T6 | Simple exposed-object removal | `backpack_remove_toy_charm` | `data/pretty_free_candidates/unsplash_backpack_keychain_njwnKDUDKNM.jpg` | existing runner task |
+| E5 removal probe (former T6, moved 2026-06-10) | Simple exposed-object removal | `backpack_remove_toy_charm` | `data/pretty_free_candidates/unsplash_backpack_keychain_njwnKDUDKNM.jpg` | existing runner task; not a headline E1 row |
 
 Temporary fallback:
 
@@ -378,7 +378,11 @@ Current implementation interpretation:
 add_decal-like surface pattern overlay
 ```
 
-## T6 Simple Exposed-Object Removal
+## E5 Removal Probe (former T6) Simple Exposed-Object Removal
+
+Status 2026-06-10: moved out of strict E1 into the E5 boundary probe (see
+`paper/wacv_experiment_design.md`, Scope Revision). Prompts below remain the
+runnable probe configuration.
 
 Runner task:
 

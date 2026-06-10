@@ -23,7 +23,8 @@ Current source of truth for the WACV paper package.
 
 ## Current Experimental Scope
 
-The active strict Core-6 tasks are:
+The active strict Core-5 tasks are (revised 2026-06-10; distinct from the
+archived 2026-05 Core-5):
 
 ```text
 cat_crown
@@ -31,8 +32,12 @@ bowl_apple_inside
 tshirt_star
 red_chair_blue
 pillow_same_color_cable_knit
-backpack_remove_toy_charm
 ```
+
+Removal (`backpack_remove_toy_charm`) is no longer a headline E1 row: decoupled
+clean-displacement control has no defined edit target for fill content, so it
+is reported as an E5 boundary probe with removal-aware metrics
+(`t6_removal_aware_metrics.csv`) and the VAE fill-texture ceiling analysis.
 
 The active E2 design is a layered fairness experiment:
 

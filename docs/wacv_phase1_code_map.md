@@ -20,7 +20,7 @@ SCOPE=implemented bash scripts/run_wacv_phase1.sh
 Supported scopes:
 
 - `implemented`: runnable updated-task subset only.
-- `strict`: revised strict Core-6 with `cat_crown` for T1 and `tshirt_star` for T3; T2/T5 are implemented and human-reviewed as passing.
+- `strict`: revised strict Core-5 (2026-06-10) with `cat_crown` for T1 and `tshirt_star` for T3; T2/T5 are implemented and human-reviewed as passing. Removal runs via `e5_removal_probe`.
 - `old_server_evidence`: previous server-evidence task set; diagnostic/supplement only.
 
 ## Paper-To-Code Task Alignment
@@ -32,7 +32,7 @@ Supported scopes:
 | T3 surface decal | `tshirt_star` | implemented; visual pass | `tshirt_star` / `P5` | Canonical T3 after mug heart was too small/weak for the main grid. |
 | T4 local recolor | `red_chair_blue` | implemented | `red_chair_blue` / `P4` | Keep after visual audit confirms local recolor. |
 | T5 localized same-color material replacement | `pillow_same_color_cable_knit` | implemented; seed 10/11/12 canonical gate passed 2026-06-10 | `pillow_same_color_cable_knit` | Canonical T5 after the corduroy/quilted center-panel versions failed visibility/naturalness review; full-pillow white cable-knit, model-driven (no reference compositing) with final source-chroma projection. `pillow_same_color_corduroy_panel` and `pillow_vertical_fabric_strip` remain diagnostic. |
-| T6 exposed removal | `backpack_remove_toy_charm` | implemented | `backpack_remove_toy_charm` / `P7` | Canonical T6 with zipper/fabric caveat. |
+| E5 removal probe (former T6) | `backpack_remove_toy_charm` | implemented; 3-seed gate passed; demoted from headline E1 (2026-06-10) | `backpack_remove_toy_charm` / `P7` | Boundary probe: support localizes removal correctly but clean-displacement control has no defined fill target; evaluated with removal-aware metrics. |
 
 ## E2 Baseline Upgrade Note
 
@@ -82,7 +82,7 @@ Do not delete yet, but keep out of the Phase 1 path:
 ## Simplification Plan
 
 1. Use `scripts/run_wacv_phase1.sh` for all Phase 1 runs.
-2. Use the revised strict Core-6 task list as the frozen Phase 1 starting point: `cat_crown`, `bowl_apple_inside`, `tshirt_star`, `red_chair_blue`, `pillow_same_color_cable_knit`, and `backpack_remove_toy_charm`.
+2. Use the revised strict Core-5 task list as the frozen Phase 1 starting point: `cat_crown`, `bowl_apple_inside`, `tshirt_star`, `red_chair_blue`, and `pillow_same_color_cable_knit`; `backpack_remove_toy_charm` is the E5 removal boundary probe.
 3. Keep exploratory task/method variants in `legacy/cleanup_20260603/scripts/run_pretty_matrix.full_legacy.sh`; active Core-6 config lives in `scripts/core6_tasks.sh` and `scripts/core6_methods.sh`.
 4. Parked diagnostic scripts were moved to `legacy/cleanup_20260603/scripts/`; restore from the cleanup backup only for supplementary experiments.
 5. Keep metrics/grids pointed at the strict six-task list in `experiments/support_v3_2026-06-02/`, and move older T2/T5 probes into diagnostic/supplement-only language.

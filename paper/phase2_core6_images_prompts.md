@@ -10,6 +10,10 @@
 
 ## Purpose
 
+Scope revision 2026-06-10: the strict E1 set is Core-5 (T1-T5); the T6 removal
+rows below are E5 boundary-probe candidates, not headline E1 rows (see
+`paper/wacv_experiment_design.md`, Scope Revision).
+
 This manifest prepares the Phase 2 Core-6 expansion:
 
 ```text
