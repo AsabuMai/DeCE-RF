@@ -33,7 +33,10 @@ fi
   --method-names "flowedit flowalign splitflow fireflow rf_solver_edit reflex" \
   --seeds "10 11 12" \
   --eval-mask-dir "$EXP/normalized_512/eval_masks" \
-  --preserve-floor-csv "$EXP/e4_t1_t4_reconstruction_floor_metrics.csv"
+  --preserve-floor-csv "$EXP/e4_t1_t4_reconstruction_floor_metrics.csv" \
+  --clip-model openai/clip-vit-large-patch14 \
+  --dino-model facebook/dinov2-base \
+  --allow-download
 
 "$PY" - <<'PY'
 import csv

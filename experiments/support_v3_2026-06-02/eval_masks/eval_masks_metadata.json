@@ -26,6 +26,16 @@
     "source_type": "manual",
     "task": "cat_crown"
   },
+  "pillow_same_color_cable_knit": {
+    "eval_mask": "experiments/support_v3_2026-06-02/eval_masks/pillow_same_color_cable_knit_eval_mask.png",
+    "fixed_eval_mask_area": 0.10555594308035714,
+    "note": "SAM pillow mask from the canonical seed-10 run, frozen 2026-06-11 as the task-level fixed eval mask (full-pillow material replacement).",
+    "seed": "10",
+    "source": "outputs/pretty_matrix/pillow_same_color_cable_knit/support_v3_controller_rmsgap/seed_10/masks/semantic_support.png",
+    "source_image": "data/phase2_candidates/pexels_white_pillow_brown_sofa_6312089.jpg",
+    "source_type": "frozen_semantic_sam",
+    "task": "pillow_same_color_cable_knit"
+  },
   "pillow_vertical_fabric_strip": {
     "area": 0.0885649181547619,
     "eval_mask": "experiments/support_v3_2026-06-02/eval_masks/pillow_vertical_fabric_strip_eval_mask.png",
