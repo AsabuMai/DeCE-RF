@@ -71,6 +71,7 @@ side branch, not the mainline.
   task-specific heuristic.
 - `docs/worklog_2026-06-03.md`: E2 baseline/environment worklog and experiment readout.
 - `docs/worklog_2026-06-10.md`: T5 cable-knit redesign, decal-reference code fixes, and E1-E5 consolidated report pointer.
+- `docs/todo_2026-06-11.md`: prioritized execution queue (P0-P3) after the T5/T6/Core-5 session.
 - `docs/rmsgap_mainline_mechanism_audit.md`: current rmsgap mainline mechanism
   map and next-step implications.
 - `docs/wacv_phase1_code_map.md`: current paper-to-code alignment and cleanup boundary for the redesigned WACV Phase 1 plan.
