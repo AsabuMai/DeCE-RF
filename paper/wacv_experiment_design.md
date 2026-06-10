@@ -21,10 +21,12 @@ controller has no principled leverage over. Empirical basis (worklog
 (clean_fill hallucinations, reference-guidance ghosts), fill quality is capped
 by the 512 VAE reconstruction ceiling, and fair scoring required dedicated
 removal-aware metrics. The probe is reported in E5 with those metrics and the
-ceiling analysis. "Core-6" below this point predates the revision and should
-be read as Core-5 plus the E5 removal probe; this revised Core-5 is unrelated
-to the archived 2026-05 Core-5. E2 completion records that mention strict
-Core-6 runs are factual history and include the removal task.
+ceiling analysis. Forward-looking plans, matrices, and gates below use Core-5
+(pass completed 2026-06-10). Remaining "Core-6" mentions are completion records
+of runs that factually included the removal task; do not rewrite them. This
+revised Core-5 is unrelated to the archived 2026-05 Core-5.
+`backpack_remove_toy_charm` may still appear in E2.4/E3 diagnostic task lists:
+those experiments probe support localization, where removal remains valid.
 
 ## One-Sentence Experimental Thesis
 
@@ -70,13 +72,13 @@ cherry-picked.
 
 | Reviewer question | Experiment that answers it | Main-paper artifact |
 | --- | --- | --- |
-| Does DeCE-RF actually improve localized edit-preserve behavior? | E1 controlled Core-6 edit-preserve benchmark | Table 1 + qualitative Figure 3 |
+| Does DeCE-RF actually improve localized edit-preserve behavior? | E1 controlled Core-5 edit-preserve benchmark | Table 1 + qualitative Figure 3 |
 | Why not use existing RF editing or preservation-aware RF methods? | E2 RF-native and preservation-aware baseline comparison | Table 2 |
 | Is the support geometry a real component rather than a hand-picked mask? | E3 support geometry ablation | Figure 4 + small table |
 | Does feedback control matter beyond fixed decoupled displacement? | E4 controller/stress ablation | Figure 5 |
 | Where does the method stop working? | E5 boundary and extension probes | Figure 6 + limitation paragraph |
 
-## Experiment E1: Controlled Core-6 Edit-Preserve Benchmark
+## Experiment E1: Controlled Core-5 Edit-Preserve Benchmark
 
 ### Purpose
 
@@ -92,11 +94,11 @@ paper/core6_phase1_images_prompts.md
 
 ### Task Set
 
-Core-6 should be defined as six localized-edit categories, not merely six
+Core-5 should be defined as five localized-edit categories, not merely five
 nice-looking examples. Each category corresponds to a different edit-preserve
 difficulty:
 
-| ID | Core-6 category | Operation / relation | Primary difficulty | Main component tested |
+| ID | Category | Operation / relation | Primary difficulty | Main component tested |
 | --- | --- | --- | --- | --- |
 | T1 | Attached accessory addition | `add_object` + `above_host` / `on_face` | add a small attached object while preserving host identity, pose, and background | `M_core + M_contact`, local object formation |
 | T2 | Container-constrained spatial insertion | `add_object` + `inside` | insert a new object inside an existing host/container without redrawing the host | inside-region prior and operation-conditioned support |
@@ -143,10 +145,10 @@ Keep it in the main table only after a visual audit confirms that the result is
 a local chair-color change rather than a scene-level style drift. The pape
 should call it a "localized recolor probe", not evidence of general recoloring.
 
-The unified Core-6 implementation claim is:
+The unified Core-5 implementation claim is:
 
 ```text
-All Core-6 tasks use the same DeCE-RF controller. The task category only
+All Core-5 tasks use the same DeCE-RF controller. The task category only
 selects an operation-conditioned support constructor that maps source/target
 tokens and a supported relation into M_core, M_edit, M_contact, and M_preserve.
 We freeze operation-level area budgets and post-processing parameters before
@@ -154,7 +156,7 @@ evaluation. Thus, task variation changes the geometry of where editing is
 allowed, not the editing algorithm itself.
 ```
 
-Do not use `next_to`, `beside`, `near`, or `on_desk` tasks in the main Core-6
+Do not use `next_to`, `beside`, `near`, or `on_desk` tasks in the main Core-5
 suite unless the corresponding relation constructors are added to
 `operation_support_v3.py`. Keep laptop/cactus-style next-to insertion for E5
 extension or failure analysis until then. T5 should be described narrowly as
@@ -172,14 +174,14 @@ and inspect support masks carefully.
 Recommended operation-level area order:
 
 ```text
-T3 decal < T1 accessory ~= T6 removal < T2 inside insertion
+T3 decal < T1 accessory < T2 inside insertion
 < T5 same-color material panel < T4 recolor
 ```
 
-Important wording: Core-6 is a controlled diagnostic suite, not a large-scale
-benchmark. If the final submission uses only the six canonical source images,
-write "controlled Core-6 suite" throughout the paper and do not imply broad
-dataset coverage. If compute allows, expand Core-6 into task categories with
+Important wording: Core-5 is a controlled diagnostic suite, not a large-scale
+benchmark. If the final submission uses only the five canonical source images,
+write "controlled Core-5 suite" throughout the paper and do not imply broad
+dataset coverage. If compute allows, expand Core-5 into task categories with
 multiple source images:
 
 ```text
@@ -210,7 +212,7 @@ ablation.
 ### Matrix
 
 ```text
-6 tasks x 4 methods x 3 seeds = 72 headline runs
+5 tasks x 4 methods x 3 seeds = 60 headline runs
 seeds: 10, 11, 12
 ```
 
@@ -265,7 +267,7 @@ families:
 
 ### Main Table Layout
 
-Table 1 should aggregate over all Core-6 tasks and also show per-operation
+Table 1 should aggregate over all Core-5 tasks and also show per-operation
 breakdowns:
 
 ```text
@@ -342,7 +344,7 @@ It should not be allowed to destabilize the main SD3 paper claim.
 #### Question
 
 Before comparing methods across SD3 and FLUX, estimate the baseline behavior of
-each backbone on the same Core-6 inputs.
+each backbone on the same Core-5 inputs.
 
 This layer asks:
 
@@ -361,7 +363,7 @@ Use the simplest two controls per backbone:
 | Direct target guidance | `direct_target` | FLUX direct target or method-native target guidance if runnable | estimates naive edit/preserve behavior |
 
 For SD3, the strict E1 cache already provides `base_only` and `direct_target`
-for the canonical Core-6 tasks. For FLUX, this calibration should run only afte
+for the canonical Core-5 tasks. For FLUX, this calibration should run only afte
 FLUX access and the adapter are validated. If FLUX remains blocked, E2.1 should
 report a status/audit row rather than inventing cross-backbone numbers.
 
@@ -370,14 +372,14 @@ report a status/audit row rather than inventing cross-backbone numbers.
 Minimum calibration:
 
 ```text
-6 strict Core-6 tasks x 2 backbones x 2 base methods x 2 seeds = 48 outputs
+5 strict Core-5 tasks x 2 backbones x 2 base methods x 2 seeds = 40 outputs
 seeds: 10, 11
 ```
 
 Preferred calibration if FLUX access is stable:
 
 ```text
-6 strict Core-6 tasks x 2 backbones x 2 base methods x 3 seeds = 72 outputs
+5 strict Core-5 tasks x 2 backbones x 2 base methods x 3 seeds = 60 outputs
 seeds: 10, 11, 12
 ```
 
@@ -463,22 +465,22 @@ Preservation-control upgrade:
 Optional same-backbone preservation-aware external row:
 
 ```text
-+ 6 tasks x 1 verified SD3 preservation-aware RF baseline x 2-3 seeds = 12-18 rows
++ 5 tasks x 1 verified SD3 preservation-aware RF baseline x 2-3 seeds = 10-15 rows
 ```
 
 Phase 2 expansion target:
 
 ```text
-6 categories x 2 examples x 6 SD3 rows x 3 seeds = 216 rows
+5 categories x 2 examples x 6 SD3 rows x 3 seeds = 180 rows
 rows: direct_target, FlowEdit, FlowAlign, SplitFlow, Fixed DeCE, DeCE-RF
-optional verified SD3 preserve-aware external baseline: +36 rows
+optional verified SD3 preserve-aware external baseline: +30 rows
 ```
 
 Phase 3 expansion target:
 
 ```text
-6 categories x 3 examples x 6 SD3 rows x 3 seeds = 324 rows
-optional verified SD3 preserve-aware external baseline: +54 rows
+5 categories x 3 examples x 6 SD3 rows x 3 seeds = 270 rows
+optional verified SD3 preserve-aware external baseline: +45 rows
 ```
 
 #### Claim Boundary
@@ -530,19 +532,19 @@ comparison with backbone and input caveats.
 Minimum if one native baseline becomes runnable:
 
 ```text
-1 native preservation-aware baseline x 6 strict tasks x 2 seeds = 12 outputs
+1 native preservation-aware baseline x 5 strict tasks x 2 seeds = 10 outputs
 ```
 
 Preferred compact native comparison:
 
 ```text
-2 native preservation-aware baselines x 6 strict tasks x 2 seeds = 24 outputs
+2 native preservation-aware baselines x 5 strict tasks x 2 seeds = 20 outputs
 ```
 
 Stronger version if FLUX access and adapters are stable:
 
 ```text
-2 native preservation-aware baselines x 6 strict tasks x 3 seeds = 36 outputs
+2 native preservation-aware baselines x 5 strict tasks x 3 seeds = 30 outputs
 ```
 
 Do not expand E2.3 to Phase 2 multi-example breadth until at least one native
@@ -631,8 +633,9 @@ backpack_remove_toy_charm
 ```
 
 These cover attached accessory addition, surface decal, and exposed-object
-removal. If recolor fairness becomes reviewer-critical, add `red_chair_blue` as
-a fourth task.
+removal. The removal task stays valid here because E2.4 probes support-matched
+localization, not headline edit-preserve ranking. If recolor fairness becomes
+reviewer-critical, add `red_chair_blue` as a fourth task.
 
 Current completed E2.4 diagnostic:
 
@@ -1213,7 +1216,7 @@ that extension routes are part of the base DeCE-RF mean.
 
 ### Positive Extension Probes
 
-Report separately from the Core-6 main table:
+Report separately from the Core-5 main table:
 
 | Probe | Route | Why separate |
 | --- | --- | --- |
@@ -1279,14 +1282,14 @@ fairness evidence is stable, and keep them as supplement/transparency rows.
 Minimum supplement run:
 
 ```text
-2 non-RF supplement baselines x 6 Core-6 tasks x 2 seeds = 24 outputs
+2 non-RF supplement baselines x 5 Core-5 tasks x 2 seeds = 20 outputs
 seeds: 10, 11
 ```
 
 Preferred if setup is stable:
 
 ```text
-2 non-RF supplement baselines x 6 Core-6 tasks x 3 seeds = 36 outputs
+2 non-RF supplement baselines x 5 Core-5 tasks x 3 seeds = 30 outputs
 seeds: 10, 11, 12
 ```
 
@@ -1327,14 +1330,14 @@ days on full evidence generation.
 
 | Experiment | Matrix | Outputs |
 | --- | --- | ---: |
-| E1 main internal benchmark | 6 categories x 1 example x 4 methods x 3 seeds | 72 |
+| E1 main internal benchmark | 5 categories x 1 example x 4 methods x 3 seeds | 60 |
 | E2.2 same-backbone SD3 RF cache | completed strict FlowEdit/FlowAlign/SplitFlow + DeCE-RF rows; reuse, do not rerun | 72 analyzed rows |
-| E4 controller variants | 6 categories x 1 example x 5 variants x 2 seeds | 60 |
+| E4 controller variants | 5 categories x 1 example x 5 variants x 2 seeds | 50 |
 
 Total:
 
 ```text
-about 204 analyzed/generated rows, with E2.2 mostly reused from completed cache
+about 182 analyzed/generated rows, with E2.2 mostly reused from completed cache
 ```
 
 If Phase 1 is being rerun on a new server, do not rerun all E2.2 baselines by
@@ -1346,7 +1349,7 @@ Phase 1 decision gate:
 
 | Question | Go signal |
 | --- | --- |
-| E1 main effect | DeCE-RF remains visually usable on all strict Core-6 tasks |
+| E1 main effect | DeCE-RF remains visually usable on all strict Core-5 tasks |
 | E2.2 SD3 comparison | completed SD3 RF rows remain valid under current fixed masks/metrics |
 | E4 controller | fixed-vs-feedback evidence is at least plausible enough to justify Pareto/stress runs |
 | Engineering | batch runner and environment produce deterministic artifacts with command/stats/metadata files |
@@ -1360,21 +1363,21 @@ support-matched controls that make the comparison hard to attack.
 
 | Experiment | Matrix | Outputs |
 | --- | --- | ---: |
-| E1 main benchmark | 6 categories x 3 examples x 4 internal methods x 3 seeds | 216 |
-| E2.1 backbone calibration | 6 canonical tasks x 2 backbones x 2 base methods x 2 seeds | 48 |
-| E2.2 same-backbone SD3 algorithm comparison | 6 categories x 2 examples x 6 SD3 rows x 3 seeds | 216 |
-| E2.2 optional verified SD3 preserve-aware external row | 6 categories x 2 examples x 1 row x 3 seeds | +36 |
-| E2.3 native preservation-aware RF comparison | 6 canonical tasks x 1-2 native rows x 2 seeds | 12-24 |
+| E1 main benchmark | 5 categories x 3 examples x 4 internal methods x 3 seeds | 180 |
+| E2.1 backbone calibration | 5 canonical tasks x 2 backbones x 2 base methods x 2 seeds | 40 |
+| E2.2 same-backbone SD3 algorithm comparison | 5 categories x 2 examples x 6 SD3 rows x 3 seeds | 180 |
+| E2.2 optional verified SD3 preserve-aware external row | 5 categories x 2 examples x 1 row x 3 seeds | +30 |
+| E2.3 native preservation-aware RF comparison | 5 canonical tasks x 1-2 native rows x 2 seeds | 10-20 |
 | E2.4 support-matched diagnostic | 3 representative tasks x 4-5 rows x 2 seeds | 24-30 |
-| E3 support geometry ablation | 6 categories x 2 examples x 5 support variants x 2 seeds | 120 |
-| E4 controller ablation/stress | 6 categories x 2 examples x 5 controller variants x 2 seeds | 120 |
+| E3 support geometry ablation | 5 categories x 2 examples x 5 support variants x 2 seeds | 100 |
+| E4 controller ablation/stress | 5 categories x 2 examples x 5 controller variants x 2 seeds | 100 |
 | E5 extension/failure examples | selected probes | 30 |
 
 Phase 2 total target:
 
 ```text
-about 786-804 analyzed/generated rows without optional SD3 preserve-aware external row
-about 822-840 rows if one verified SD3 preserve-aware external row is added
+about 664-680 analyzed/generated rows without optional SD3 preserve-aware external row
+about 694-710 rows if one verified SD3 preserve-aware external row is added
 ```
 
 If FLUX access remains blocked, E2.1 FLUX rows and E2.3 native rows become
@@ -1411,21 +1414,21 @@ change the E2 logic or turn cross-backbone rows into algorithmic evidence.
 
 | Experiment | Matrix | Outputs |
 | --- | --- | ---: |
-| E1 main benchmark | 6 categories x 5 examples x 4 internal methods x 3 seeds | 360 |
-| E2.1 backbone calibration | 6 canonical tasks x 2 backbones x 2 base methods x 3 seeds | 72 |
-| E2.2 same-backbone SD3 algorithm comparison | 6 categories x 3 examples x 6 SD3 rows x 3 seeds | 324 |
-| E2.2 optional verified SD3 preserve-aware external row | 6 categories x 3 examples x 1 row x 3 seeds | +54 |
-| E2.3 native preservation-aware RF comparison | 6 categories x 2 examples x 2-3 native rows x 2 seeds | 48-72 |
+| E1 main benchmark | 5 categories x 5 examples x 4 internal methods x 3 seeds | 300 |
+| E2.1 backbone calibration | 5 canonical tasks x 2 backbones x 2 base methods x 3 seeds | 60 |
+| E2.2 same-backbone SD3 algorithm comparison | 5 categories x 3 examples x 6 SD3 rows x 3 seeds | 270 |
+| E2.2 optional verified SD3 preserve-aware external row | 5 categories x 3 examples x 1 row x 3 seeds | +45 |
+| E2.3 native preservation-aware RF comparison | 5 categories x 2 examples x 2-3 native rows x 2 seeds | 40-60 |
 | E2.4 support-matched diagnostic | 3 categories x 2 examples x 4-5 rows x 2 seeds | 48-60 |
-| E3 support ablation | 6 categories x 3 examples x 5 support variants x 2 seeds | 180 |
-| E4 controller ablation/stress | 6 categories x 3 examples x 5 controller variants x 2 seeds | 180 |
+| E3 support ablation | 5 categories x 3 examples x 5 support variants x 2 seeds | 150 |
+| E4 controller ablation/stress | 5 categories x 3 examples x 5 controller variants x 2 seeds | 150 |
 | E5 extension/failure examples | selected probes | 30-50 |
 
 Phase 3 total target:
 
 ```text
-about 1242-1298 rows without optional SD3 preserve-aware external row
-about 1296-1352 rows if one verified SD3 preserve-aware external row is added
+about 1048-1100 rows without optional SD3 preserve-aware external row
+about 1093-1145 rows if one verified SD3 preserve-aware external row is added
 ```
 
 Use Phase 3 to complete supplement grids, full per-task tables, robustness
@@ -1444,7 +1447,7 @@ an algorithms paper.
 | --- | --- | --- |
 | Figure 1 | teaser: 2 examples, Source/Target/Direct/Generic/DeCE-RF | state the problem and result |
 | Figure 2 | method overview with clean-estimate decomposition, support, feedback | explain method |
-| Figure 3 | E1 Core-6 qualitative grid | show task diversity |
+| Figure 3 | E1 Core-5 qualitative grid | show task diversity |
 | Figure 4 | E2 fairness comparison: same-backbone SD3 rows, plus one native row only if clearly labeled | visualize RF alternatives without hiding backbone differences |
 | Figure 5 | E4 Pareto + timestep diagnostics | prove feedback behavior |
 | Figure 6 | E5 extension + failure cases, optional | mark scope boundary |
@@ -1470,7 +1473,7 @@ tight: 45-55 result image cells
 complete: 60-75 result image cells
 ```
 
-Supplement can contain 150-300 image cells: full Core-6 grids, all seeds,
+Supplement can contain 150-300 image cells: full Core-5 grids, all seeds,
 support masks, RF baseline examples, calibration rows, support-matched
 diagnostics, Pareto sweeps, and failure taxonomy. The main paper must still be
 self-contained without the supplement.
@@ -1582,7 +1585,7 @@ bash scripts/run_pretty_matrix.sh
 Expected output count:
 
 ```text
-6 x 5 x 2 = 60
+5 x 5 x 2 = 50
 ```
 
 If these five variants are too redundant after inspection, keep
@@ -1608,10 +1611,10 @@ Only start Phase 2 if Phase 1 passes the Go criteria.
 
 #### Phase 2 E1 Expansion
 
-Expand each of the six categories to three source examples:
+Expand each of the five categories to three source examples:
 
 ```text
-6 categories x 3 examples x 4 methods x 3 seeds = 216 outputs
+5 categories x 3 examples x 4 methods x 3 seeds = 180 outputs
 ```
 
 Keep the same four internal methods:
@@ -1642,7 +1645,7 @@ baselines.
 Expand the validated SD3 RF comparison to two source examples per category:
 
 ```text
-6 categories x 2 examples x 6 SD3 rows x 3 seeds = 216 rows
+5 categories x 2 examples x 6 SD3 rows x 3 seeds = 180 rows
 ```
 
 Rows:
@@ -1667,7 +1670,7 @@ layer unless they are genuinely ported to the matched SD3 protocol.
 
 #### Phase 2 E2.3 Native Preservation-Aware RF Rows
 
-Run after a native method passes strict Core-6 smoke and access checks:
+Run after a native method passes strict Core-5 smoke and access checks:
 
 ```text
 6 canonical tasks x 1-2 native rows x 2 seeds = 12-24 outputs
@@ -1730,7 +1733,7 @@ bash scripts/run_pretty_matrix.sh
 Expected output count:
 
 ```text
-6 categories x 2 examples x 5 support variants x 2 seeds = 120
+5 categories x 2 examples x 5 support variants x 2 seeds = 100
 ```
 
 Before running E3, freeze all support thresholds, area limits, component
@@ -1741,7 +1744,7 @@ selection, dilation, blur, and relation presets.
 Run controller variants on two examples per category:
 
 ```text
-6 categories x 2 examples x 5 variants x 2 seeds = 120 outputs
+5 categories x 2 examples x 5 variants x 2 seeds = 100 outputs
 ```
 
 Then run a targeted stress sweep on the most diagnostic subset. Use the legacy
@@ -1783,14 +1786,14 @@ Phase 3 expands the same layered E2 design rather than introducing new baseline
 families:
 
 ```text
-E1: 6 categories x 5 examples x 4 methods x 3 seeds = 360
-E2.1: 6 canonical tasks x 2 backbones x 2 base methods x 3 seeds = 72
-E2.2: 6 categories x 3 examples x 6 SD3 rows x 3 seeds = 324
-E2.2 optional SD3 preserve-aware external row = +54
-E2.3: 6 categories x 2 examples x 2-3 native rows x 2 seeds = 48-72
+E1: 5 categories x 5 examples x 4 methods x 3 seeds = 300
+E2.1: 5 canonical tasks x 2 backbones x 2 base methods x 3 seeds = 60
+E2.2: 5 categories x 3 examples x 6 SD3 rows x 3 seeds = 270
+E2.2 optional SD3 preserve-aware external row = +45
+E2.3: 5 categories x 2 examples x 2-3 native rows x 2 seeds = 40-60
 E2.4: 3 categories x 2 examples x 4-5 rows x 2 seeds = 48-60
-E3: 6 categories x 3 examples x 5 support variants x 2 seeds = 180
-E4: 6 categories x 3 examples x 5 controller variants x 2 seeds = 180
+E3: 5 categories x 3 examples x 5 support variants x 2 seeds = 150
+E4: 5 categories x 3 examples x 5 controller variants x 2 seeds = 150
 E5: 30-50 selected outputs
 ```
 
@@ -1815,7 +1818,7 @@ This supports E4, not Table 1.
 Run only the two selected supplement baselines after the RF evidence is stable:
 `instruct_pix2pix` and `h_edit_r_p2p`. They are not part of Phase 1, not part of
 E2.1-E2.4, and not evidence for the RF-specific claim. Use them as a supplement
-positioning table with the same Core-6 sources, prompts, fixed masks, and visual
+positioning table with the same Core-5 sources, prompts, fixed masks, and visual
 audit rubric.
 
 ### Visual Audit
@@ -1841,7 +1844,7 @@ After about 170 outputs, decide whether to continue:
 
 | Gate | Continue if |
 | --- | --- |
-| E1 main effect | DeCE-RF visibly succeeds on at least 4/6 canonical examples |
+| E1 main effect | DeCE-RF visibly succeeds on at least 4/5 canonical examples |
 | preservation | DeCE-RF improves over direct target in outside-mask drift or visual preservation on most examples |
 | RF context | compact RF baselines are runnable or explicitly audited; any locality/preservation gap claim is limited to completed matched outputs |
 | controller signal | full DeCE-RF is competitive with variants and shows interpretable feedback diagnostics |
