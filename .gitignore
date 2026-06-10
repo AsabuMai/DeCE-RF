@@ -55,3 +55,15 @@ phase2_*_preview.jpg
 *.docx
 *.pptx
 *.xlsx
+
+# Debug archives and scratch sync dirs
+*.tgz
+*.bak
+*.bak_*
+.pip_cache/
+flux_tmp_sync/
+slurm_logs/
+phase2_review/
+flux/
+sd3/
+tmp_reference_*/
